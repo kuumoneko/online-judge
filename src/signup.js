@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import Cookies from 'js-cookie';
 import { insertUser } from './ulti.js';
+import axios from "axios";
 
 export function Already() {
     return (
@@ -12,7 +13,7 @@ export function Already() {
             <form className='loginform'>
                 {/* Input field for the username */}
                 <a>
-                    Loged in bruh 
+                    Loged in bruh
                 </a>
             </form>
         </div>
@@ -153,7 +154,7 @@ export function Singupform() {
     }
 
     // Function to handle form submission
-    const hanldeSubmitForm = (event) => {
+    const hanldeSubmitForm = async (event) => {
         event.preventDefault(); // Prevent the default form submission behavior
         // Do something with the username, like sending it to a server
 
@@ -183,20 +184,27 @@ export function Singupform() {
                 password: password,
                 points: 0,
                 problems_count: 0,
-                group: "",
+                group: [],
                 rank: "Newbie",
                 role: "User"
             }
-            const db = window.indexedDB.open("users", 1);
-            db.onsuccess = (e) => {
-                const db = e.target.result;
-                insertUser(db, user);
-                localStorage.setItem("users", JSON.stringify(temp))
-                Cookies.set("user", username);
-                Cookies.set("remember", "true")
-                localStorage.setItem("user", JSON.stringify({ username: username, role: "user" }))
-                window.location.href = "/"
-            }
+
+            await axios.post("http://localhost:3001/api/data", { method: "post", mode: "users", data: user }, {})
+            Cookies.set("user", username);
+            Cookies.set("remember", "true");
+            localStorage.setItem("user", JSON.stringify({ username: username, role: "User" }))
+            window.location.href = "/";
+
+            // const db = window.indexedDB.open("users", 1);
+            // db.onsuccess = (e) => {
+            //     const db = e.target.result;
+            //     insertUser(db, user);
+            //     localStorage.setItem("users", JSON.stringify(temp))
+            //     Cookies.set("user", username);
+            //     Cookies.set("remember", "true")
+            //     localStorage.setItem("user", JSON.stringify({ username: username, role: "user" }))
+            //     window.location.href = "/"
+            // }
         }
     };
 

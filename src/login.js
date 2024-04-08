@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { getUser } from "./ulti.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faKey, faUser } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 export function Loginform() {
     // backend
@@ -54,60 +55,41 @@ export function Loginform() {
         event.preventDefault(); // Prevent the default form submission behavior
         // Do something with the username, like sending it to a server
 
-        const indexedDB = window.indexedDB;
+        const temp = await axios.post("http://localhost:3001/api/data", { method: "get", mode: "users", data: username }, {})
+        console.log(temp.data.data)
 
-        const test = indexedDB.open("users", 1)
+        const res = temp.data.data;
 
-        test.onupgradeneeded = (event) => {
-            const db = event.target.result
-            db.createObjectStore("user")
+
+        const name = (res != undefined) ? res.username : undefined;
+        const pass = (res != undefined) ? res.password : undefined;
+
+        if (name == undefined) {
+            setLoggedIn({
+                username: false,
+                password: loggedIn.password
+            })
         }
-
-        test.onsuccess = async (event) => {
-            const db = event.target.result;
-
-            const temp = await getUser(db, username)
-
-            const res = temp.result
-
-
-            const name = (res != undefined) ? res.username : undefined;
-            const pass = (res != undefined) ? res.password : undefined;
-
-            if (name == undefined) {
-                setLoggedIn({
-                    username: false,
-                    password: loggedIn.password
-                })
-            }
-            else if (pass != password) {
-                setLoggedIn({
-                    username: true,
-                    password: false
-                })
-            }
-            else {
-                console.log("okay")
-                setLoggedIn({
-                    username: true,
-                    password: true
-                })
-                Cookies.set("user", username);
-                Cookies.set("remember", (remember) ? "true" : "false")
-                localStorage.setItem("user", JSON.stringify({ username: res.username, role: res.role }))
-                window.location.href = "/"
-            }
-
+        else if (pass != password) {
+            setLoggedIn({
+                username: true,
+                password: false
+            })
         }
-
-
-
+        else {
+            console.log("okay")
+            setLoggedIn({
+                username: true,
+                password: true
+            })
+            Cookies.set("user", username);
+            Cookies.set("remember", (remember) ? "true" : "false")
+            localStorage.setItem("user", JSON.stringify({ username: res.username, role: res.role }))
+            window.location.href = "/"
+        }
     };
 
-
-
     function Create_stm({ mode }) {
-
         if (mode == "username" && loggedIn.username == false) {
             return (
                 <div>

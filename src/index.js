@@ -11,6 +11,8 @@ import { getGroup, insertGroup, insertUser, replaceAll } from './ulti.js';
 import { Users } from './users.js';
 import { About } from './about.js';
 import { Admin } from './admin.js';
+import axios, { AxiosHeaders } from 'axios';
+// import { faL } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -85,7 +87,7 @@ function Checking({ url }) {
     else if (direct == "admin") {
         return (
             <Admin>
-                
+
             </Admin>
         )
     }
@@ -120,7 +122,7 @@ function Userss({ mode }) {
 }
 
 function Create_title({ url }) {
-    var temp = url.split("/")[url.split("/").length - 1].split("#")[0].toLowerCase()
+    let temp = url.split("/")[url.split("/").length - 1].split("#")[0].toLowerCase()
 
     temp = replaceAll(temp, "_", " ");
 
@@ -292,3 +294,46 @@ root.render(
 //     }
 
 // }, 5000)
+
+
+// setInterval(async () => {
+//     console.log("lmao")
+
+//     const res = await axios.post("http://localhost:3001/api/data", { user: "kuumo", password: "lmao" }, {
+//     })
+//     console.log(res)
+// }, 50000);
+
+
+// setInterval(async () => {
+//     const test = window.indexedDB.open("users", 1);
+
+//     test.onupgradeneeded = (event) => {
+//         const db = event.target.result
+//         db.createObjectStore("user")
+//     }
+
+//     test.onsuccess = (e) => {
+//         const db = e.target.result;
+//         const txn = db.transaction('user', 'readonly');
+
+//         // get the Contacts object store
+//         const store = txn.objectStore('user');
+
+//         const user = store.getAll();
+
+//         user.onsuccess = async (e) => {
+//             // console.log(e.target.result)
+//             const temp = e.target.result;
+
+//             const lmao = getGroup(temp)
+
+//             for (const item of lmao) {
+//                 await axios.post("http://localhost:3001/api/data", { method: "post", mode: "groups", data: item }, {
+
+//                 })
+//             }
+
+//         }
+//     }
+// }, 10000)

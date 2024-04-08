@@ -1,0 +1,4 @@
+{
+    "reactserver": "http://localhost:3000",
+    "sideserver": "http://localhost:3001/api/data"
+}

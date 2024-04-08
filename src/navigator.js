@@ -21,12 +21,7 @@ function Loggedined({ loggedin, username }) {
         document.location.reload()
     }
 
-    if (!/* The `loggedin` variable is being used to determine whether a user is currently logged in or
-    not. It is passed as a prop to the `Loggedined` component and based on its value, different
-    content is displayed in the navigation bar. If `loggedin` is `true`, the user's username
-    and a dropdown menu with options like "Admin", "Edit profile", and "Logout" are displayed.
-    If `loggedin` is `false`, options to "Login" and "Sign up" are displayed instead. */
-        loggedin) {
+    if (!loggedin) {
         return (
             <>
                 <li style={{ float: "right" }} >
@@ -45,6 +40,8 @@ function Loggedined({ loggedin, username }) {
             </>
         )
     }
+
+
 
     return (
         <li
@@ -86,7 +83,6 @@ function Loggedined({ loggedin, username }) {
                     </>
                 )
             }
-
         </li>
     )
 }
@@ -169,7 +165,7 @@ export default function Navigator({ mode, loggedin, username }) {
 
                         {
                             problems_visiable && (
-                                <div className="dropdown-content" id="dropdown-content" style={{ fontSize: "15px", textTransform: "none"}}>
+                                <div className="dropdown-content" id="dropdown-content" style={{ fontSize: "15px", textTransform: "none" }}>
                                     <a>
                                         Problems group
                                     </a>

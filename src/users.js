@@ -1,8 +1,8 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { ConvertToPage, get_rank_color, SortGroup, SortUser } from "./ulti.js";
-// import { number } from "yup";
-// import { render } from "react-dom";
+import axios from "axios";
+
 
 /**
  * 
@@ -52,7 +52,7 @@ async function Pages(users, page, modee, search) {
 
     // console.log(users.length > 5 , '\n' , page >= 5)
 
-    var temp = false;
+    let temp = false;
     const res = (
         <StrictMode>
             <button id="begin" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: "1px solid #000000", width: "25px", height: "25px" }} disabled={(page == 1)}>
@@ -83,29 +83,27 @@ async function Pages(users, page, modee, search) {
                             )
                         }
                     }
-                    else {
-                        if (index < 2 || (index >= page - 3 && index <= page + 1)) {
-                            // console.log(index + 1)
-                            return (
-                                <button id={index + 1} onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: "1px solid #000000", width: "25px", height: "25px", backgroundColor: color }} disabled={false}>
-                                    <a id={index + 1} onClick={handleClick}>
-                                        {` ${index + 1} `}
-                                    </a>
-                                </button >
-                            )
-                        }
-                        else if (!temp) {
-                            // console.log("...")
-                            temp = true
+                    else if (index < 2 || (index >= page - 3 && index <= page + 1)) {
+                        // console.log(index + 1)
+                        return (
+                            <button id={index + 1} onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: "1px solid #000000", width: "25px", height: "25px", backgroundColor: color }} disabled={false}>
+                                <a id={index + 1} onClick={handleClick}>
+                                    {` ${index + 1} `}
+                                </a>
+                            </button >
+                        )
+                    }
+                    else if (!temp) {
+                        // console.log("...")
+                        temp = true
 
-                            return (
-                                <button id={"..."} style={{ paddingLeft: "2px", paddingRight: "2px", border: "1px solid #000000", width: "25px", height: "25px" }} disabled={true}>
-                                    <a id={"..."}>
-                                        {`...`}
-                                    </a>
-                                </button>
-                            )
-                        }
+                        return (
+                            <button id={"..."} style={{ paddingLeft: "2px", paddingRight: "2px", border: "1px solid #000000", width: "25px", height: "25px" }} disabled={true}>
+                                <a id={"..."}>
+                                    {`...`}
+                                </a>
+                            </button>
+                        )
                     }
 
 
@@ -151,7 +149,7 @@ async function test(users, page, modee, search) {
     const pages = ConvertToPage(users, 100);
     // console.log(page)
     Pages(pages, page, modee, search)
-    // var i = 1
+    // let i = 1
 
     const lists = pages[page - 1]
     // console.log(page)
@@ -227,24 +225,24 @@ async function test(users, page, modee, search) {
                                     </td>
                                     {
                                         headers.map((header) => {
-                                            if (item[header] != undefined)
+                                            if (item[header] != undefined) {
                                                 if (header == "rank") {
                                                     return (
                                                         <td style={{ border: "1px solid #dddddd", color: color, fontWeight: "bold" }}>
                                                             {item[header]}
                                                         </td>
                                                     )
-                                                }
-                                                else
+                                                } else {
                                                     return (
                                                         <td style={{ border: "1px solid #dddddd" }}>
                                                             {item[header]}
                                                         </td>
                                                     )
-                                            else {
+                                                }
+                                            } else {
                                                 const groups = item.group;
                                                 const fn_color = "#808080"
-                                                var group = ""
+                                                let group = ""
                                                 groups.forEach((item) => {
                                                     group += `${item} | `
                                                 })
@@ -265,7 +263,7 @@ async function test(users, page, modee, search) {
                                                         <div style={{ float: "right", paddingRight: "10px", fontWeight: "bold", color: "#808080" }}>
                                                             {
                                                                 groups.map((group, index) => {
-                                                                    if (index != groups.length - 1)
+                                                                    if (index != groups.length - 1) {
                                                                         return (
                                                                             <>
                                                                                 <em >
@@ -278,7 +276,7 @@ async function test(users, page, modee, search) {
                                                                                 </em>
                                                                             </>
                                                                         )
-                                                                    else
+                                                                    } else {
                                                                         return (
                                                                             <em >
                                                                                 <a href={`/group/${group}`}>
@@ -286,6 +284,7 @@ async function test(users, page, modee, search) {
                                                                                 </a>
                                                                             </em>
                                                                         )
+                                                                    }
                                                                 })
                                                             }
                                                         </div>
@@ -298,10 +297,7 @@ async function test(users, page, modee, search) {
                             )
                         }
                         else {
-                            const item = user.group
-                            // console.log(item);
-                            const color = "#dddddd";
-
+                            const item = user.group;
                             return (
                                 <tr>
                                     <td style={{ border: "1px solid #dddddd" }}>
@@ -309,18 +305,25 @@ async function test(users, page, modee, search) {
                                     </td>
                                     {
                                         headers.map((header, index) => {
-                                            // if (header == "u")
                                             return (
                                                 <td style={{ border: "1px solid #dddddd" }}>
-
-                                                    <a href={`/group/${item[header]}`}>
-                                                        {
-                                                            item[header]
-                                                        }s
-                                                    </a>
+                                                    {
+                                                        (header == "group") ? (
+                                                            <a href={`/group/${item[header]}`}>
+                                                                {
+                                                                    item[header]
+                                                                }
+                                                            </a>
+                                                        ) : (
+                                                            <a >
+                                                                {
+                                                                    item[header]
+                                                                }
+                                                            </a>
+                                                        )
+                                                    }
                                                 </td>
                                             )
-                                            // console.log(`${header}: ${item[header]}`)
                                         })
                                     }
                                 </tr>
@@ -341,116 +344,96 @@ async function test(users, page, modee, search) {
  * @param {string} search 
  */
 async function render_users(modee, curr_page, search) {
-    if (modee.mode == "users") {
-        const db = window.indexedDB.open("users", 1);
+    const data = await axios.post("http://localhost:3001/api/data", { method: "get", mode: modee.mode, data: "all" }, {})
 
-        var mode;
 
-        db.onsuccess = (event) => {
-            const res = event
-                .target
-                .result
-                .transaction('user', 'readonly')
-                .objectStore('user')
-                .getAll();
-            res.onsuccess = (e) => {
-                const res = e.target.result;
+    const res = []
+    Object.keys(data.data.data).forEach((item) => {
+        res.push(data.data.data[item])
+    })
 
-                if (modee.rank != "auto") {
-                    mode = {
-                        mode: "rank",
-                        reverse: (modee.rank == "down") ? false : true
-                    }
-                }
-                else if (modee.prlcnt != "auto") {
-                    mode = {
-                        mode: "problems_count",
-                        reverse: (modee.prlcnt == "down") ? false : true
-                    }
-                }
-                else if (modee.pnt != "auto") {
-                    mode = {
-                        mode: "points",
-                        reverse: (modee.pnt == "down") ? false : true
-                    }
-                }
-                else if (modee.ctb != "auto") {
-                    mode = {
-                        mode: "contribute",
-                        reverse: (modee.ctb == "down") ? false : true
-                    }
-                }
-                // console.log(search)
-                const users = SortUser(res, mode.mode, mode.reverse, search || "")
-                // console.log(users)
-                if (users.length == 0) {
-                    users.push({
-                        stt: 1,
-                        user: {
-                            username: "Unable to find this user, try to search another word",
-                            points: 0,
-                            problems_count: 0,
-                            group: [],
-                            rank: 0,
-                            role: undefined,
-                            contribute: 0
-                        }
-                    })
-                }
-                test(users, curr_page, modee, search)
-            }
+
+    // console.log(res)
+
+    let mode = undefined;
+
+    if (modee.rank != "auto") {
+        mode = {
+            mode: "rank",
+            reverse: (modee.rank == "down") ? false : true
         }
     }
-    else {
-        const db = window.indexedDB.open("groups", 1);
-
-        var mode;
-
-        db.onsuccess = (event) => {
-            const res = event
-                .target
-                .result
-                .transaction('group', 'readonly')
-                .objectStore('group')
-                .getAll();
-            res.onsuccess = (e) => {
-                const res = e.target.result;
-
-                if (modee.unt != "auto") {
-                    mode = {
-                        mode: "unt",
-                        reverse: (modee.unt == "down") ? false : true
-                    }
-                }
-
-                // console.log(res)
-                const groups = SortGroup(res, mode.mode, mode.reverse, search || "")
-                // const users = SortUser(res, mode.mode, mode.reverse, search || "")
-                console.log(groups)
-                if (groups.length == 0) {
-                    groups.push({
-                        stt: 1,
-                        group: {
-                            group: "Unable to find this user, try to search another word",
-                            unt: 0
-                        }
-                    })
-                }
-                test(groups, curr_page, modee, search)
-            }
+    else if (modee.prlcnt != "auto") {
+        mode = {
+            mode: "problems_count",
+            reverse: (modee.prlcnt == "down") ? false : true
         }
+    }
+    else if (modee.pnt != "auto") {
+        mode = {
+            mode: "points",
+            reverse: (modee.pnt == "down") ? false : true
+        }
+    }
+    else if (modee.ctb != "auto") {
+        mode = {
+            mode: "contribute",
+            reverse: (modee.ctb == "down") ? false : true
+        }
+    }
+    else if (modee.unt != "auto") {
+        mode = {
+            mode: "unt",
+            reverse: (modee.unt == "down") ? false : true
+        }
+    }
+
+    if (modee.mode == "users") {
+        const users = SortUser(res, mode.mode, mode.reverse, search || "")
+
+        if (users.length == 0) {
+            users.push({
+                stt: 1,
+                user: {
+                    username: "Unable to find this user, try to search another word",
+                    points: 0,
+                    problems_count: 0,
+                    group: [],
+                    rank: 0,
+                    role: undefined,
+                    contribute: 0
+                }
+            })
+        }
+        test(users, curr_page, modee, search)
+
+
+    }
+    else {
+        const groups = SortGroup(res, mode.mode, mode.reverse, search || "")
+
+        if (groups.length == 0) {
+            groups.push({
+                stt: 1,
+                group: {
+                    group: "Unable to find this user, try to search another word",
+                    unt: 0
+                }
+            })
+        }
+        test(groups, curr_page, modee, search)
     }
 }
 
 
 function Render({ mode }) {
-    var rank = "auto",
+    let rank = "auto",
         prlcnt = "auto",
         pnt = "up",
         ctb = "auto",
         unt = "up";
 
-    var curr_page = 1;
+    let curr_page = 1;
 
     const handleClick = (event) => {
         const target = event.target;
@@ -511,7 +494,7 @@ function Render({ mode }) {
 
     const [searching, Setsearching] = useState(false)
     const [search, Setsearch] = useState(null)
-    var temp = null
+    let temp = null
 
     const handleSearch = (event) => {
         // console.log(searching)
@@ -558,7 +541,6 @@ function Render({ mode }) {
                     </input>
                 </span>
             </div>
-
             <div style={{ float: "left", width: "100%" }}>
                 <table style={{ borderCollapse: "collapse", width: "100%", textAlign: "center" }} id="userss" onClick={handleClick}>
                     <a style={{ fontSize: "30px" }}>
@@ -566,13 +548,11 @@ function Render({ mode }) {
                     </a>
                 </table>
             </div>
-
             <div id="page2" style={{ float: "left", paddingTop: "10px" }}>
                 <a>
                     loading....
                 </a>
             </div>
-
         </div>
     )
 }
@@ -582,7 +562,6 @@ function Render({ mode }) {
  * @param {string} param0    
  */
 export function Users({ mode }) {
-
     if (mode == "users") {
         return (
             <Render mode={"users"} />
@@ -593,5 +572,4 @@ export function Users({ mode }) {
             <Render mode={"groups"} />
         )
     }
-
 }

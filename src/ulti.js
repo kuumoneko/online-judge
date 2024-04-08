@@ -171,7 +171,7 @@ export function SortUser(users, mode, reverse = false, search) {
     )
 
     const res = []
-    var indexx = 1;
+    let indexx = 1;
     users.forEach((item) => {
 
         if (search == "") {
@@ -201,7 +201,7 @@ export function SortUser(users, mode, reverse = false, search) {
                 }
 
                 const temp = []
-                var i = 0;
+                let i = 0;
                 indices.forEach((itemm) => {
                     temp.push(item.fullname.slice(i, itemm))
                     temp.push(item.fullname.slice(itemm, itemm + search.length))
@@ -247,7 +247,7 @@ export function SortUser(users, mode, reverse = false, search) {
                 }
 
                 const temp = []
-                var i = 0;
+                let i = 0;
                 indices.forEach((itemm) => {
                     temp.push(item.username.slice(i, itemm))
                     temp.push(item.username.slice(itemm, itemm + search.length))
@@ -304,7 +304,7 @@ export function SortGroup(groups, mode, reverse, search) {
 
 
     const res = []
-    var indexx = 1;
+    let indexx = 1;
     groups.forEach((item) => {
 
         if (search == "") {
@@ -332,7 +332,7 @@ export function SortGroup(groups, mode, reverse, search) {
             }
 
             const temp = []
-            var i = 0;
+            let i = 0;
 
             // console.log(item.group.)
             indices.forEach((itemm) => {
