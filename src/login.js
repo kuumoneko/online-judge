@@ -3,10 +3,11 @@ import { useForm } from "react-hook-form"
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import Cookies from "js-cookie";
-import { getUser } from "./ulti.js";
+import { get_rank_color, getdata, getUser } from "./ulti.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faKey, faUser } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
+// import axios from "axios";
+// import { Users } from "./users.js";
 
 export function Loginform() {
     // backend
@@ -55,10 +56,11 @@ export function Loginform() {
         event.preventDefault(); // Prevent the default form submission behavior
         // Do something with the username, like sending it to a server
 
-        const temp = await axios.post("http://localhost:3001/api/data", { method: "get", mode: "users", data: username }, {})
-        console.log(temp.data.data)
+        // const temp = await axios.post("http://localhost:3001/api/data", { method: "get", mode: "users", data: username }, {})
+        const res = await getdata("get" , "users" , username)
+        // console.log(temp.data.data)
 
-        const res = temp.data.data;
+        // const res = temp.data.data;
 
 
         const name = (res != undefined) ? res.username : undefined;
@@ -84,7 +86,15 @@ export function Loginform() {
             })
             Cookies.set("user", username);
             Cookies.set("remember", (remember) ? "true" : "false")
-            localStorage.setItem("user", JSON.stringify({ username: res.username, role: res.role }))
+            // const item = {
+            //     username: res.username,
+            //     role: res.role,
+            //     color: get_rank_color(res.rank, res.role),
+            //     fullname: res.fullname,
+            //     email: res.email,
+            //     group: res.group
+            // }
+            // localStorage.setItem("user", JSON.stringify({ username: res.username, role: res.role }))
             window.location.href = "/"
         }
     };

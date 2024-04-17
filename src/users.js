@@ -1,6 +1,6 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { ConvertToPage, get_rank_color, SortGroup, SortUser } from "./ulti.js";
+import { ConvertToPage, get_rank_color, getdata, SortGroup, SortUser } from "./ulti.js";
 import axios from "axios";
 
 
@@ -344,16 +344,13 @@ async function test(users, page, modee, search) {
  * @param {string} search 
  */
 async function render_users(modee, curr_page, search) {
-    const data = await axios.post("http://localhost:3001/api/data", { method: "get", mode: modee.mode, data: "all" }, {})
 
+    const data = await getdata("get", "users", "all");
 
     const res = []
-    Object.keys(data.data.data).forEach((item) => {
-        res.push(data.data.data[item])
+    Object.keys(data).forEach((item) => {
+        res.push(data[item])
     })
-
-
-    // console.log(res)
 
     let mode = undefined;
 

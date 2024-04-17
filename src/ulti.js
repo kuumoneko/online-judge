@@ -1,6 +1,10 @@
 
 // import Ansi from "ansi-to-react";
 
+import axios from "axios"
+import { sha256 } from "js-sha256"
+// import { string } from "yup"
+
 export const colortheme = {
     light: {
         background: "#000000",
@@ -431,3 +435,88 @@ export function getGroup(users) {
     })
     return res;
 }
+
+/**
+ * 
+ * @param {string} email 
+ * @param {number} size 
+ * @returns {string}
+ */
+export function getGravatarURL(email, size) {
+    // Trim leading and trailing whitespace from
+    // an email address and force all characters
+    // to lower case
+    const address = String(email).trim().toLowerCase();
+
+    // Create a SHA256 hash of the final string
+    const hash = sha256(address);
+
+    // Grab the actual image URL
+    return `https://www.gravatar.com/avatar/${hash}?d=identicon&s=${size}`;
+}
+
+
+export function cookie(document) {
+    const temp = document.cookie.split(";");
+    // console.log(temp)
+    let cookies = {};
+
+    // console.log(url)
+
+    temp.forEach((cookie) => {
+        const lmao = cookie.split("=");
+        if (lmao[0] != "") {
+            while (lmao[0][0] == " ") {
+                lmao[0] = lmao[0].slice(1)
+            }
+            while (lmao[0][lmao[0].length - 1] == " ") {
+                lmao[0] = lmao[0].slice(0, lmao[0].length - 2)
+            }
+
+            while (lmao[1][0] == " ") {
+                lmao[1] = lmao[1].slice(1)
+            }
+            while (lmao[1][lmao[1].length - 1] == " ") {
+                lmao[1] = lmao[1].slice(0, lmao[1].length - 2)
+            }
+            cookies[lmao[0]] = lmao[1]
+        }
+    })
+
+    return cookies;
+}
+
+export function geturl() {
+    const url = document.URL;
+
+    return url.split("//")[1].split("/").slice(1);
+}
+
+// export function CreateMarkdown(data , html) {
+//     // const strings = data.split("\n");
+//     console.log(data)
+//     return data;
+// }
+
+export async function getdata(method, mode, data) {
+    const res = await axios.post("http://localhost:3001/api/data", { method: method, mode: mode, data: data }, {});
+    if (res.status != 200) {
+        return `Error code: ${res.status}`;
+    }
+    return res.data.data;
+}
+
+export const color = {
+    theme: "#ff9797",
+    dark: {
+        font: "#ffffff",
+        background: "#111111",
+        content: "#222222"
+    },
+    light: {
+        font: "ffffff",
+        background: "#f8f8f8",
+        content: "#ffffff"
+    }
+}
+

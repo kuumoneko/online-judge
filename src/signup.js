@@ -4,8 +4,10 @@ import { useForm } from "react-hook-form"
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import Cookies from 'js-cookie';
-import { insertUser } from './ulti.js';
+import { get_rank_color, getdata, insertUser } from './ulti.js';
 import axios from "axios";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faEnvelope, faKey, faSignature, faUser, faVoicemail } from '@fortawesome/free-solid-svg-icons';
 
 export function Already() {
     return (
@@ -38,7 +40,9 @@ export function Singupform() {
     const [fullname, Setfullname] = useState("");
     const [password, Setpassword] = useState("");
     const [passwordagain, Setpasswordagain] = useState("");
+    const [email, Setemail] = useState("");
 
+    const [remember, Setremember] = useState(true)
 
     console.log("allowed ", allowed)
 
@@ -87,6 +91,12 @@ export function Singupform() {
         }
         else if (name == "pswa") {
             Setpasswordagain(value)
+        }
+        else if (name == "mail") {
+            Setemail(value)
+        }
+        else if (name == "rmb") {
+            Setremember(event.target.checked)
         }
     }
 
@@ -178,33 +188,34 @@ export function Singupform() {
             setAllowed(true)
             setLoggedIn(true);
             const temp = JSON.parse(localStorage.getItem("users")) || {};
+            
+
             const user = {
                 fullname: fullname,
                 username: username,
                 password: password,
+                email: email,
+                group: [],
+                contribute: 0,
                 points: 0,
                 problems_count: 0,
-                group: [],
                 rank: "Newbie",
-                role: "User"
+                role: "User",
+                profile: {
+                    data: "",
+                    html: "",
+                },
+                problems: [],
+                blogs: []
             }
 
-            await axios.post("http://localhost:3001/api/data", { method: "post", mode: "users", data: user }, {})
-            Cookies.set("user", username);
-            Cookies.set("remember", "true");
-            localStorage.setItem("user", JSON.stringify({ username: username, role: "User" }))
-            window.location.href = "/";
+            // await axios.post("http://localhost:3001/api/data", { method: "post", mode: "users", data: user }, {})
 
-            // const db = window.indexedDB.open("users", 1);
-            // db.onsuccess = (e) => {
-            //     const db = e.target.result;
-            //     insertUser(db, user);
-            //     localStorage.setItem("users", JSON.stringify(temp))
-            //     Cookies.set("user", username);
-            //     Cookies.set("remember", "true")
-            //     localStorage.setItem("user", JSON.stringify({ username: username, role: "user" }))
-            //     window.location.href = "/"
-            // }
+            await getdata("post", "users", user)
+            Cookies.set("user", username);
+            Cookies.set("remember", (remember) ? "true" : "false");
+            // localStorage.setItem("user", JSON.stringify({ username: username, role: "User" }))
+            window.location.href = "/";
         }
     };
 
@@ -212,65 +223,121 @@ export function Singupform() {
         <>
             <div className="container" style={{ display: "block", position: "relative" }}>
                 <form className='loginform' onChange={handleChage}>
-                    {/* Input field for the full name */}
-                    <div className='Header'>
-                        Full name
-                    </div>
-                    <span className='Form'>
-                        <input
-                            className="fullname"
-                            type="text"
-                            placeholder="Enter Fullname"
-                            name="fname"
-                            required />
-                    </span>
-                    <CheckFullname />
+                    <a style={{ display: "flex", justifyContent: "space-around" }}>
+                        Signup
+                    </a>
+                    <table>
+                        {/* Input field for the full name */}
+                        <tr>
+                            <th>
+                                <FontAwesomeIcon icon={faSignature} style={{ display: "flex", }} />
+                            </th>
+                            <th>
+                                <input className="fullname"
+                                    type="text"
+                                    placeholder="Enter Fullname"
+                                    name="fname"
+                                    required />
 
-                    {/* Input field for the username */}
-                    <div className='Header'>
-                        Username
-                    </div>
-                    <span className='Form'>
-                        <input
-                            className="username"
-                            type="text"
-                            placeholder="Enter Username"
-                            name="uname"
-                            required />
-                    </span>
-                    <CheckAllowed />
+                                {/* </input> */}
+                            </th>
+                        </tr>
+                        <tr>
+                            <th />
+                            <th>
+                                <CheckFullname />
+                            </th>
+                        </tr>
 
-                    {/* Input field for the password */}
-                    <div className='Header'>
-                        Password
-                    </div>
-                    <span className='Form'>
-                        <input
-                            className="password"
-                            type="password" {...register('password')}
-                            placeholder="Enter password"
-                            name="psw"
-                            required />
-                    </span>
-                    <CheckPsw />
+                        {/* Input field for the username */}
+                        <tr>
+                            <th>
+                                <FontAwesomeIcon icon={faUser} />
+                            </th>
+                            <th>
+                                <input
+                                    className="username"
+                                    type="text"
+                                    placeholder="Enter Username"
+                                    name="uname"
+                                    required />
+                            </th>
+                        </tr>
+                        <tr>
+                            <th />
+                            <th>
+                                <CheckAllowed />
+                            </th>
+                        </tr>
 
-                    {/* Input field for the password again */}
-                    <div className='Header'>
-                        Password <small>
-                            (For Comformation)
-                        </small>
-                    </div>
-                    <span className='Form'>
-                        <input
-                            className="apassword"
-                            type="password" {...register('confirmPassword')}
-                            placeholder="Enter Password again"
-                            name="pswa"
-                            required />
-                    </span>
-                    <Checkpswsr />
+                        {/* Input field for the email */}
+                        <tr>
+                            <th>
+                                <FontAwesomeIcon icon={faEnvelope} />
+                            </th>
+                            <th>
+                                <input
+                                    className="email"
+                                    type="text"
+                                    placeholder="Enter Email"
+                                    name="mail"
+                                    required
+                                />
+                            </th>
+                        </tr>
+
+                        {/* Input field for the password */}
+                        <tr>
+                            <th>
+                                <FontAwesomeIcon icon={faKey} />
+                            </th>
+                            <th>
+                                <input
+                                    className="password"
+                                    type="password" {...register('password')}
+                                    placeholder="Enter password"
+                                    name="psw"
+                                    required />
+
+                            </th>
+                        </tr>
+                        <tr>
+                            <th />
+                            <th>
+                                <CheckPsw />
+                            </th>
+                        </tr>
+
+                        {/* Input field for the password again */}
+                        <tr>
+                            <th>
+                                <FontAwesomeIcon icon={faCheck} />
+                            </th>
+                            <th>
+                                <input
+                                    className="apassword"
+                                    type="password" {...register('confirmPassword')}
+                                    placeholder="Enter Password again"
+                                    name="pswa"
+                                    required />
+                            </th>
+                        </tr>
+                        <tr>
+                            <th />
+                            <th>
+                                <Checkpswsr />
+                            </th>
+                        </tr>
+
+                    </table>
                     <hr id='stm' />
                     <hr id='more' />
+                    <label style={{ display: "block" }}>
+                        <input type="checkbox" name="rmb" checked={remember} />
+                        <a id="rmb">
+                            remember me
+                        </a>
+                    </label>
                     <button type="submit" className='submit' onClick={hanldeSubmitForm} style={{ float: "inline-end" }}>
                         <a>
                             Sign up

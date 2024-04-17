@@ -66,18 +66,19 @@ body {
 }
 
 #root {
+  align-items: center;
   min-height: 100vh;
   position: relative;
-  border-right: 1px solid #3b3b3b;
-  border-left: 1px solid #3b3b3b;
+  /* border-right: 1px solid #3b3b3b;
+  border-left: 1px solid #3b3b3b; */
   border-bottom: 1px solid #3b3b3b;
-  max-width: 100em;
+  /* max-width: 100em; */
 }
 div {
   display: block;
 }
 
-nav {
+div#nav {
   display: block;
   cursor: default;
   position: fixed;
@@ -85,9 +86,7 @@ nav {
   left: 0;
   right: 0;
   z-index: 500;
-  background: #1e1e1e;
-  border-bottom: 6px solid #ff9797;
-  box-shadow: 0 0 5px rgb(87, 78, 78);
+  padding-bottom: 50px;
 }
 
 .nav-divider {
@@ -100,16 +99,26 @@ nav {
   border-right: 3px solid rgba(255, 255, 255, 0.15);
 }
 
-nav ul {
+div#nav ul {
   display: inline-table;
+  display: inline-table;
+  background-color: #000000;
+  border-radius: 10px;
+  float: left;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+
+  margin: 0 0 0 -5px;
+
+  /* border-bottom: 5px solid #ff9797; */
 }
 
 a {
   display: inline;
 }
 
-nav ul li a,
-nav ul li button {
+div#nav ul li a,
+div ul li button {
   text-decoration: none;
   text-align: center;
   vertical-align: middle;
@@ -117,7 +126,7 @@ nav ul li button {
   padding: 13px 7px;
   display: inline-table;
 }
-nav ul li {
+div#nav ul li {
   display: inline-block;
   color: #fff;
   text-transform: uppercase;
@@ -125,7 +134,7 @@ nav ul li {
   font-family: "Lato", sans-serif;
 }
 
-nav ul {
+div ul {
   margin: 0 0 0 -5px;
   padding: 0 0 0 1%;
   display: block;
@@ -136,10 +145,11 @@ nav ul {
   min-height: 120vh;
   position: relative;
   margin: 0 auto;
-  border-right: 1px solid #ccc;
+  /* border-right: 1px solid #ccc;
   border-left: 1px solid #ccc;
+  border-top: 1px solid #ccc; */
   /* background: rgb(255, 255, 255); */
-  max-width: 100em;
+  /* max-width: 100em; */
 }
 
 @media (max-width: 1498px) {
@@ -178,10 +188,7 @@ nav ul {
   border-radius: 4px;
   border: 1px solid #ccc;
   text-align: left;
-  width: 250px;
-  position: absolute;
-  /* top: 50%;
-  /* left: 50%; */
+  width: 300px;
 }
 
 .submit {
@@ -194,7 +201,7 @@ nav ul {
   line-height: 1.4;
   background: rgb(51, 122, 183) none repeat scroll 0 0% / auto padding-box
     border-box;
-  background: linear-gradient(to bottom, #09806d 0, #065245 100%) repeat-x;
+  background: linear-gradient(to bottom, #ff9797 0, #a76262 100%) repeat-x;
   border-radius: 4px;
   /* padding: 6px 12px; */
   padding-top: 6px;
@@ -207,17 +214,6 @@ nav ul {
   font-size: 15px;
 }
 
-/* ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #333;
-}
-
-li {
-  float: left;
-} */
 
 li.dropdown {
   display: inline-block;
@@ -246,7 +242,7 @@ li.dropdown {
 li a,
 .dropbtn {
   display: inline-block;
-  color: white;
+  /* color: white; */
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
@@ -291,7 +287,7 @@ hr#more {
 }
 
 a#rmb {
-  position: absolute;
+  /* position: absolute; */
   bottom: 3em;
 }
 
@@ -390,8 +386,8 @@ a#users {
 footer {
   text-align: center;
   height: 40px;
-  border-top: 1px solid #3b3b3b;
-  background: #181818;
+  /* border-top: 1px solid #3b3b3b; */
+  /* background: #181818; */
 
   color: #808080;
   display: block;
@@ -401,7 +397,7 @@ footer {
 }
 
 div div p {
-  margin: 1em 0 !important;
+  /* margin: 1em 0 !important; */
   padding: 0 !important;
 }
 
@@ -448,3 +444,5 @@ table {
   border-spacing: 2px;
   border-color: gray;
 }
+
+

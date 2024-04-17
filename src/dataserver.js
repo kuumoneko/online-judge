@@ -4,42 +4,92 @@ import cors from "cors"
 const app = express();
 const port = 3001
 
-app.use(cors({
-    origin: 'http://localhost:3000' // Replace with your React app's origin
-}));
+app.use(cors());
 
 app.use(express.json());
+
+const temp = {
+    fullname: "",
+    username: "",
+    password: "",
+    email: "",
+    group: [],
+    contribute: 0,
+    points: 0,
+    problems_count: 0,
+    rank: 0,
+    role: "User",
+
+    profie: {
+        data: "",
+        html: "",
+    },
+    problems: {
+        name: "",
+        submissions: [
+            {
+                time: "",
+                status: "",
+                tests: [
+                    {
+                        language: "",
+                        user_code: "",
+                        user_output: "",
+                        input: "",
+                        output: ""
+                    }
+                ]
+            }
+        ]
+    },
+    blogs: [
+        {
+            title: "",
+            time: "",
+            content: ""
+        }
+    ]
+}
 
 app.post('/api/data', (req, res) => {
     // method , mode , data
     const receivedData = req.body;
+    let mess = "";
+    let status = 200;
+    if (receivedData.data == undefined) {
+        mess = "";
+        status = 404
+    }
+    else {
+        try {
+            if (receivedData.method != "get") {
+                const temp = readFileSync(`./data/${receivedData.mode}.json`, { encoding: "utf-8" }) || "{}";
 
-    try {
-        if (receivedData.method != "get") {
-            const temp = readFileSync(`./data/${receivedData.mode}.json`, { encoding: "utf-8" }) || "{}";
+                const lmao = JSON.parse(temp);
+                // lmao.push(receivedData.data)
+                console.log(receivedData.data)
 
-            const lmao = JSON.parse(temp);
-            // lmao.push(receivedData.data)
-            console.log(receivedData.data)
-
-            if (receivedData.mode == "users") {
-                lmao[receivedData.data.username] = receivedData.data;
+                if (receivedData.mode == "users") {
+                    lmao[receivedData.data.username] = receivedData.data;
+                }
+                else if (receivedData.mode == "groups") {
+                    lmao[receivedData.data.group] = receivedData.data;
+                }
+                writeFileSync(`./data/${receivedData.mode}.json`, JSON.stringify(lmao))
             }
-            else if (receivedData.mode == "groups") {
-                lmao[receivedData.data.group] = receivedData.data;
+            else {
+                const temp = readFileSync(`./data/${receivedData.mode}.json`, { encoding: "utf-8" })
+                res.json({ status: 200, mess: "ok", data: (receivedData.data != "all") ? JSON.parse(temp)[receivedData.data] : JSON.parse(temp) })
             }
-            writeFileSync(`./data/${receivedData.mode}.json`, JSON.stringify(lmao))
+            mess = "done"
         }
-        else {
-            const temp = readFileSync(`./data/${receivedData.mode}.json`, { encoding: "utf-8" })
-            res.json({ mess: "ok", data: (receivedData.data != "all") ? JSON.parse(temp)[receivedData.data] : JSON.parse(temp) })
+        catch (e) {
+            mess = e
+
         }
     }
-    catch (e) {
-        res.json({ mess: e });
-        return;
-    }
-    res.json({ mess: "done" })
+
+    res.json({ status: status, mess: mess })
 })
 
 app.listen(port, () => {
