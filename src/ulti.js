@@ -23,7 +23,7 @@ const rank_color = {
     "Expert": "#0000ff",
     "Candidate Master": "#aa00aa",
     "Master": "#ff8c00",
-    "Grandmaster": "#ff0000",
+    "Grandmaster": "#ff1a1a",
 }
 
 /**
@@ -520,3 +520,69 @@ export const color = {
     }
 }
 
+// export function
+
+
+// export function getrank(users, mode , user) {
+//     users.sort((a, b) => (
+//         (a[mode] - b[mode]))
+//     )
+    
+//     console.log(users)
+
+//     // dùng tìm kiếm nhị phân ở đây để tìm kiếm vị trí của user
+//     return users
+// }
+
+export function getrank(users, mode, user) {
+    users.sort((a, b) => {
+        return (a[mode] - b[mode]) * -1
+    })
+
+    let l = 0, r = users.length - 1;
+    let mid;
+
+    while (l < r) {
+        mid = Math.floor(l + (r - l) / 2);
+        // console.log(users[mid])
+        const usr = users[mid];
+
+        if (usr[mode] > user[mode]) {
+            l = mid + 1;
+        }
+        else if (usr[mode] < user[mode]) {
+            r = mid;
+        }
+        else {
+            // console.log(users[mid].username)
+            if (users[mid].username == user.username) {
+                // console.log(mid);
+                return mid;
+                // break;
+            }
+            else {
+                for (let i = mid; i >= 0; i--) {
+                    // console.log(users[i].username)
+                    if (users[i].username == user.username) {
+                        return i;
+                    }
+                    else if (users[i][mode] != users[mid][mode]) {
+                        break;
+                    }
+                }
+
+                for (let i = mid; i < users.length; i++) {
+                    // console.log(users[i].username)
+                    if (users[i].username == user.username) {
+                        return i;
+                    }
+                    else if (users[i][mode] != users[mid][mode]) {
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
+    return mid;
+}

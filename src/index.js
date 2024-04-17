@@ -59,9 +59,13 @@ async function lmao() {
 
 }
 
-lmao().then((res) => {
+lmao().then(async (res) => {
+
+    const ress = await getdata("get", "users", "all")
+    // console.log(ress);
     // console.log(res)
     function Checking({ url }) {
+        // console.log(ress)
         // console.log(url.split("/"))
         const direct = url[0];
 
@@ -87,9 +91,9 @@ lmao().then((res) => {
             )
         }
         else if (direct == "user") {
-            // console.log(url)
+            // console.log(ress)
             return (
-                <User url={url} user={res} />
+                <User url={url} users={ress} />
             )
         }
         else if (direct == "about") {

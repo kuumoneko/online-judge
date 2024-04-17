@@ -6,10 +6,18 @@ import { createRoot } from "react-dom/client";
 import Markdown from "react-markdown";
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
-import { color, getdata, getGravatarURL } from "./ulti.js";
+import { color, get_rank_color, getdata, getGravatarURL, getrank } from "./ulti.js";
 // import { CreateMarkdown } from "./ulti.js";
 
+function sanitizeHtml(html) {
+    const domParser = new DOMParser();
+    const doc = domParser.parseFromString(html, 'text/html');
 
+    const scripts = doc.querySelectorAll('script');
+    scripts.forEach(script => script.parentNode.removeChild(script));
+
+    return doc.body.innerHTML;
+}
 
 function Editprofile({ user }) {
 
@@ -46,7 +54,7 @@ function Editprofile({ user }) {
         e.preventDefault();
         setmode(e.target.id)
 
-        console.log(mode)
+        // console.log(mode)
     }
 
     const saveClick = async (e) => {
@@ -65,15 +73,7 @@ function Editprofile({ user }) {
         setfullname(e.target.value)
     }
 
-    function sanitizeHtml(html) {
-        const domParser = new DOMParser();
-        const doc = domParser.parseFromString(html, 'text/html');
 
-        const scripts = doc.querySelectorAll('script');
-        scripts.forEach(script => script.parentNode.removeChild(script));
-
-        return doc.body.innerHTML;
-    }
 
     return (
         <>
@@ -175,8 +175,23 @@ function Editprofile({ user }) {
     )
 }
 
-function Profile({ user }) {
-    console.log(user.group.length)
+function Profile({ users, user }) {
+
+    const temp = [];
+    Object.keys(users).forEach((item) => {
+        temp.push(users[item])
+    })
+
+    const rank_by_points = getrank(temp, "points", user)
+    const rank_by_rank = getrank(temp, "rank", user)
+
+    // console.log(rank_by_points, ' ', rank_by_rank)
+    // console.log(temp)
+    // console.log(user.group.length)
+    // console.log(user.profile)
+    // console.log()
+
+    const color = get_rank_color(2900, "Users")
     return (
         <>
             <div >
@@ -202,6 +217,15 @@ function Profile({ user }) {
 
                         <h4 style={{ borderBottom: "0px" }}>
                             <a className="font-bold">
+                                {"Rank by points: "}
+                            </a>
+                            <a style={{ fontSize: "20px" }}>
+                                {`#${rank_by_points}`}
+                            </a>
+                        </h4>
+
+                        <h4 style={{ borderBottom: "0px" }}>
+                            <a className="font-bold">
                                 {"Problems solved: "}
                             </a>
                             <a style={{ fontSize: "20px" }}>
@@ -217,26 +241,76 @@ function Profile({ user }) {
                                 {user.contribute}
                             </a>
                         </h4>
+
+                        <a style={{ display: "block", borderBottom: "1px solid #d2d2d2", width: "250px" }} />
+
+                        <h4 style={{ borderBottom: "0px" }}>
+                            <a className="font-bold">
+                                {"Rank by rating: "}
+                            </a>
+                            <a style={{ fontSize: "20px" }}>
+                                {`#${rank_by_rank}`}
+                            </a>
+                        </h4>
+
+                        <h4 style={{ borderBottom: "0px" }}>
+                            <a className="font-bold">
+                                {"Rating: "}
+                            </a>
+                            <a className="font-bold" style={{ fontSize: "20px", color: color }}>
+                                {user.rank}
+                            </a>
+                        </h4>
+
                     </div>
                 </div>
                 <div style={{ float: "right", height: "400px", width: "1600px" }}>
                     {
                         (user.group.length != 0) ? (
-                            <div style={{ borderBottom: "1px solid #ccc" }}>
+                            <>
+                                <div style={{ borderBottom: "1px solid #ccc" }}>
                                 <a>
                                     {"From: "}
-                                    {
-                                        user.group.map(i => (
-                                            <a>
-                                                {item}
+                                    {user.group.map((i , index) => {
+                                        // console.log(i);
+                                        if (index == user.group.length - 1) {
+                                            return (
+                                                <a href={`/group/${i}`}>
+                                                    {` ${i}`}
+                                                </a>
+                                            )
+                                        }
+                                        return (
+                                            <a href={`/group/${i}`}>
+                                                {` ${i},`}
                                             </a>
-                                        ))
+                                        );
                                     }
+                                    )}
                                 </a>
-                            </div>
+                                </div>
+                                <br />
+                            </>
                         ) : (<></>)
                     }
-                    
+                    {
+                        (
+                            user.profile.html
+                        ) ?
+                            (
+                                <div>
+                                    <Markdown
+                                        children={sanitizeHtml(user.profile.data)}
+                                        rehypePlugins={[rehypeRaw, rehypeSanitize]}
+                                    />
+                                </div>
+                            )
+                            :
+                            (
+                                <>
+                                </>
+                            )
+                    }
 
                 </div>
             </div>
@@ -245,8 +319,16 @@ function Profile({ user }) {
     )
 }
 
-export function User({ url, user }) {
-    // console.log(user)
+export function User({ url, users }) {
+    // const lmaoo = []
+    // // lmaoo.reduce()
+    // console.log(typeof users)
+    // const userss = users.reduce((acc, username) => {
+    //     console.log(acc, username)
+
+    //     return { ...acc, [username]: username }
+    // }, {});
+
     useEffect(() => {
         async function lmao() {
 
@@ -256,13 +338,13 @@ export function User({ url, user }) {
 
                 root.render(
                     (url[2] == "edit_profile") ? (
-                        <Editprofile user={res} />
+                        <Editprofile user={users[url[1]]} />
                     ) : (<></>)
                 )
             }
             else {
                 root.render(
-                    <Profile user={user} />
+                    <Profile users={users} user={users[url[1]]} />
                 )
             }
 
