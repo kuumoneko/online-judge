@@ -105,9 +105,9 @@ export default function Navigator({ mode, loggedin, user }) {
     // })
 
     const [problems_visiable, setproblems_visiable] = useState(false);
-
+    // console.log(color[JSON.parse(localStorage.getItem("user")).themes.mode].background)
     return (
-        <div id="nav" style={{ backgroundColor: "white", paddingTop: "20px", paddingLeft: "20px", position: "sticky" }}>
+        <div id="nav" style={{ backgroundColor: `${color[JSON.parse(localStorage.getItem("user")).themes.mode].background}`, paddingTop: "20px", paddingLeft: "20px", position: "sticky" }}>
             <ul style={{ borderBottom: `5px solid ${color.theme}` }}>
                 <li>
                     <a style={{ color: "white" }} href="/">

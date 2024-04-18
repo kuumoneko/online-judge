@@ -1,6 +1,6 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { ConvertToPage, get_rank_color, getdata, SortGroup, SortUser } from "./ulti.js";
+import { color, ConvertToPage, get_rank_color, getdata, SortGroup, SortUser } from "./ulti.js";
 import axios from "axios";
 
 
@@ -51,16 +51,17 @@ async function Pages(users, page, modee, search) {
     }
 
     // console.log(users.length > 5 , '\n' , page >= 5)
-
+    const themes = color[JSON.parse(localStorage.getItem("user")).themes.mode];
+    // console.log(themes)
     let temp = false;
     const res = (
         <StrictMode>
-            <button id="begin" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: "1px solid #000000", width: "25px", height: "25px" }} disabled={(page == 1)}>
+            <button id="begin" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: `1px solid ${themes.content}`, width: "25px", height: "25px" }} disabled={(page == 1)}>
                 <a id="begin" onClick={handleClick}>
                     {"<<"}
                 </a>
             </button>
-            <button id="pre" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: "1px solid #000000", width: "25px", height: "25px" }} disabled={(page == 1)}>
+            <button id="pre" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(page == 1)}>
                 <a id="pre" onClick={handleClick}>
                     {"<"}
                 </a>
@@ -68,14 +69,14 @@ async function Pages(users, page, modee, search) {
             {
 
                 users.map((item, index) => {
-                    const color = (index + 1 == page) ? "yellow" : ""
+                    const color = (index + 1 == page) ? "#999900" : ""
 
                     if (page <= 5) {
                         // console.log( page + 2)
                         if (index < page + 2) {
                             // console.log(index + 1)
                             return (
-                                <button id={index + 1} onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: "1px solid #000000", width: "25px", height: "25px", backgroundColor: color }} disabled={false}>
+                                <button id={index + 1} onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: `1px solid ${themes.font}`, width: "25px", height: "25px", backgroundColor: color }} disabled={false}>
                                     <a id={index + 1} onClick={handleClick}>
                                         {` ${index + 1} `}
                                     </a>
@@ -86,7 +87,7 @@ async function Pages(users, page, modee, search) {
                     else if (index < 2 || (index >= page - 3 && index <= page + 1)) {
                         // console.log(index + 1)
                         return (
-                            <button id={index + 1} onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: "1px solid #000000", width: "25px", height: "25px", backgroundColor: color }} disabled={false}>
+                            <button id={index + 1} onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: `1px solid ${themes.font}`, width: "25px", height: "25px", backgroundColor: color }} disabled={false}>
                                 <a id={index + 1} onClick={handleClick}>
                                     {` ${index + 1} `}
                                 </a>
@@ -98,7 +99,7 @@ async function Pages(users, page, modee, search) {
                         temp = true
 
                         return (
-                            <button id={"..."} style={{ paddingLeft: "2px", paddingRight: "2px", border: "1px solid #000000", width: "25px", height: "25px" }} disabled={true}>
+                            <button id={"..."} style={{ paddingLeft: "2px", paddingRight: "2px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={true}>
                                 <a id={"..."}>
                                     {`...`}
                                 </a>
@@ -111,7 +112,7 @@ async function Pages(users, page, modee, search) {
             }
             {
                 (page != users.length) && (
-                    <button id={"..."} style={{ paddingLeft: "2px", paddingRight: "2px", border: "1px solid #000000", width: "25px", height: "25px" }} disabled={true}>
+                    <button id={"..."} style={{ paddingLeft: "2px", paddingRight: "2px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={true}>
                         <a id={"..."}>
                             {`...`}
                         </a>
@@ -119,12 +120,12 @@ async function Pages(users, page, modee, search) {
                 )
             }
 
-            <button id="next" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: "1px solid #000000", width: "25px", height: "25px" }} disabled={(page == users.length)}>
+            <button id="next" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(page == users.length)}>
                 <a id="next" onClick={handleClick}>
                     {">"}
                 </a>
             </button>
-            <button id="end" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: "1px solid #000000", width: "25px", height: "25px" }} disabled={(page == users.length)}>
+            <button id="end" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(page == users.length)}>
                 <a id="end" onClick={handleClick}>
                     {">>"}
                 </a>
@@ -206,7 +207,7 @@ async function test(users, page, modee, search) {
             </th>
         </>
     )
-
+    const themes = color[JSON.parse(localStorage.getItem("user")).themes.mode];
     lmao.render(
         <StrictMode>
             <tbody style={{ display: "table-row-group", verticalAlign: "middle", borderColor: "inherit" }}>
@@ -217,7 +218,9 @@ async function test(users, page, modee, search) {
                     lists.map((user, index) => {
                         if (modee.mode == "users") {
                             const item = user.user
-                            const color = get_rank_color(item.rank, item.role)
+                            const color = get_rank_color(item.rank, item.role , themes.font);
+                            // if (item.role == "admin")
+
                             return (
                                 <tr>
                                     <td style={{ border: "1px solid #dddddd" }}>
@@ -326,7 +329,11 @@ async function test(users, page, modee, search) {
                                             )
                                         })
                                     }
+                                    {/* <td>
+                                        a
+                                    </td> */}
                                 </tr>
+
                             )
                         }
                     })

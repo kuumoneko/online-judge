@@ -29,9 +29,9 @@ const rank_color = {
 /**
  * 
  */
-export function get_rank_color(points, role) {
+export function get_rank_color(points, role , themes) {
     if (role == "administrator") {
-        return "#222222"
+        return themes;
     }
     if (points < 1200) {
         return rank_color.Newbie
@@ -266,7 +266,7 @@ export function SortUser(users, mode, reverse = false, search) {
                             temp.map((item) => {
                                 if (item.toLowerCase() == search) {
                                     return (
-                                        <a style={{ backgroundColor: "yellow" }}>
+                                        <a style={{ backgroundColor: "#999900" }}>
                                             {item}
                                         </a>
                                     )
@@ -353,7 +353,7 @@ export function SortGroup(groups, mode, reverse, search) {
                         temp.map((item) => {
                             if (item.toLowerCase() == search) {
                                 return (
-                                    <a style={{ backgroundColor: "yellow" }}>
+                                    <a style={{ backgroundColor: "#999900" }}>
                                         {item}
                                     </a>
                                 )
@@ -510,11 +510,11 @@ export const color = {
     theme: "#ff9797",
     dark: {
         font: "#ffffff",
-        background: "#111111",
+        background: "#6e6e6e",
         content: "#222222"
     },
     light: {
-        font: "ffffff",
+        font: "#000000",
         background: "#f8f8f8",
         content: "#ffffff"
     }

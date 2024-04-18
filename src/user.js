@@ -20,10 +20,10 @@ function sanitizeHtml(html) {
 }
 
 function Editprofile({ user }) {
-
+    // console.log(user.profile.data.split("\n").length)
     const [fullname, setfullname] = useState(user.fullname)
     const [mode, setmode] = useState("editor");
-    const [lines, setlines] = useState((user.profile == undefined || user.profile.data == "") ? 1 : user.profile.data.split("/n").length);
+    const [lines, setlines] = useState((user.profile == undefined || user.profile.data == "") ? 1 : user.profile.data.split("\n").length);
     const [data, setdata] = useState((user.profile == undefined || user.profile.data == "") ? `Hello, I'm ${user.fullname}` : user.profile.data);
     const [html, sethtml] = useState((user.profile == undefined || user.profile.data == "") ? `Hello, I'm ${user.fullname}` : user.profile.html);
 
@@ -74,7 +74,7 @@ function Editprofile({ user }) {
     }
 
 
-
+    // console.log(color[JSON.parse(localStorage.getItem("user")).themes.mode].font)
     return (
         <>
             <div>
@@ -115,7 +115,7 @@ function Editprofile({ user }) {
                             {
                                 (mode == "editor") ? (
                                     <>
-                                        <div id="row" style={{ width: "3%", height: "100%", borderRight: "2px solid", backgroundColor: "#e8e8e8", marginTop: "5px" }}>
+                                        <div id="row" style={{ width: "3%", height: "100%", borderRight: "2px solid", backgroundColor: "#e8e8e8", marginTop: "5px", color: color[JSON.parse(localStorage.getItem("user")).themes.mode].background }}>
                                             {temp.map((item, index) => (
                                                 <a style={{ display: "flex", justifyContent: "space-around", paddingTop: "0px" }}>
                                                     {item}
@@ -185,11 +185,6 @@ function Profile({ users, user }) {
     const rank_by_points = getrank(temp, "points", user)
     const rank_by_rank = getrank(temp, "rank", user)
 
-    // console.log(rank_by_points, ' ', rank_by_rank)
-    // console.log(temp)
-    // console.log(user.group.length)
-    // console.log(user.profile)
-    // console.log()
 
     const color = get_rank_color(2900, "Users")
     return (
@@ -268,26 +263,32 @@ function Profile({ users, user }) {
                     {
                         (user.group.length != 0) ? (
                             <>
-                                <div style={{ borderBottom: "1px solid #ccc" }}>
-                                <a>
-                                    {"From: "}
-                                    {user.group.map((i , index) => {
-                                        // console.log(i);
-                                        if (index == user.group.length - 1) {
+                                <div>
+                                    <h1 className="font-bold">
+                                        FROM: 
+                                    </h1>
+                                </div>
+                                <br />
+                                <div >
+                                    <a>
+                                        {/* {"From: "} */}
+                                        {user.group.map((i, index) => {
+                                            // console.log(i);
+                                            if (index == user.group.length - 1) {
+                                                return (
+                                                    <a href={`/group/${i}`}>
+                                                        {` ${i}`}
+                                                    </a>
+                                                )
+                                            }
                                             return (
                                                 <a href={`/group/${i}`}>
-                                                    {` ${i}`}
+                                                    {` ${i},`}
                                                 </a>
-                                            )
+                                            );
                                         }
-                                        return (
-                                            <a href={`/group/${i}`}>
-                                                {` ${i},`}
-                                            </a>
-                                        );
-                                    }
-                                    )}
-                                </a>
+                                        )}
+                                    </a>
                                 </div>
                                 <br />
                             </>
@@ -298,12 +299,18 @@ function Profile({ users, user }) {
                             user.profile.html
                         ) ?
                             (
-                                <div>
-                                    <Markdown
-                                        children={sanitizeHtml(user.profile.data)}
-                                        rehypePlugins={[rehypeRaw, rehypeSanitize]}
-                                    />
-                                </div>
+                                <>
+                                    <div>
+                                        <h1 className="font-bold">
+                                            ABOUT ME:
+                                        </h1>
+                                    </div>
+                                    <div>
+                                        <Markdown
+                                            children={sanitizeHtml(user.profile.data)}
+                                            rehypePlugins={[rehypeRaw, rehypeSanitize]} />
+                                    </div>
+                                </>
                             )
                             :
                             (

@@ -7,7 +7,7 @@ import Navigator from "./navigator.js";
 import { Already, Singupform } from "./signup.js";
 import { Loginform } from "./login.js";
 import Cookies from 'js-cookie';
-import { cookie, get_rank_color, getdata, getGroup, geturl, insertGroup, insertUser, replaceAll } from './ulti.js';
+import { color, cookie, get_rank_color, getdata, getGroup, geturl, insertGroup, insertUser, replaceAll } from './ulti.js';
 import { Users } from './users.js';
 import { About } from './about.js';
 import { Admin } from './admin.js';
@@ -32,34 +32,36 @@ const urll = geturl();
 let cookies = cookie(document);
 
 async function lmao() {
-
-
-    // console.log(localStorage.getItem("user") == undefined);
-    // console.log(localStorage.getItem("user") == undefined || localStorage.getItem("user") == null)
-    if (localStorage.getItem("user") == undefined || localStorage.getItem("user") == null) {
-        
-        const res = await getdata("get", "users", cookies.user)
-        // console.log(res)
-        if (res == undefined) {
-            // localStorage.setItem("user", undefined);
-            return undefined;
-
+    const res = await getdata("get", "users", cookies.user)
+    // console.log(res)
+    if (res == undefined) {
+        // localStorage.setItem("user", undefined);
+        const temp = {
+            "themes": {
+                "color": "#ff9797",
+                "mode": "light"
+            },
         }
-        // console.log(res)
-        res.password = undefined;
+        localStorage.setItem("user", JSON.stringify(temp))
+        return temp;
 
-
-
-        localStorage.setItem("user", JSON.stringify(res))
-        localStorage.setItem("date", new Date().getTime())
-        // console.log(res)
-        return res;
     }
-    return JSON.parse(localStorage.getItem("user"))
+    // console.log(res)
+    res.password = undefined;
+
+    localStorage.setItem("user", JSON.stringify(res))
+    localStorage.setItem("date", new Date().getTime())
+    // console.log(res)
+    return res;
 
 }
 
 lmao().then(async (res) => {
+
+
+    const themes = (res) ? color[res.themes.mode] : color.light;
+
+
 
     const ress = await getdata("get", "users", "all")
     // console.log(ress);
@@ -112,25 +114,26 @@ lmao().then(async (res) => {
 
     function Userss({ mode }) {
 
-        function res(modee) {
+        function resss(modee) {
+
             return {
                 borderRadius: "4px 4px 0 0",
-                borderTop: (modee == mode) ? "3px solid #ff99cc" : "",
-                borderBottom: (modee == mode) ? "1px solid #ffffff" : "1px solid #dddddd",
-                borderLeft: (modee == mode) ? "1px solid #dddddd" : "1px solid #ffffff",
-                borderRight: (modee == mode) ? "1px solid #dddddd" : "1px solid #ffffff",
+                borderTop: (modee == mode) ? "3px solid #ff99cc" : `1px solid ${themes.content}`,
+                borderBottom: (modee == mode) ? `1px solid ${themes.content}` : "1px solid #dddddd",
+                borderLeft: (modee == mode) ? "1px solid #dddddd" : `1px solid ${themes.content}`,
+                borderRight: (modee == mode) ? "1px solid #dddddd" : `1px solid ${themes.content}`,
             }
         }
 
         return (
-            <ul style={{ paddingLeft: "0px", backgroundColor: "white", borderBottom: "0px", display: "flex", margin: "0", height: "45px", float: "right", marginBottom: "-1px", flexWrap: "nowrap", alignItems: "flex-end" }}>
+            <ul style={{ paddingLeft: "0px", backgroundColor: `${themes.content}`, color: `${themes.font}`, borderBottom: "0px", display: "flex", margin: "0", height: "45px", float: "right", marginBottom: "-1px", flexWrap: "nowrap", alignItems: "flex-end" }}>
                 <li>
-                    <a id="users" href='/users' style={res("users")}>
+                    <a id="users" href='/users' style={resss("users")}>
                         User
                     </a>
                 </li>
                 <li>
-                    <a id="users" href='/groups' style={res("groups")}>
+                    <a id="users" href='/groups' style={resss("groups")}>
                         Groups
                     </a>
                 </li>
@@ -140,30 +143,31 @@ lmao().then(async (res) => {
 
     function Userr({ mode }) {
 
-        function res(modee) {
+        function resss(modee) {
+            // console.log(modee, ' ', mode)
             return {
                 borderRadius: "4px 4px 0 0",
-                borderTop: (modee == mode[2]) ? "3px solid #ff99cc" : "",
-                borderBottom: (modee == mode[2]) ? "1px solid #ffffff" : "1px solid #dddddd",
-                borderLeft: (modee == mode[2]) ? "1px solid #dddddd" : "1px solid #ffffff",
-                borderRight: (modee == mode[2]) ? "1px solid #dddddd" : "1px solid #ffffff",
+                borderTop: (modee == mode[2]) ? "3px solid #ff99cc" : `1px solid ${themes.content}`,
+                borderBottom: (modee == mode[2]) ? `1px solid ${themes.content}` : "1px solid #dddddd",
+                borderLeft: (modee == mode[2]) ? "1px solid #dddddd" : `1px solid ${themes.content}`,
+                borderRight: (modee == mode[2]) ? "1px solid #dddddd" : `1px solid ${themes.content}`,
             }
         }
 
         return (
-            <ul style={{ paddingLeft: "0px", backgroundColor: "white", borderBottom: "0px", display: "flex", margin: "0", height: "45px", float: "right", marginBottom: "-1px", flexWrap: "nowrap", alignItems: "flex-end" }}>
+            <ul style={{ paddingLeft: "0px", backgroundColor: `${themes.content}`, color: `${themes.font}`, borderBottom: "0px", display: "flex", margin: "0", height: "45px", float: "right", marginBottom: "-1px", flexWrap: "nowrap", alignItems: "flex-end" }}>
                 <li>
-                    <a id="users" href={`/user/${mode[1]}`} style={res(undefined)}>
+                    <a id="users" href={`/user/${mode[1]}`} style={resss(undefined)}>
                         About
                     </a>
                 </li>
                 <li>
-                    <a id="users" href={`/user/${mode[1]}/statistics`} style={res("statistics")}>
+                    <a id="users" href={`/user/${mode[1]}/statistics`} style={resss("statistics")}>
                         Statistics
                     </a>
                 </li>
                 <li>
-                    <a id="users" href={`/user/${mode[1]}/blogs`} style={res("blogs")}>
+                    <a id="users" href={`/user/${mode[1]}/blogs`} style={resss("blogs")}>
                         Blogs
                     </a>
                 </li>
@@ -172,7 +176,7 @@ lmao().then(async (res) => {
                     (cookies.user == mode[1]) ?
                         (
                             <li>
-                                <a id="users" href={`/user/${mode[1]}/edit_profile`} style={res("edit_profile")}>
+                                <a id="users" href={`/user/${mode[1]}/edit_profile`} style={resss("edit_profile")}>
                                     Edit profile
                                 </a>
                             </li>
@@ -207,7 +211,7 @@ lmao().then(async (res) => {
                     if (temp == "user") {
                         const temp = createRoot(document.getElementById("title"));
                         temp.render(
-                            <a className='font-bold' style={{ color: get_rank_color(res.rank, res.role) }}>
+                            <a className='font-bold' style={{ color: get_rank_color(res.rank, res.role, themes.font) }}>
                                 {
                                     (res.username) ? res.username : ""
                                 }
@@ -221,6 +225,7 @@ lmao().then(async (res) => {
         }
 
 
+
         return (
             <>
                 <br style={{ paddingBottom: "10px" }}>
@@ -228,7 +233,7 @@ lmao().then(async (res) => {
                 <div
                     className='tabs'
                     style={{
-                        borderBottom: "1px  solid #3b3b3b3b",
+                        borderBottom: `1px  solid ${themes.font}`,
                         display: "flex",
                         margin: "0 0 8px",
                         width: "100%",
@@ -264,12 +269,23 @@ lmao().then(async (res) => {
     }
 
     // console.log(url.split("/")[3])
+    // const lmao = new CSSStyleDeclaration();
+    // lmao.backgroundColor = themes.background;
+    // console.log(lmao.backgroundColor)
+    // document.getElementById("root").style = {
+    //     backgroundColor : 
+    // }
 
+    // document.body.style.backgroundColor = themes.content
+    // console.log(document.body)
+    // console.log(res)
+    // console.log(res.themes.mode)
+    // console.log(themes.content)
     root.render(
         <StrictMode>
             {/* <MyComponent /> */}
             <Navigator mode={(urll[0] == "admin") ? "admin" : "normal"} loggedin={(cookies.user) ? true : false} user={res} />
-            <div id='page-container'>
+            <div id='page-container' style={{ backgroundColor: themes.content, color: themes.font }}>
                 <noscript>
                     <div id="noscript">This site works best with JavaScript enabled.</div>
                 </noscript>
