@@ -315,19 +315,35 @@ lmao().then(async (res) => {
                             VNOJ
                         </a>
                         {" using React.js | "}
-                        <a href="/user/nekoteam">
-                            nekoteam
+                        <a href="/user/kuumoneko">
+                            kuumoneko
                         </a>
                     </span>
                 </footer>
             </div >
-
+            {/* <script>
+                {
+                    // let lmao = ;
+                    console.log(document.getElementsByClassName("submit"))
+                    
+                }
+            </script>
+            <script>
+                {
+                    console.log(document.getElementsByClassName("submit").item(0))
+                }
+            </script> */}
         </StrictMode >
     );
+
+
+
 
     // console.log("lmaoo")
 })
 
+
+// const all_language_code = ["C++03", "C++11", "C++14", "C++17", "C++20", "C++ (Themis)", "Python 3", "java", "javascript"];
 
 
 // setTimeout(async () => {
@@ -349,43 +365,48 @@ lmao().then(async (res) => {
 //                 points: item.points,
 //                 problems_count: item.problems_count,
 //                 rank: item.rank,
-//                 role: item.role || "User",
-//                 profie: undefined,
+//                 role: item.role,
 //                 profile: {
-//                     data: "",
-//                     html: "",
+//                     data: item.profile.data,
+//                     html: item.profile.html,
 //                 },
 //                 themes: {
-//                     color: "#ff9797",
-//                     mode: "light",
+//                     color: item.themes.color,
+//                     mode: item.themes.mode,
 //                 },
-//                 problems: [
-//                     //     {
-//                     //     name: "",
-//                     //     submissions: [
-//                     //         {
-//                     //             time: "",
-//                     //             status: "",
-//                     //             tests: [
-//                     //                 {
-//                     //                     language: "",
-//                     //                     user_code: "",
-//                     //                     user_output: "",
-//                     //                     input: "",
-//                     //                     output: ""
-//                     //                 }
-//                     //             ]
-//                     //         }
-//                     //     ]
-//                     // }
-//                 ],
-//                 blogs: [
-//                     // {
-//                     //     title: "",
-//                     //     time: "",
-//                     //     content: ""
-//                     // }
-//                 ]
+//                 language: {
+//                     languages: all_language_code,
+//                     default_language: "C++20",
+//                 },
+//                 problems: item.problems,
+//                 // [
+//                 //     {
+//                 //     name: "",
+//                 //     submissions: [
+//                 //         {
+//                 //             time: "",
+//                 //             status: "",
+//                 //             tests: [
+//                 //                 {
+//                 //                     language: "",
+//                 //                     user_code: "",
+//                 //                     user_output: "",
+//                 //                     input: "",
+//                 //                     output: ""
+//                 //                 }
+//                 //             ]
+//                 //         }
+//                 //     ]
+//                 // }
+//                 // ],
+//                 blogs: item.blogs,
+//                 //[
+//                 // {
+//                 //     title: "",
+//                 //     time: "",
+//                 //     content: ""
+//                 // }
+//                 //]
 //             }
 //         )
 //     })
@@ -394,4 +415,4 @@ lmao().then(async (res) => {
 //         await getdata("post", "users", res[item.username])
 //     }
 //     console.log("lmao")
-// }, 1000);
+// }, 100000);

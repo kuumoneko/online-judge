@@ -56,12 +56,12 @@ async function Pages(users, page, modee, search) {
     let temp = false;
     const res = (
         <StrictMode>
-            <button id="begin" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: `1px solid ${themes.content}`, width: "25px", height: "25px" }} disabled={(page == 1)}>
+            <button id="begin" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px" , marginRight:"5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(page == 1)}>
                 <a id="begin" onClick={handleClick}>
                     {"<<"}
                 </a>
             </button>
-            <button id="pre" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(page == 1)}>
+            <button id="pre" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px" , marginRight:"5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(page == 1)}>
                 <a id="pre" onClick={handleClick}>
                     {"<"}
                 </a>
@@ -76,7 +76,7 @@ async function Pages(users, page, modee, search) {
                         if (index < page + 2) {
                             // console.log(index + 1)
                             return (
-                                <button id={index + 1} onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: `1px solid ${themes.font}`, width: "25px", height: "25px", backgroundColor: color }} disabled={false}>
+                                <button id={index + 1} onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px" , marginRight:"5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px", backgroundColor: color }} disabled={false}>
                                     <a id={index + 1} onClick={handleClick}>
                                         {` ${index + 1} `}
                                     </a>
@@ -87,7 +87,7 @@ async function Pages(users, page, modee, search) {
                     else if (index < 2 || (index >= page - 3 && index <= page + 1)) {
                         // console.log(index + 1)
                         return (
-                            <button id={index + 1} onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: `1px solid ${themes.font}`, width: "25px", height: "25px", backgroundColor: color }} disabled={false}>
+                            <button id={index + 1} onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px" , marginRight:"5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px", backgroundColor: color }} disabled={false}>
                                 <a id={index + 1} onClick={handleClick}>
                                     {` ${index + 1} `}
                                 </a>
@@ -99,7 +99,7 @@ async function Pages(users, page, modee, search) {
                         temp = true
 
                         return (
-                            <button id={"..."} style={{ paddingLeft: "2px", paddingRight: "2px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={true}>
+                            <button id={"..."} style={{ paddingLeft: "2px", paddingRight: "2px" , marginRight:"5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={true}>
                                 <a id={"..."}>
                                     {`...`}
                                 </a>
@@ -112,7 +112,7 @@ async function Pages(users, page, modee, search) {
             }
             {
                 (page != users.length) && (
-                    <button id={"..."} style={{ paddingLeft: "2px", paddingRight: "2px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={true}>
+                    <button id={"..."} style={{ paddingLeft: "2px", paddingRight: "2px" , marginRight:"5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={true}>
                         <a id={"..."}>
                             {`...`}
                         </a>
@@ -120,12 +120,12 @@ async function Pages(users, page, modee, search) {
                 )
             }
 
-            <button id="next" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(page == users.length)}>
+            <button id="next" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px" , marginRight:"5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(page == users.length)}>
                 <a id="next" onClick={handleClick}>
                     {">"}
                 </a>
             </button>
-            <button id="end" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(page == users.length)}>
+            <button id="end" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px" , marginRight:"5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(page == users.length)}>
                 <a id="end" onClick={handleClick}>
                     {">>"}
                 </a>
@@ -274,7 +274,7 @@ async function test(users, page, modee, search) {
                                                                                         {group}
                                                                                     </a>
                                                                                 </em>
-                                                                                <em style={{ color: "black" }}>
+                                                                                <em style={{ color: themes.font }}>
                                                                                     {" | "}
                                                                                 </em>
                                                                             </>

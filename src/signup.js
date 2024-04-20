@@ -168,6 +168,8 @@ export function Singupform() {
         event.preventDefault(); // Prevent the default form submission behavior
         // Do something with the username, like sending it to a server
 
+        const all_language_code = ["C++03", "C++11", "C++14", "C++17", "C++20", "C++ (Themis)", "Python 3", "java", "javascript"];
+        const default_language = "C++20";
 
         const checking = {
             fname: (fullname != "") ? true : false,
@@ -188,7 +190,7 @@ export function Singupform() {
             setAllowed(true)
             setLoggedIn(true);
             const temp = JSON.parse(localStorage.getItem("users")) || {};
-            
+
 
             const user = {
                 fullname: fullname,
@@ -201,6 +203,10 @@ export function Singupform() {
                 problems_count: 0,
                 rank: "Newbie",
                 role: "User",
+                language: {
+                    languages: all_language_code,
+                    default_language: default_language,
+                },
                 profile: {
                     data: "",
                     html: "",

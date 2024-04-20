@@ -7,6 +7,8 @@ import Markdown from "react-markdown";
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
 import { color, get_rank_color, getdata, getGravatarURL, getrank } from "./ulti.js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 // import { CreateMarkdown } from "./ulti.js";
 
 function sanitizeHtml(html) {
@@ -26,13 +28,39 @@ function Editprofile({ user }) {
     const [lines, setlines] = useState((user.profile == undefined || user.profile.data == "") ? 1 : user.profile.data.split("\n").length);
     const [data, setdata] = useState((user.profile == undefined || user.profile.data == "") ? `Hello, I'm ${user.fullname}` : user.profile.data);
     const [html, sethtml] = useState((user.profile == undefined || user.profile.data == "") ? `Hello, I'm ${user.fullname}` : user.profile.html);
+    const [themes, setthemes] = useState(user.themes.mode)
 
-    const contentRef = useRef(null);
+    const [default_language, setdefault_language] = useState(user.language.default_language)
 
-    const temp = []
-    for (let i = 1; i <= lines; i++) {
-        temp.push(i)
+    const languages = [
+        "C++03",
+        "C++11",
+        "C++14",
+        "C++17",
+        "C++20",
+        "C++ (Themis)",
+        "Python 3",
+        "java",
+        "javascript"
+    ];
+
+    const all_language_code = {
+        "C++03": false,
+        "C++11": false,
+        "C++14": false,
+        "C++17": false,
+        "C++20": false,
+        "C++ (Themis)": false,
+        "Python 3": false,
+        "java": false,
+        "javascript": false,
     }
+    user.language.languages.forEach((item) => {
+        all_language_code[item] = true
+    })
+
+    // console.log(all_language_code)
+    const contentRef = useRef(null);
 
     const oninput = (e) => {
         e.preventDefault()
@@ -65,13 +93,21 @@ function Editprofile({ user }) {
             data: data,
             html: html
         };
+        res.themes.mode = themes;
 
         await getdata("post", "users", res)
+        window.location.reload();
     }
 
     const onChange = (e) => {
         setfullname(e.target.value)
     }
+
+    const onThemesClick = (e) => {
+        console.log(e.target.id)
+        setthemes(e.target.id)
+    }
+
 
 
     // console.log(color[JSON.parse(localStorage.getItem("user")).themes.mode].font)
@@ -80,17 +116,75 @@ function Editprofile({ user }) {
             <div>
                 <form>
                     <div style={{ paddingBottom: "10px", width: "100%", borderBottom: "1px solid #ccc" }}>
-                        <span>
-                            {"Full name:   "}
-                        </span>
-                        <input
-                            type="text"
-                            placeholder="Full name"
-                            onChange={onChange}
-                            value={fullname}
-                        >
-                        </input>
+                        <table>
+
+                            <tr>
+                                <td>
+                                    Full name:
+                                </td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        placeholder="Full name"
+                                        onChange={onChange}
+                                        value={fullname}
+                                        style={{ background: color[JSON.parse(localStorage.getItem("user")).themes.mode].background }}
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Themes:
+                                </td>
+                                <td>
+                                    <span style={{ boxSizing: "border-box" }}>
+                                        <ul>
+                                            <tr onClick={onThemesClick}>
+                                                <input type="radio" name="themes" checked={themes == "dark"} id="dark" />
+                                                <label style={{ paddingRight: "10px" }}>
+                                                    <a id="dark">
+                                                        Dark
+                                                    </a>
+                                                </label>
+
+                                                <input type="radio" name="themes" checked={themes == "light"} id="light" />
+                                                <label >
+                                                    <a id="light">
+                                                        Light
+                                                    </a>
+                                                </label>
+                                            </tr>
+                                        </ul>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr >
+                                <td>
+                                    languages:
+                                </td>
+                                <td style={{ width: "1000px" }}>
+                                    <span>
+                                        <ul>
+                                            {
+                                                languages.map((item) => {
+                                                    return (
+                                                        <>
+                                                            <input type="checkbox" checked={all_language_code[item]}>
+                                                            </input>
+                                                            <label id={item} style={{ paddingRight: "10px" }}  >
+                                                                {item}
+                                                            </label>
+                                                        </>
+                                                    )
+                                                })
+                                            }
+                                        </ul>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
+
                     <div>
                         <span>
                             Self-description:
@@ -99,13 +193,17 @@ function Editprofile({ user }) {
                         <div>
 
                             <button onClick={onClick} id="editor" style={{ padding: "3px 3px 3px 3px" }}>
-                                <a onClick={onClick} id="editor">
+
+                                <FontAwesomeIcon icon={faPenToSquare} />
+
+                                <a onClick={onClick} id="editor" style={{ paddingLeft: "5px" }}>
                                     Editor
                                 </a>
                             </button>
 
-                            <button onClick={onClick} id="preview" style={{ padding: "3px 3px 3px 3px" }}>
-                                <a onClick={onClick} id="preview">
+                            <button onClick={onClick} id="preview" style={{ padding: "3px 3px 3px 10px" }}>
+                                <FontAwesomeIcon icon={faEye} />
+                                <a onClick={onClick} id="preview" style={{ paddingLeft: "5px" }}>
                                     Preview
                                 </a>
                             </button>
@@ -115,28 +213,48 @@ function Editprofile({ user }) {
                             {
                                 (mode == "editor") ? (
                                     <>
-                                        <div id="row" style={{ width: "3%", height: "100%", borderRight: "2px solid", backgroundColor: "#e8e8e8", marginTop: "5px", color: color[JSON.parse(localStorage.getItem("user")).themes.mode].background }}>
-                                            {temp.map((item, index) => (
-                                                <a style={{ display: "flex", justifyContent: "space-around", paddingTop: "0px" }}>
-                                                    {item}
-                                                </a>
+                                        <div id="row" style={
+                                            {
+                                                overflowY: "auto",
+                                                overflow: "hidden",
+                                                // top: "0",
+                                                // position: "sticky",
+                                                width: "3%",
+                                                height: "100%",
+                                                borderRight: "2px solid",
+                                                backgroundColor: "#e8e8e8",
+                                                marginTop: "5px",
+                                                color: color[JSON.parse(localStorage.getItem("user")).themes.mode].background
+                                            }}>
+                                            {Array.from({ length: lines }).map((item, index) => (
+                                                <div style={{ display: "flex", justifyContent: "space-around", paddingTop: "0px" }}>
+                                                    {index + 1}
+                                                </div>
                                             ))}
                                         </div>
-                                        <div id="input" style={{ marginTop: "5px", marginLeft: "1px" }}>
-                                            <div
-                                                id="editorr"
-                                                contentEditable="true"
-                                                ref={contentRef}
-                                                style={{ height: "350px", width: "1400px" }}
-                                                onInput={oninput}
-                                            >
-                                            </div>
+                                        <div
+                                            id="editorr"
+                                            contentEditable="true"
+                                            ref={contentRef}
+                                            style={{
+                                                marginTop: "5px",
+                                                marginLeft: "1px",
+                                                height: "350px",
+                                                width: "1400px",
+                                                overflowY: "auto",
+                                                flex: "1"
+                                            }}
+                                            onInput={oninput}
+                                            onScroll={(e) => {
+                                                document.getElementById("row").scrollTop = e.target.scrollTop
+                                            }}
+                                        >
                                         </div>
                                     </>
                                 ) : (
                                     <div style={{
                                         height: "350px",
-                                        width: "1400px",
+                                        width: "100%",
                                         marginTop: "5px",
 
                                         padding: "15px 15px 15px 15px",
@@ -192,7 +310,8 @@ function Profile({ users, user }) {
             <div >
                 <div style={{ float: "left", height: "400px", width: "250px", border: "1px 1px 1px 1px" }}>
                     <div >
-                        <img src={getGravatarURL(user.email, 200)} />
+                        <img src={getGravatarURL(user.email, 200)} style={{ borderRadius: "100px" }} />
+
                         <br />
                         <h4 style={{ borderBottom: "0px" }}>
                             <a className="font-bold"> Email: </a>
@@ -265,7 +384,7 @@ function Profile({ users, user }) {
                             <>
                                 <div>
                                     <h1 className="font-bold">
-                                        FROM: 
+                                        FROM:
                                     </h1>
                                 </div>
                                 <br />

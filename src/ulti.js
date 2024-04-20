@@ -29,7 +29,7 @@ const rank_color = {
 /**
  * 
  */
-export function get_rank_color(points, role , themes) {
+export function get_rank_color(points, role, themes) {
     if (role == "administrator") {
         return themes;
     }
@@ -174,6 +174,7 @@ export function SortUser(users, mode, reverse = false, search) {
     )
     )
 
+    const themes = JSON.parse(localStorage.getItem("user")).themes.mode;
     const res = []
     let indexx = 1;
     users.forEach((item) => {
@@ -218,9 +219,11 @@ export function SortUser(users, mode, reverse = false, search) {
                     <a>
                         {
                             temp.map((item) => {
+                                console.log(item)
                                 if (item.toLowerCase() == search) {
+                                    
                                     return (
-                                        <a style={{ backgroundColor: "yellow" }}>
+                                        <a style={{ backgroundColor: "yellow"  }}>
                                             {item}
                                         </a>
                                     )
@@ -266,7 +269,7 @@ export function SortUser(users, mode, reverse = false, search) {
                             temp.map((item) => {
                                 if (item.toLowerCase() == search) {
                                     return (
-                                        <a style={{ backgroundColor: "#999900" }}>
+                                        <a style={{ backgroundColor: "yellow" }}>
                                             {item}
                                         </a>
                                     )
@@ -527,7 +530,7 @@ export const color = {
 //     users.sort((a, b) => (
 //         (a[mode] - b[mode]))
 //     )
-    
+
 //     console.log(users)
 
 //     // dùng tìm kiếm nhị phân ở đây để tìm kiếm vị trí của user
