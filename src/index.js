@@ -3,18 +3,15 @@ import React, { StrictMode, useEffect } from 'react';
 import { createRoot } from "react-dom/client";
 import "./index.css";
 
-import Navigator from "./navigator.js";
+import { Navigator } from "./navigator.js";
 import { Already, Singupform } from "./signup.js";
 import { Loginform } from "./login.js";
 import Cookies from 'js-cookie';
-import { color, cookie, get_rank_color, getdata, getGroup, geturl, insertGroup, insertUser, replaceAll } from './ulti.js';
+import { color, cookie, get_rank_color, getdata, geturl, replaceAll } from './ulti.js';
 import { Users } from './users.js';
 import { About } from './about.js';
 import { Admin } from './admin.js';
-import axios, { AxiosHeaders } from 'axios';
 import { User } from './user.js';
-// import { Editprofile } from './editprofile.js';
-// import { About } from './about';
 
 const root = createRoot(document.getElementById("root"));
 
@@ -23,7 +20,6 @@ if (!document.referrer && Cookies.get("remember") == "false") {
     Cookies.remove("user")
     Cookies.remove("remember")
 }
-
 const url = document.URL;
 
 // console.log(url.split("//")[1].split("/").slice(1))
@@ -93,7 +89,9 @@ lmao().then(async (res) => {
             )
         }
         else if (direct == "user") {
-            // console.log(ress)
+            if (url[1] == undefined) {
+                window.location.href = "/login"
+            }
             return (
                 <User url={url} users={ress} />
             )
@@ -268,23 +266,10 @@ lmao().then(async (res) => {
         )
     }
 
-    // console.log(url.split("/")[3])
-    // const lmao = new CSSStyleDeclaration();
-    // lmao.backgroundColor = themes.background;
-    // console.log(lmao.backgroundColor)
-    // document.getElementById("root").style = {
-    //     backgroundColor : 
-    // }
-
-    // document.body.style.backgroundColor = themes.content
-    // console.log(document.body)
-    // console.log(res)
-    // console.log(res.themes.mode)
-    // console.log(themes.content)
     root.render(
-        <StrictMode>
+        <>
             {/* <MyComponent /> */}
-            <Navigator mode={(urll[0] == "admin") ? "admin" : "normal"} loggedin={(cookies.user) ? true : false} user={res} />
+            <Navigator mode={(urll[0] == "admin") ? "admin" : "normal"} />
             <div id='page-container' style={{ backgroundColor: themes.content, color: themes.font }}>
                 <noscript>
                     <div id="noscript">This site works best with JavaScript enabled.</div>
@@ -321,29 +306,12 @@ lmao().then(async (res) => {
                     </span>
                 </footer>
             </div >
-            {/* <script>
-                {
-                    // let lmao = ;
-                    console.log(document.getElementsByClassName("submit"))
-                    
-                }
-            </script>
-            <script>
-                {
-                    console.log(document.getElementsByClassName("submit").item(0))
-                }
-            </script> */}
-        </StrictMode >
+        </>
     );
-
-
-
-
-    // console.log("lmaoo")
 })
 
 
-// const all_language_code = ["C++03", "C++11", "C++14", "C++17", "C++20", "C++ (Themis)", "Python 3", "java", "javascript"];
+// const all_language_code = ["C++03", "C++11", "C++14 (C++ Themis)", "C++17", "C++20", "Python 3", "java", "javascript"];
 
 
 // setTimeout(async () => {
@@ -415,4 +383,4 @@ lmao().then(async (res) => {
 //         await getdata("post", "users", res[item.username])
 //     }
 //     console.log("lmao")
-// }, 100000);
+// }, 100);

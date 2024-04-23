@@ -1,8 +1,6 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { color, ConvertToPage, get_rank_color, getdata, SortGroup, SortUser } from "./ulti.js";
-import axios from "axios";
-
+import { color, ConvertToPage, get_rank_color, getdata, getGroup, SortGroup, SortUser } from "./ulti.js";
 
 /**
  * 
@@ -414,7 +412,8 @@ async function render_users(modee, curr_page, search) {
 
     }
     else {
-        const groups = SortGroup(res, mode.mode, mode.reverse, search || "")
+        // console.log(res)
+        const groups = SortGroup(getGroup(res), mode.mode, mode.reverse, search || "")
 
         if (groups.length == 0) {
             groups.push({

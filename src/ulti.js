@@ -5,16 +5,7 @@ import axios from "axios"
 import { sha256 } from "js-sha256"
 // import { string } from "yup"
 
-export const colortheme = {
-    light: {
-        background: "#000000",
-        text: "#ffffff",
-    },
-    dark: {
-        background: "#ffffff",
-        text: "#000000",
-    }
-}
+
 
 const rank_color = {
     "Newbie": "#808080",
@@ -221,9 +212,9 @@ export function SortUser(users, mode, reverse = false, search) {
                             temp.map((item) => {
                                 console.log(item)
                                 if (item.toLowerCase() == search) {
-                                    
+
                                     return (
-                                        <a style={{ backgroundColor: "yellow"  }}>
+                                        <a style={{ backgroundColor: "yellow" }}>
                                             {item}
                                         </a>
                                     )
@@ -397,14 +388,6 @@ export function ConvertToPage(list, size) {
     }, []);
 }
 
-// /**
-//  *
-//  * @param { { fullname: string, username: string, password: string, points: Number, problems_count: Number, group: [], rank: Number, role: string, contribute: number } } user
-//  */
-// export function UsersToString(user) {
-//     return `${user.username}`
-// }
-
 /**
  * 
  * @param { [{ fullname: string, username: string, password: string, points: Number, problems_count: Number, group: [], rank: Number, role: string, contribute: number }] } users 
@@ -495,12 +478,6 @@ export function geturl() {
     return url.split("//")[1].split("/").slice(1);
 }
 
-// export function CreateMarkdown(data , html) {
-//     // const strings = data.split("\n");
-//     console.log(data)
-//     return data;
-// }
-
 export async function getdata(method, mode, data) {
     const res = await axios.post("http://localhost:3001/api/data", { method: method, mode: mode, data: data }, {});
     if (res.status != 200) {
@@ -522,20 +499,6 @@ export const color = {
         content: "#ffffff"
     }
 }
-
-// export function
-
-
-// export function getrank(users, mode , user) {
-//     users.sort((a, b) => (
-//         (a[mode] - b[mode]))
-//     )
-
-//     console.log(users)
-
-//     // dùng tìm kiếm nhị phân ở đây để tìm kiếm vị trí của user
-//     return users
-// }
 
 export function getrank(users, mode, user) {
     users.sort((a, b) => {
@@ -589,3 +552,6 @@ export function getrank(users, mode, user) {
     }
     return mid;
 }
+
+
+export const all_language = ["C++03", "C++11", "C++14 (C++ Themis)", "C++17", "C++20", "Python 3", "java", "javascript"];

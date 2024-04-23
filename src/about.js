@@ -1,4 +1,5 @@
-// import { isHtmlElement } from "react-router-dom/dist/dom"
+import { color } from "./ulti.js";
+
 
 export function About() {
     const rank_color = [
@@ -56,7 +57,8 @@ export function About() {
         }
     }
 
-    const header = Object.keys(return_res)
+    const header = Object.keys(return_res);
+    const themes = color[JSON.parse(localStorage.getItem("user")).themes.mode] || color.light;
     return (
         <div>
             <p>
@@ -74,8 +76,8 @@ export function About() {
             <p>
                 {"Hệ thống được phát triển và duy trì bởi "}
                 <span className="rating rate-none admin">
-                    <a href="/user/nekoteam" className="font-bold" style={{ display: "inline-block", color: "black" }}>
-                        {" nekoteam"}
+                    <a href="/user/kuumoneko" className="font-bold" style={{ display: "inline-block", color: themes.font }}>
+                        {" kuumoneko"}
                     </a>
                 </span>
                 - tRẠI cỪ
@@ -99,7 +101,7 @@ export function About() {
 
                                         </td>
                                         <td>
-                                            <a style={{ display: "inline-block", color: "#000000", width: "1200px", paddingBottom: "15px" }}>
+                                            <a style={{ display: "inline-block", color: themes.font, width: "1200px", paddingBottom: "15px" }}>
                                                 {return_res[item].mess}
                                             </a>
                                         </td>
@@ -161,7 +163,7 @@ export function About() {
                 {
                     administrator.map((item, index) => (
                         <>
-                            <a className="font-bold" href={`/user/${item}`} style={{ color: "black" }}>
+                            <a className="font-bold" href={`/user/${item}`} style={{ color: themes.font }}>
                                 {` ${item}`}
                             </a>
                             {

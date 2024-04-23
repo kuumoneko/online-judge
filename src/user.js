@@ -1,15 +1,11 @@
-// import { width } from "@fortawesome/free-solid-svg-icons/fa0";
-import axios from "axios";
-import DOMPurify from "dompurify";
 import { useEffect, useRef, useState } from "react"
 import { createRoot } from "react-dom/client";
 import Markdown from "react-markdown";
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
-import { color, get_rank_color, getdata, getGravatarURL, getrank } from "./ulti.js";
+import { all_language, color, get_rank_color, getdata, getGravatarURL, getrank } from "./ulti.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-// import { CreateMarkdown } from "./ulti.js";
 
 function sanitizeHtml(html) {
     const domParser = new DOMParser();
@@ -23,41 +19,28 @@ function sanitizeHtml(html) {
 
 function Editprofile({ user }) {
     // console.log(user.profile.data.split("\n").length)
+    var temping = []
+    if (user.profile != undefined && user.profile.data != "") {
+        user.profile.data.split("\n").forEach((item, index) => {
+            if (item.length <= 303) {
+                temping.push({ line: index + 1, more: Math.floor(item.length / 215) })
+                return;
+            }
+
+            const length = item.length - 95;
+            temping.push({ line: index + 1, more: Math.floor(length / 208) + 1 })
+        })
+    }
     const [fullname, setfullname] = useState(user.fullname)
     const [mode, setmode] = useState("editor");
-    const [lines, setlines] = useState((user.profile == undefined || user.profile.data == "") ? 1 : user.profile.data.split("\n").length);
+    const [lines, setlines] = useState((user.profile == undefined || user.profile.data == "") ? [{ line: 1, more: 0 }] : temping);
     const [data, setdata] = useState((user.profile == undefined || user.profile.data == "") ? `Hello, I'm ${user.fullname}` : user.profile.data);
     const [html, sethtml] = useState((user.profile == undefined || user.profile.data == "") ? `Hello, I'm ${user.fullname}` : user.profile.html);
     const [themes, setthemes] = useState(user.themes.mode)
 
     const [default_language, setdefault_language] = useState(user.language.default_language)
 
-    const languages = [
-        "C++03",
-        "C++11",
-        "C++14",
-        "C++17",
-        "C++20",
-        "C++ (Themis)",
-        "Python 3",
-        "java",
-        "javascript"
-    ];
-
-    const all_language_code = {
-        "C++03": false,
-        "C++11": false,
-        "C++14": false,
-        "C++17": false,
-        "C++20": false,
-        "C++ (Themis)": false,
-        "Python 3": false,
-        "java": false,
-        "javascript": false,
-    }
-    user.language.languages.forEach((item) => {
-        all_language_code[item] = true
-    })
+    const [all_language_code, set_all] = useState(user.language.languages);
 
     // console.log(all_language_code)
     const contentRef = useRef(null);
@@ -67,7 +50,22 @@ function Editprofile({ user }) {
 
         setdata(e.target.innerText.replace(/\n\n/g, '\n'))
         sethtml(e.target.innerHTML)
-        setlines((e.target.innerText != "" && e.target.innerText != "\n") ? e.target.innerText.replace(/\n\n/g, '\n').split("\n").length : 1)
+
+        const temp = []
+
+        e.target.innerText.replace(/\n\n/g, '\n').split("\n").forEach((item, index) => {
+            // console.log(item.split("\n"))
+            if (item.length <= 303) {
+                temp.push({ line: index + 1, more: Math.floor(item.length / 215) })
+                return;
+            }
+            const length = item.length - 95;
+            temp.push({ line: index + 1, more: Math.floor(length / 208) + 1 })
+        })
+
+
+
+        setlines((e.target.innerText != "" && e.target.innerText != "\n") ? temp : [{ line: 1, more: 0 }])
     }
 
     useEffect(() => {
@@ -81,8 +79,6 @@ function Editprofile({ user }) {
     const onClick = (e) => {
         e.preventDefault();
         setmode(e.target.id)
-
-        // console.log(mode)
     }
 
     const saveClick = async (e) => {
@@ -94,6 +90,8 @@ function Editprofile({ user }) {
             html: html
         };
         res.themes.mode = themes;
+        res.language.languages = all_language_code;
+        res.language.default_language = default_language;
 
         await getdata("post", "users", res)
         window.location.reload();
@@ -104,13 +102,13 @@ function Editprofile({ user }) {
     }
 
     const onThemesClick = (e) => {
-        console.log(e.target.id)
         setthemes(e.target.id)
     }
 
+    const onDefLangClick = (e) => {
+        setdefault_language(e.target.id.split("_")[0])
+    }
 
-
-    // console.log(color[JSON.parse(localStorage.getItem("user")).themes.mode].font)
     return (
         <>
             <div>
@@ -158,23 +156,58 @@ function Editprofile({ user }) {
                                     </span>
                                 </td>
                             </tr>
-                            <tr >
+                            <tr>
                                 <td>
-                                    languages:
+                                    My languages:
                                 </td>
                                 <td style={{ width: "1000px" }}>
                                     <span>
-                                        <ul>
+                                        <ul style={{ display: "flex" }}>
                                             {
-                                                languages.map((item) => {
+                                                all_language.map((item) => {
+
                                                     return (
-                                                        <>
-                                                            <input type="checkbox" checked={all_language_code[item]}>
+                                                        <li>
+                                                            <input type="checkbox" id={item} value={item} checked={all_language_code.includes(item)} onChange={(e) => {
+                                                                const newValues = [...all_language_code];
+                                                                if (e.target.checked) {
+                                                                    newValues.push(e.target.value);
+                                                                } else {
+                                                                    const index = newValues.indexOf(e.target.value);
+                                                                    newValues.splice(index, 1);
+                                                                }
+                                                                set_all(newValues);
+                                                            }}>
                                                             </input>
-                                                            <label id={item} style={{ paddingRight: "10px" }}  >
+                                                            <label htmlFor={item} style={{ paddingRight: "5px" }}  >
                                                                 {item}
                                                             </label>
-                                                        </>
+                                                        </li>
+                                                    )
+                                                })
+                                            }
+                                        </ul>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Default language:
+                                </td>
+                                <td>
+                                    <span>
+                                        <ul style={{ display: "flex" }} onClick={onDefLangClick}>
+                                            {
+                                                all_language.map((item) => {
+
+                                                    return (
+                                                        <li>
+                                                            <input type="radio" id={`${item}_1`} checked={default_language == item} >
+                                                            </input>
+                                                            <label id={`${item}_1`} style={{ paddingRight: "5px" }}  >
+                                                                {item}
+                                                            </label>
+                                                        </li>
                                                     )
                                                 })
                                             }
@@ -216,6 +249,7 @@ function Editprofile({ user }) {
                                         <div id="row" style={
                                             {
                                                 overflowY: "auto",
+
                                                 overflow: "hidden",
                                                 // top: "0",
                                                 // position: "sticky",
@@ -226,8 +260,8 @@ function Editprofile({ user }) {
                                                 marginTop: "5px",
                                                 color: color[JSON.parse(localStorage.getItem("user")).themes.mode].background
                                             }}>
-                                            {Array.from({ length: lines }).map((item, index) => (
-                                                <div style={{ display: "flex", justifyContent: "space-around", paddingTop: "0px" }}>
+                                            {lines.map((item, index) => (
+                                                <div style={{ display: "flex", justifyContent: "space-around", paddingTop: "0px", paddingBottom: `${item.more * 20}px` }}>
                                                     {index + 1}
                                                 </div>
                                             ))}
@@ -242,6 +276,7 @@ function Editprofile({ user }) {
                                                 height: "350px",
                                                 width: "1400px",
                                                 overflowY: "auto",
+                                                overflowX: "auto",
                                                 flex: "1"
                                             }}
                                             onInput={oninput}
@@ -446,14 +481,7 @@ function Profile({ users, user }) {
 }
 
 export function User({ url, users }) {
-    // const lmaoo = []
-    // // lmaoo.reduce()
-    // console.log(typeof users)
-    // const userss = users.reduce((acc, username) => {
-    //     console.log(acc, username)
-
-    //     return { ...acc, [username]: username }
-    // }, {});
+    
 
     useEffect(() => {
         async function lmao() {

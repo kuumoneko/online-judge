@@ -1,221 +1,157 @@
 // @ts-nocheck
 import Cookies from "js-cookie";
-import { useEffect, useState } from "react"
-import { createRoot } from "react-dom/client";
-import { color, cookie, getdata, getGravatarURL } from "./ulti.js";
+import { useEffect, useState } from "react";
+import { color } from "./ulti.js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faBars,
+    faCode,
+    faFolder,
+    faHome,
+    faInfo,
+    faRightFromBracket,
+    faTerminal,
+    faUser,
+    faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 
-function Loggedined({ loggedin, user }) {
+export function Navigator({ mode }) {
+    const themes = color[JSON.parse(localStorage.getItem("user")).themes.mode];
+    const user = JSON.parse(localStorage.getItem("user"));
+    const [opened, setopen] = useState(false);
 
-    // console.log(user)
-    const [dropdowmVisible, setdropdowmVisible] = useState(false);
+    // console.log(color[user.themes.mode].font)
 
-    const handleMouseEnter = () => {
-        setdropdowmVisible(true);
-    };
+    useEffect(() => {
+        // console.log(opened)
 
-    const handleMouseLeave = () => {
-        setdropdowmVisible(false);
-    };
+        const nav_circle = document.getElementsByClassName("nav-circle")
 
-    const logout = () => {
-        Cookies.remove("user")
-        Cookies.remove("remember")
-        localStorage.clear()
-        document.location.reload()
+        for (let i = 0; i < nav_circle.length; i++) {
+            nav_circle[i].style.transform = (opened) ? `translate(${lmao.find(item => item.id == nav_circle[i].id).x}px, ${lmao.find(item => item.id == nav_circle[i].id).y}px)` : "";
+            nav_circle[i].style.left = (opened) ? "44.5%" : "50%";
+        }
+    }, [opened])
+
+    const nav = [
+        {
+            id: "Problems",
+            href: "/problems",
+            icon: faFolder,
+        },
+        {
+            id: "Submissions",
+            href: "/submissions",
+            icon: faTerminal,
+        },
+        {
+            id: "Users",
+            href: "/users",
+            icon: faUsers,
+        },
+        {
+            id: "Contests",
+            href: "/contests",
+            icon: faCode,
+        },
+        {
+            id: "About",
+            href: "/about",
+            icon: faInfo,
+        },
+        {
+            id: "Me",
+            href: (user.username == undefined || user.username == null) ? "/user" : `/user/${user.username}`,
+            icon: faUser
+        }
+    ];
+
+    if (user.username != undefined && user.username != null) {
+        nav.push({
+            id: "Log out",
+            href: "",
+            icon: faRightFromBracket
+        })
+
     }
+    // const circumference = 2 * Math.PI * radius;
+    const radius = 120;
+    const anglePerDiv = (Math.PI * 2) / nav.length / 2;
+    // console.log(anglePerDiv)
 
-    if (!loggedin) {
-        return (
-            <>
-                <li style={{ float: "right" }} >
-                    <a href="/login">
-                        Login
-                    </a>
-                </li>
-                <li style={{ float: "right", height: "44.43px" }}>
-                    <a style={{ WebkitTextFillColor: "#ccc", fontSize: "10px", paddingTop: "15px", display: "inline-block" }}>Or</a>
-                </li>
-                <li style={{ float: "right" }} >
-                    <a href="/signup">
-                        Sign up
-                    </a>
-                </li>
-            </>
-        )
-    }
+    const lmao = []
+    const divs = [];
+    nav.reverse().forEach((item, index) => {
+        const angle = index * anglePerDiv + Math.PI * 1 / 10 - ((nav.length == 7) ? 1 / 11 : 1 / 19);
+        // console.log(angle);
+        const xPos = radius + radius * Math.cos(angle) - 20;
+        const yPos = radius - radius * (1 - Math.sin(angle)) - 65;
+
+        // console.log(xPos, ' ', yPos)
+        lmao.push({ x: xPos, y: yPos, id: item.id })
+        divs.push(
+            <div
+                className="nav-circle"
+                id={item.id}
+                title={item.id}
+                style={{
+                    borderColor: color.theme,
+                    backgroundColor: color.theme,
+                    // transform: `translate(${xPos}px, ${yPos}px)`
+                }}
+                onClick={(e) => {
+                    // console.log(e.target.id)
+                    if (e.target.id == "logout") {
+                        Cookies.remove("user");
+                        Cookies.remove("remember");
+                        localStorage.clear();
+                    }
+
+                    window.location.href = item.href;
+                }}
+            >
+                <FontAwesomeIcon icon={item.icon} />
+            </div>
+        );
+    })
+
+
 
     return (
-        <li
-            className="dropdown"
-            style={{ float: "right", textTransform: "none" }}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            onClick={handleMouseEnter}
+        <div
+            className="navigator"
+            style={{ backgroundColor: themes.content }}
+            onMouseLeave={() => setopen(false)}
         >
-            <a href={`/user/${user.username}`} style={{
-                padding: "0px 0px 0px 10px",
-            }}>
-                <img src={getGravatarURL("", 24)}>
-                </img>
-            </a>
-            <a href={`/user/${user.username}`} style={{ display: "inline-block" }} >
-                Hello, <b className="italic">
-                    {user.username}
-                </b>
-            </a>
+            <div
+                className="nav-center"
+                title="Home"
+                style={{
+                    borderColor: color.theme,
+                    backgroundColor: color.theme,
+                    zIndex: "10"
+                }}
+                onClick={(e) => {
+                    if (opened)
+                        window.location.href = "/";
+
+                    setopen(true);
+
+                }}
+            >
+                <FontAwesomeIcon icon={(opened) ? faHome : faBars} />
+            </div>
+
             {
-                dropdowmVisible && (
-
+                divs.map((item) => (
                     <>
-
-                        <div className="dropdown-content" id="dropdown-content" style={{ marginLeft: "20px" }}>
-                            {
-                                (JSON.parse(localStorage.getItem("user")).role == "administrator") ?
-                                    (
-                                        <>
-                                            <a href="/admin">Admin</a>
-                                            <a href={`/user/${user.username}/edit_profile`}>Edit profile</a>
-                                            <a onClick={logout} href="/">Logout</a>
-                                        </>
-
-                                    ) : (
-                                        <>
-                                            <a href={`/user/${user.username}/edit_profile`}>Edit profile</a>
-                                            <a onClick={logout} href="/">Logout</a>
-                                        </>
-                                    )
-                            }
-
-                        </div>
+                        {
+                            item
+                        }
                     </>
-                )
+                ))
             }
-        </li >
-    )
+
+        </div>
+    );
 }
-
-export default function Navigator({ mode, loggedin, user }) {
-    
-    // useEffect(() => {
-    //     async function lmao() {
-    //         const res = await getdata("get", "users", username);
-    //     }
-
-    //     lmao();
-    // })
-
-    const [problems_visiable, setproblems_visiable] = useState(false);
-    // console.log(color[JSON.parse(localStorage.getItem("user")).themes.mode].background)
-    return (
-        <div id="nav" style={{ backgroundColor: `${color[JSON.parse(localStorage.getItem("user")).themes.mode].background}`, paddingTop: "20px", paddingLeft: "20px", position: "sticky" }}>
-            <ul style={{ borderBottom: `5px solid ${color.theme}` }}>
-                <li>
-                    <a style={{ color: "white" }} href="/">
-                        Home
-                    </a>
-                </li>
-
-                <li>
-                    <span className="nav-divider">
-                    </span>
-                </li>
-
-                {
-                    (mode == "normal") ? (
-                        <>
-
-                            <li>
-                                <a style={{ color: "white" }} href="/problems">
-                                    Problems
-                                </a>
-                            </li>
-                            <li>
-                                <a style={{ color: "white" }} href="/submissions">
-                                    Submissions
-                                </a>
-                            </li>
-                            <li>
-                                <a style={{ color: "white" }} href="/users">
-                                    Users
-                                </a>
-                            </li>
-                            <li>
-                                <a style={{ color: "white" }} href="/contests">
-                                    Contests
-                                </a>
-                            </li>
-                            <li>
-                                <a style={{ color: "white" }} href="/about">
-                                    About
-                                </a>
-                            </li>
-                        </>
-
-                    ) : (
-                        <>
-                            <li
-                                onMouseEnter={() => {
-                                    setproblems_visiable(true);
-                                }}
-                                onMouseLeave={() => {
-                                    setproblems_visiable(false)
-                                }}
-                            >
-                                <a href="/admin/problems">
-                                    Problems
-                                </a>
-                                {
-                                    problems_visiable && (
-                                        <div className="dropdown-content" id="dropdown-content" style={{ fontSize: "15px", textTransform: "none" }}>
-                                            <a href="/admin/problemgroups">
-                                                Problem groups
-                                            </a>
-                                            <a href="/admin/problemtypes">
-                                                Problem types
-                                            </a>
-                                            <a href="/admin/licenses">
-                                                Licenses
-                                            </a>
-                                        </div>
-                                    )
-                                }
-                            </li>
-                            <li>
-                                <a href="/admin/submissions">
-                                    Submissions
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/users">
-                                    Contests
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/contests">
-                                    Contests
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/organizations">
-                                    Organizations
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/blogs">
-                                    Blogs spot
-                                </a>
-                            </li>
-                        </>
-
-                    )
-                }
-
-
-            </ul>
-            <ul style={{ float: "right", paddingLeft: "2px", marginRight: "10px", borderBottom: `5px solid ${color.theme}` }}>
-                <Loggedined loggedin={loggedin} user={user} />
-            </ul>
-        </div >
-    )
-}
-

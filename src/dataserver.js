@@ -1,12 +1,17 @@
 import express from "express";
 import { read, readFileSync, writeFileSync } from "fs";
+import cookieparse from "cookie-parser";
 import cors from "cors"
 const app = express();
 const port = 3001
 
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true
+}));
 
 app.use(express.json());
+app.use(cookieparse());
 
 const temp = {
     fullname: "",
