@@ -469,6 +469,7 @@ table {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  transition: all 1s;
   /* padding: 50px; */
 }
 
@@ -489,3 +490,19 @@ table {
   transition: all 1s;
   /* margin: -50px; */
 }
+
+.flipper .login{
+transform: rotateY(180deg);
+}
+
+.flipper .sigup{
+transform: rotateY(0deg);
+}
+
+.blogs {
+  border: 1px solid;
+  border-radius: 10px;
+  padding-left: 5px;
+  margin-bottom: 15px;  
+}
+

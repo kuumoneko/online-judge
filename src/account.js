@@ -1,25 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { useForm } from "react-hook-form"
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+import React, { useState } from 'react';
+import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import Cookies from 'js-cookie';
-import { getdata } from './ulti.js';
+import { color_themes, getdata } from './ulti.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faEnvelope, faKey, faSignature, faUser, faVoicemail } from '@fortawesome/free-solid-svg-icons';
-
-
+import { faCaretLeft, faCaretRight, faCheck, faEnvelope, faKey, faSignature, faUser } from '@fortawesome/free-solid-svg-icons';
 function Login() {
-    // backend
     const [loggedIn, setLoggedIn] = useState({
-        username: true,
-        password: true
+        username: false,
+        password: false
     });
-
-    // information
     const [username, Setusername] = useState('');
     const [password, Setpassword] = useState('');
-    const [remember, Setremember] = useState(true)
-
+    const [remember, Setremember] = useState(true);
     const validationSchema = Yup.object().shape({
         password: Yup.string()
             .required('Password is required')
@@ -27,18 +30,12 @@ function Login() {
         confirmPassword: Yup.string()
             .required('Confirm Password is required')
             .oneOf([Yup.ref('password')], 'Passwords must match')
-
     });
     const formOptions = { resolver: yupResolver(validationSchema) };
-
-    // get functions to build form with useForm() hook
     const { register, formState } = useForm(formOptions);
     const { errors } = formState;
-
-
     const handleChange = (event) => {
-        console.log(event.target)
-        const name = event.target.name
+        const name = event.target.name;
         if (name == "uname") {
             Setusername(event.target.value);
         }
@@ -46,190 +43,91 @@ function Login() {
             Setpassword(event.target.value);
         }
         else if (name == "rmb") {
-            Setremember(event.target.checked)
+            Setremember(event.target.checked);
         }
-    }
-
-    // Function to handle form submission
-    const handleSubmit = async (event) => {
-        event.preventDefault(); // Prevent the default form submission behavior
-        // Do something with the username, like sending it to a server
-
-        // const temp = await axios.post("http://localhost:3001/api/data", { method: "get", mode: "users", data: username }, {})
-        const res = await getdata("get", "users", username)
-        // console.log(temp.data.data)
-
-        // const res = temp.data.data;
-
-
+    };
+    const handleSubmit = (event) => __awaiter(this, void 0, void 0, function* () {
+        event.preventDefault();
+        const res = yield getdata("get", "users", username);
         const name = (res != undefined) ? res.username : undefined;
         const pass = (res != undefined) ? res.password : undefined;
-
         if (name == undefined) {
             setLoggedIn({
                 username: false,
                 password: loggedIn.password
-            })
+            });
         }
         else if (pass != password) {
             setLoggedIn({
                 username: true,
                 password: false
-            })
+            });
         }
         else {
-            console.log("okay")
+            console.log("okay");
             setLoggedIn({
                 username: true,
                 password: true
-            })
+            });
             Cookies.set("user", username);
-            Cookies.set("remember", (remember) ? "true" : "false")
-            // const item = {
-            //     username: res.username,
-            //     role: res.role,
-            //     color: get_rank_color(res.rank, res.role),
-            //     fullname: res.fullname,
-            //     email: res.email,
-            //     group: res.group
-            // }
-            // localStorage.setItem("user", JSON.stringify({ username: res.username, role: res.role }))
-            window.location.href = "/"
+            Cookies.set("remember", (remember) ? "true" : "false");
+            window.location.href = "/";
         }
-    };
-
-    function Create_stm({ mode }) {
-        if (mode == "username" && loggedIn.username == false) {
-            return (
-                <div>
-                    <span>
-                        <a style={{ WebkitTextFillColor: "red" }}>
-                            Username does not exist
-                        </a>
-                    </span>
-                </div>
-            )
-        }
-        else if (mode == "password" && loggedIn.password == false) {
-            return (
-                <div>
-                    <span>
-                        <a style={{ WebkitTextFillColor: "red" }}>
-                            Wrong password, please try again
-                        </a>
-                    </span>
-                </div>
-            )
-        }
-    }
-
-    return (
-        <div className="container" style={{ display: "block", paddingTop: "5%" }}>
-            <form className='loginform' onChange={handleChange}>
-                <table style={{ display: "table" }}>
-                    <tbody>
-                        <tr>
-                            <th style={{ paddingRight: "5px" }}>
-                                <FontAwesomeIcon icon={faUser} />
-                            </th>
-                            <th>
-                                <input
-                                    style={{ width: "200px" }}
-                                    className="username"
-                                    type="text"
-                                    placeholder="Enter Username"
-                                    name="uname"
-                                    value={username} // Bind the value of the input field to the state
-                                    // onChange={handleUsernameChange} // Handle changes in the input field
-                                    required
-                                />
-                            </th>
-                        </tr>
-
-                        <tr>
-                            <th>
-                                <FontAwesomeIcon icon={faKey} />
-                            </th>
-                            <th>
-                                <input
-                                    style={{ width: "200px" }}
-                                    className="password"
-                                    type="password"{...register('password')}
-                                    placeholder="Enter Password"
-                                    name="psw"
-                                    value={password} // Bind the value of the input field to the state
-                                    // onChange={handlePasswordChange} // Handle changes in the input field
-                                    required
-                                />
-                            </th>
-                        </tr>
-                    </tbody>
-                </table>
-
-                {/* Button to submit the form */}
-                <hr id="stm" />
-                <hr id="more" />
-                <label style={{ display: "block" }}>
-                    <input type="checkbox" name="rmb" checked={remember} />
-                    <a id="rmb">
-                        remember me
-                    </a>
-                </label>
-
-                <button type="submit" className='submit' onClick={handleSubmit} style={{ float: "inline-end" }}>
-                    <a>
-                        Sign in
-                    </a>
-                </button>
-
-            </form>
-        </div>
-
-    );
+    });
+    return (React.createElement("div", { className: "container", style: { display: "block", paddingTop: "5%" } },
+        React.createElement("form", { className: 'loginform', onChange: (e) => {
+                const name = e.target.name;
+                if (name == "uname") {
+                    Setusername(e.target.value);
+                }
+                else if (name == "psw") {
+                    Setpassword(e.target.value);
+                }
+                else if (name == "rmb") {
+                    Setremember(e.target.checked);
+                }
+            } },
+            React.createElement("table", { style: { display: "table" } },
+                React.createElement("tbody", null,
+                    React.createElement("tr", null,
+                        React.createElement("th", { style: { paddingRight: "5px" } },
+                            React.createElement(FontAwesomeIcon, { icon: faUser })),
+                        React.createElement("th", null,
+                            React.createElement("input", { style: { width: "200px" }, className: "username", type: "text", placeholder: "Enter Username", name: "uname", value: username, required: true }))),
+                    React.createElement("tr", null,
+                        React.createElement("th", null,
+                            React.createElement(FontAwesomeIcon, { icon: faKey })),
+                        React.createElement("th", null,
+                            React.createElement("input", Object.assign({ style: { width: "200px" }, className: "password", type: "password" }, register('password'), { placeholder: "Enter Password", name: "psw", value: password, required: true })))))),
+            React.createElement("hr", { id: "stm" }),
+            React.createElement("hr", { id: "more" }),
+            React.createElement("label", { style: { display: "block" } },
+                React.createElement("input", { type: "checkbox", name: "rmb", checked: remember }),
+                React.createElement("a", { id: "rmb" }, "remember me")),
+            React.createElement("button", { type: "submit", className: 'submit', onClick: handleSubmit, style: { float: "inline-end" } },
+                React.createElement("a", null, "Sign in")))));
 }
-
-
-
 function Already() {
-    return (
-        <div className="container" style={{ display: "block" }}>
-            <form className='loginform'>
-                {/* Input field for the username */}
-                <a>
-                    Loged in bruh
-                </a>
-            </form>
-        </div>
-    )
+    return (React.createElement("div", { className: "container", style: { display: "block" } },
+        React.createElement("form", { className: 'loginform' },
+            React.createElement("a", null, "Loged in bruh"))));
 }
-
-
-
 function Singupform() {
-
-
-    // back-end
     const [loggedIn, setLoggedIn] = useState(false);
-    const [allowed, setAllowed] = useState("true");
-    const [pswsimilar, Setpswsimilar] = useState(true)
-    const [pswle, Setpswle] = useState(true)
-    const [fname, Setfname] = useState(true)
-    const [usralrd, Setusralrd] = useState(true)
-
-    // information
+    const [allowed, setAllowed] = useState(true);
+    const [pswsimilar, Setpswsimilar] = useState(true);
+    const [pswle, Setpswle] = useState(true);
+    const [fname, Setfname] = useState(true);
+    const [usralrd, Setusralrd] = useState(true);
     const [username, Setusername] = useState("");
     const [fullname, Setfullname] = useState("");
     const [password, Setpassword] = useState("");
     const [passwordagain, Setpasswordagain] = useState("");
     const [email, Setemail] = useState("");
-
-    const [remember, Setremember] = useState(true)
-
-    console.log("allowed ", allowed)
-
-    console.log("password >= 8:  ", pswle)
-    console.log("comfrim similar ", pswsimilar)
-
+    const [remember, Setremember] = useState(true);
+    console.log("allowed ", allowed);
+    console.log("password >= 8:  ", pswle);
+    console.log("comfrim similar ", pswsimilar);
     const validationSchema = Yup.object().shape({
         password: Yup.string()
             .required('Password is required')
@@ -237,142 +135,95 @@ function Singupform() {
         confirmPassword: Yup.string()
             .required('Confirm Password is required')
             .oneOf([Yup.ref('password')], 'Passwords must match')
-
     });
     const formOptions = { resolver: yupResolver(validationSchema) };
-
-    // get functions to build form with useForm() hook
     const { register, formState } = useForm(formOptions);
     const { errors } = formState;
-
-
-
-    function check_user({ username }) {
-        const temp = JSON.parse(localStorage.getItem("users")) || {};
-        console.log(temp[username])
-        if (temp[username] == undefined) {
-            return true;
-        }
-        else {
+    function check_user(username) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const temp = yield getdata("get", "users", "all");
+            console.log(temp[username]);
+            if (temp[username] == undefined || username.includes(" ")) {
+                return true;
+            }
             return false;
-        }
+        });
     }
-
     const handleChage = (event) => {
         const name = event.target.name;
         const value = event.target.value;
         if (name == "fname") {
-            Setfullname(value)
+            Setfullname(value);
         }
         else if (name == "uname") {
-            Setusername(value)
+            Setusername(value);
         }
         else if (name == "psw") {
-            Setpassword(value)
+            Setpassword(value);
         }
         else if (name == "pswa") {
-            Setpasswordagain(value)
+            Setpasswordagain(value);
         }
         else if (name == "mail") {
-            Setemail(value)
+            Setemail(value);
         }
         else if (name == "rmb") {
-            Setremember(event.target.checked)
+            Setremember(event.target.checked);
         }
-    }
-
+    };
     function CheckFullname() {
         if (fname == false) {
-            return (
-                <div>
-                    <span>
-                        <a style={{ WebkitTextFillColor: "red" }}>
-                            Fullname must be at least 1 character
-                        </a>
-                    </span>
-                </div>
-
-            )
+            return (React.createElement("div", null,
+                React.createElement("span", null,
+                    React.createElement("a", { style: { WebkitTextFillColor: "red" } }, "Fullname must be at least 1 character"))));
         }
+        return (React.createElement(React.Fragment, null));
     }
-
     function CheckAllowed() {
         if (!usralrd) {
-            return (
-                <div>
-                    <span>
-                        <a style={{ WebkitTextFillColor: "red" }}>
-                            {
-                                (username != "") ? "This username already exists" : "Username must be at least 1 character"
-                            }
-
-                        </a>
-                    </span>
-                </div>
-
-            )
+            return (React.createElement("div", null,
+                React.createElement("span", null,
+                    React.createElement("a", { style: { WebkitTextFillColor: "red" } }, (username == "") ? "Username must be at least 1 character" : ((username.includes(" ")) ? "Username must not have space" : "This username already exists")))));
         }
+        return (React.createElement(React.Fragment, null));
     }
-
     function CheckPsw() {
         if (!pswle) {
-            return (
-                <div>
-                    <span>
-                        <a style={{ WebkitTextFillColor: "red" }}>
-                            Password must be at least 8 characters
-                        </a>
-                    </span>
-                </div>
-
-            )
+            return (React.createElement("div", null,
+                React.createElement("span", null,
+                    React.createElement("a", { style: { WebkitTextFillColor: "red" } }, "Password must be at least 8 characters"))));
         }
+        return (React.createElement(React.Fragment, null));
     }
-
     function Checkpswsr() {
         if (!pswsimilar) {
-            return (
-                <div>
-                    <span>
-                        <a style={{ WebkitTextFillColor: "red" }}>
-                            Comfirm password must be similar to password
-                        </a>
-                    </span>
-                </div>
-
-            )
+            return (React.createElement("div", null,
+                React.createElement("span", null,
+                    React.createElement("a", { style: { WebkitTextFillColor: "red" } }, "Comfirm password must be similar to password"))));
         }
+        return (React.createElement(React.Fragment, null));
     }
-
-    // Function to handle form submission
-    const hanldeSubmitForm = async (event) => {
-        event.preventDefault(); // Prevent the default form submission behavior
-        // Do something with the username, like sending it to a server
-
+    const hanldeSubmitForm = (event) => __awaiter(this, void 0, void 0, function* () {
+        event.preventDefault();
         const all_language_code = ["C++03", "C++11", "C++14", "C++17", "C++20", "C++ (Themis)", "Python 3", "java", "javascript"];
         const default_language = "C++20";
-
         const checking = {
             fname: (fullname != "") ? true : false,
-            username_check: (check_user({ username: username })) ? true : false,
+            username_check: (yield check_user(username)) ? false : true,
             pswsimilar: (password === passwordagain) ? true : false,
-            pswle: (password.length >= 8)
-
+            pswle: (password.length >= 8),
+            res: true
         };
-
         checking.res = ((checking.username_check === true) && checking.pswle && checking.pswsimilar);
-        console.log(checking.username_check)
-        Setusralrd((checking.username_check == true) ? true : false)
-        Setfname((checking.fname == true) ? true : false)
-        Setpswle(checking.pswle)
-        Setpswsimilar(checking.pswsimilar)
-
+        console.log(checking.username_check);
+        Setusralrd((checking.username_check == true) ? true : false);
+        Setfname((checking.fname == true) ? true : false);
+        Setpswle(checking.pswle);
+        Setpswsimilar(checking.pswsimilar);
         if (checking.res) {
-            setAllowed(true)
+            setAllowed(true);
             setLoggedIn(true);
             const temp = JSON.parse(localStorage.getItem("users")) || {};
-
-
             const user = {
                 fullname: fullname,
                 username: username,
@@ -382,11 +233,15 @@ function Singupform() {
                 contribute: 0,
                 points: 0,
                 problems_count: 0,
-                rank: "Newbie",
+                rank: 0,
                 role: "User",
                 language: {
                     languages: all_language_code,
                     default_language: default_language,
+                },
+                themes: {
+                    color: "#ff9797",
+                    mode: "light"
                 },
                 profile: {
                     data: "",
@@ -394,153 +249,113 @@ function Singupform() {
                 },
                 problems: [],
                 blogs: []
-            }
-
-            // await axios.post("http://localhost:3001/api/data", { method: "post", mode: "users", data: user }, {})
-
-            await getdata("post", "users", user)
+            };
+            yield getdata("post", "users", user);
             Cookies.set("user", username);
             Cookies.set("remember", (remember) ? "true" : "false");
-            // localStorage.setItem("user", JSON.stringify({ username: username, role: "User" }))
             window.location.href = "/";
         }
-    };
-
-    return (
-        <>
-            <div className="container" style={{ display: "block", position: "relative" }}>
-                <form className='loginform' onChange={handleChage}>
-                    <a style={{ display: "flex", justifyContent: "space-around" }}>
-                        Signup
-                    </a>
-                    <table>
-                        {/* Input field for the full name */}
-                        <tr>
-                            <th>
-                                <FontAwesomeIcon icon={faSignature} style={{ display: "flex", }} />
-                            </th>
-                            <th>
-                                <input className="fullname"
-                                    type="text"
-                                    placeholder="Enter Fullname"
-                                    name="fname"
-                                    required />
-
-                                {/* </input> */}
-                            </th>
-                        </tr>
-                        <tr>
-                            <th />
-                            <th>
-                                <CheckFullname />
-                            </th>
-                        </tr>
-
-                        {/* Input field for the username */}
-                        <tr>
-                            <th>
-                                <FontAwesomeIcon icon={faUser} />
-                            </th>
-                            <th>
-                                <input
-                                    className="username"
-                                    type="text"
-                                    placeholder="Enter Username"
-                                    name="uname"
-                                    required />
-                            </th>
-                        </tr>
-                        <tr>
-                            <th />
-                            <th>
-                                <CheckAllowed />
-                            </th>
-                        </tr>
-
-                        {/* Input field for the email */}
-                        <tr>
-                            <th>
-                                <FontAwesomeIcon icon={faEnvelope} />
-                            </th>
-                            <th>
-                                <input
-                                    className="email"
-                                    type="text"
-                                    placeholder="Enter Email"
-                                    name="mail"
-                                    required
-                                />
-                            </th>
-                        </tr>
-
-                        {/* Input field for the password */}
-                        <tr>
-                            <th>
-                                <FontAwesomeIcon icon={faKey} />
-                            </th>
-                            <th>
-                                <input
-                                    className="password"
-                                    type="password" {...register('password')}
-                                    placeholder="Enter password"
-                                    name="psw"
-                                    required />
-
-                            </th>
-                        </tr>
-                        <tr>
-                            <th />
-                            <th>
-                                <CheckPsw />
-                            </th>
-                        </tr>
-
-                        {/* Input field for the password again */}
-                        <tr>
-                            <th>
-                                <FontAwesomeIcon icon={faCheck} />
-                            </th>
-                            <th>
-                                <input
-                                    className="apassword"
-                                    type="password" {...register('confirmPassword')}
-                                    placeholder="Enter Password again"
-                                    name="pswa"
-                                    required />
-                            </th>
-                        </tr>
-                        <tr>
-                            <th />
-                            <th>
-                                <Checkpswsr />
-                            </th>
-                        </tr>
-
-                    </table>
-                    <hr id='stm' />
-                    <hr id='more' />
-                    <label style={{ display: "block" }}>
-                        <input type="checkbox" name="rmb" checked={remember} />
-                        <a id="rmb">
-                            remember me
-                        </a>
-                    </label>
-                    <button type="submit" className='submit' onClick={hanldeSubmitForm} style={{ float: "inline-end" }}>
-                        <a>
-                            Sign up
-                        </a>
-                    </button>
-                </form>
-            </div>
-
-        </>
-    )
+    });
+    return (React.createElement(React.Fragment, null,
+        React.createElement("div", { className: "container", style: { display: "block", position: "relative" } },
+            React.createElement("form", { className: 'loginform', onChange: (e) => {
+                    const name = e.target.name;
+                    const value = e.target.value;
+                    if (name == "fname") {
+                        Setfullname(value);
+                    }
+                    else if (name == "uname") {
+                        Setusername(value);
+                    }
+                    else if (name == "psw") {
+                        Setpassword(value);
+                    }
+                    else if (name == "pswa") {
+                        Setpasswordagain(value);
+                    }
+                    else if (name == "mail") {
+                        Setemail(value);
+                    }
+                    else if (name == "rmb") {
+                        Setremember(e.target.checked);
+                    }
+                } },
+                React.createElement("a", { style: { display: "flex", justifyContent: "space-around" } }, "Signup"),
+                React.createElement("table", null,
+                    React.createElement("tr", null,
+                        React.createElement("th", null,
+                            React.createElement(FontAwesomeIcon, { icon: faSignature, style: { display: "flex", } })),
+                        React.createElement("th", null,
+                            React.createElement("input", { className: "fullname", type: "text", placeholder: "Enter Fullname", name: "fname", required: true }))),
+                    React.createElement("tr", null,
+                        React.createElement("th", null),
+                        React.createElement("th", null,
+                            React.createElement(CheckFullname, null))),
+                    React.createElement("tr", null,
+                        React.createElement("th", null,
+                            React.createElement(FontAwesomeIcon, { icon: faUser })),
+                        React.createElement("th", null,
+                            React.createElement("input", { className: "username", type: "text", placeholder: "Enter Username", name: "uname", required: true }))),
+                    React.createElement("tr", null,
+                        React.createElement("th", null),
+                        React.createElement("th", null,
+                            React.createElement(CheckAllowed, null))),
+                    React.createElement("tr", null,
+                        React.createElement("th", null,
+                            React.createElement(FontAwesomeIcon, { icon: faEnvelope })),
+                        React.createElement("th", null,
+                            React.createElement("input", { className: "email", type: "text", placeholder: "Enter Email", name: "mail", required: true }))),
+                    React.createElement("tr", null,
+                        React.createElement("th", null,
+                            React.createElement(FontAwesomeIcon, { icon: faKey })),
+                        React.createElement("th", null,
+                            React.createElement("input", Object.assign({ className: "password", type: "password" }, register('password'), { placeholder: "Enter password", name: "psw", required: true })))),
+                    React.createElement("tr", null,
+                        React.createElement("th", null),
+                        React.createElement("th", null,
+                            React.createElement(CheckPsw, null))),
+                    React.createElement("tr", null,
+                        React.createElement("th", null,
+                            React.createElement(FontAwesomeIcon, { icon: faCheck })),
+                        React.createElement("th", null,
+                            React.createElement("input", Object.assign({ className: "apassword", type: "password" }, register('confirmPassword'), { placeholder: "Enter Password again", name: "pswa", required: true })))),
+                    React.createElement("tr", null,
+                        React.createElement("th", null),
+                        React.createElement("th", null,
+                            React.createElement(Checkpswsr, null)))),
+                React.createElement("hr", { id: 'stm' }),
+                React.createElement("hr", { id: 'more' }),
+                React.createElement("label", { style: { display: "block" } },
+                    React.createElement("input", { type: "checkbox", name: "rmb", checked: remember }),
+                    React.createElement("a", { id: "rmb" }, "remember me")),
+                React.createElement("button", { type: "submit", className: 'submit', onClick: hanldeSubmitForm, style: { float: "inline-end" } },
+                    React.createElement("a", null, "Sign up"))))));
 }
-
-
-// gộp log in với sign up :V
 export function Userring() {
-
+    const [mode, setmode] = useState("login");
+    return (React.createElement("div", { className: 'container', style: { display: "flex", justifyContent: "center", alignItems: "center" } },
+        React.createElement("form", { className: 'loginform', style: { display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" } },
+            React.createElement("span", null,
+                React.createElement("a", null, "Login"),
+                " Or ",
+                React.createElement("a", null, "Sign up")),
+            React.createElement("br", null),
+            React.createElement("button", { style: {
+                    height: "15px", width: "30px", borderRadius: "50px", border: "1px solid black", position: "relative"
+                }, onClick: (e) => {
+                    e.preventDefault();
+                    setmode((mode == "login") ? "signup" : "login");
+                } },
+                React.createElement("div", { style: {
+                        height: "15px", width: "15px", borderRadius: "50px",
+                        display: "flex", justifyContent: "center", alignItems: "center",
+                        position: "absolute",
+                        transform: (mode == "login") ? "translate(-1.5px, -7.5px)" : "translate(14px, -7.5px)",
+                        transition: "all 1s ease-in-out",
+                        backgroundColor: color_themes
+                    } },
+                    React.createElement(FontAwesomeIcon, { icon: (mode == "login") ? faCaretRight : faCaretLeft }))),
+            React.createElement("br", null),
+            React.createElement("div", { className: `flipper ${mode}`, style: { transformStyle: "preserve-3d", transition: "all 1s" } }, mode == "login" ? React.createElement(Login, null) : React.createElement(Singupform, null)))));
 }
-
-
+//# sourceMappingURL=account.js.map
