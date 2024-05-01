@@ -20,7 +20,6 @@ import { User_role } from "./classes/enum.js";
 
 export function Navigator({ mode }) {
 
-    // console.log(JSON.parse(localStorage.getItem("user")).themes.mode)
     const themes = color[JSON.parse(localStorage.getItem("user")).themes.mode];
     const user = JSON.parse(localStorage.getItem("user"));
     const [opened, setopen] = useState(false);
@@ -29,19 +28,32 @@ export function Navigator({ mode }) {
     useEffect(() => {
         // console.log(opened)
 
-        const nav_circle = document.getElementsByClassName("nav-circle")
+        const nav_circle: HTMLElement[] = document.getElementsByClassName("nav-circle")
+        console.log(nav_circle)
 
-        for (let i = 0; i < nav_circle.length; i++) {
-            nav_circle[i].style.transform = (opened) ? `translate(${lmao.find(item => item.id == nav_circle[i].id).x}px, ${lmao.find(item => item.id == nav_circle[i].id).y}px)` : "";
-            nav_circle[i].style.left = (opened) ? "44.5%" : "50%";
+        if (opened) {
+            for (let i = 0; i < nav_circle.length; i++) {
+                // console.log(nav_circle[i].attributes[1].value)
+                nav_circle[i].style.rotate = (nav_circle[i].attributes[1].value == "right") ? "-90deg" : "90deg";
+            }
         }
+        else {
+            for (let i = 0; i < nav_circle.length; i++) {
+                nav_circle[i].style.rotate = "0deg";
+            }
+        }
+
     }, [opened])
 
 
     let nav;
 
+    let left_nav = [],
+        right_nav = [];
+
+
     if (mode == "admin") {
-        nav = [
+        left_nav = [
             {
                 id: "Problems",
                 href: "/admin/problems",
@@ -62,20 +74,51 @@ export function Navigator({ mode }) {
                 href: "/admin/contests",
                 icon: faCode,
             },
-            // {
-            //     id: "About",
-            //     href: "/about",
-            //     icon: faInfo,
-            // },
+        ];
+        right_nav = [
+            {
+                id: "About",
+                href: "/about",
+                icon: faInfo,
+            },
             {
                 id: "Me",
                 href: (user.username == undefined || user.username == null) ? "/user" : `/user/${user.username}`,
                 icon: faUser
             }
         ];
+
+        // nav = [
+        //     {
+        //         id: "Problems",
+        //         href: "/admin/problems",
+        //         icon: faFolder,
+        //     },
+        //     {
+        //         id: "Groups",
+        //         href: "/admin/groups",
+        //         icon: faUserGroup,
+        //     },
+        //     {
+        //         id: "Users",
+        //         href: "/admin/users",
+        //         icon: faUsers,
+        //     },
+        //     {
+        //         id: "Contests",
+        //         href: "/admin/contests",
+        //         icon: faCode,
+        //     },
+        //     {
+        //         id: "Me",
+        //         href: (user.username == undefined || user.username == null) ? "/user" : `/user/${user.username}`,
+        //         icon: faUser
+        //     }
+        // ];
     }
     else if (mode == "normal") {
-        nav = [
+
+        left_nav = [
             {
                 id: "Problems",
                 href: "/problems",
@@ -96,6 +139,9 @@ export function Navigator({ mode }) {
                 href: "/contests",
                 icon: faCode,
             },
+        ];
+
+        right_nav = [
             {
                 id: "About",
                 href: "/about",
@@ -107,41 +153,73 @@ export function Navigator({ mode }) {
                 icon: faUser
             }
         ];
+
+
+        // nav = [
+        //     {
+        //         id: "Problems",
+        //         href: "/problems",
+        //         icon: faFolder,
+        //     },
+        //     {
+        //         id: "Submissions",
+        //         href: "/submissions",
+        //         icon: faTerminal,
+        //     },
+        //     {
+        //         id: "Users",
+        //         href: "/users",
+        //         icon: faUsers,
+        //     },
+        //     {
+        //         id: "Contests",
+        //         href: "/contests",
+        //         icon: faCode,
+        //     },
+        //     {
+        //         id: "About",
+        //         href: "/about",
+        //         icon: faInfo,
+        //     },
+        //     {
+        //         id: "Me",
+        //         href: (user.username == undefined || user.username == null) ? "/user" : `/user/${user.username}`,
+        //         icon: faUser
+        //     }
+        // ];
     }
 
     if (user.username != undefined && user.username != null) {
-        nav.push({
+        right_nav.push({
             id: "logout",
             href: "/",
             icon: faRightFromBracket
         })
     }
     // const circumference = 2 * Math.PI * radius;
-    const radius = 120;
-    const anglePerDiv = (Math.PI * 2) / nav.length / 2;
-    // console.log(anglePerDiv)
+    // const radius = 120;
+    // const anglePerDiv = (Math.PI * 2) / nav.length / 2;
+    // // console.log(anglePerDiv)
 
-    const lmao = []
+    // const lmao = []
     const divs = [];
-    nav.reverse().forEach((item, index) => {
-        const angle = index * anglePerDiv + Math.PI * 1 / 10 - ((nav.length == 7) ? 1 / 11 : 1 / 19);
-        // console.log(angle);
-        const xPos = radius + radius * Math.cos(angle) - 20;
-        const yPos = radius - radius * (1 - Math.sin(angle)) - 65;
 
-        // console.log(xPos, ' ', yPos)
-        lmao.push({ x: xPos, y: yPos, id: item.id })
+    left_nav.reverse().forEach((item, index) => {
 
-        // console.log(themes)
+        const location = `translate(-50% , ${index * 150 + 450}%)`;
+
         divs.push(
             <div
                 className="nav-circle"
+                name="left"
                 id={item.id}
                 title={item.id}
                 style={{
                     borderColor: color_themes,
                     backgroundColor: color_themes,
-                    // transform: `translate(${xPos}px, ${yPos}px)`
+                    zIndex: "0",
+                    transform: location,
+                    // rotate: "90deg"
                 }}
                 onClick={(e) => {
                     // console.log(e.target.id)
@@ -149,16 +227,104 @@ export function Navigator({ mode }) {
                         Cookies.remove("user");
                         Cookies.remove("remember");
                         localStorage.clear();
-                        // document.location.reload();
+                        window.location.reload();
+                        return;
                     }
 
                     window.location.href = item.href;
                 }}
             >
-                <FontAwesomeIcon icon={item.icon} id={item.id} />
+                <FontAwesomeIcon icon={item.icon} id={item.id} style={{
+                    rotate: "270deg"
+                }} />
             </div>
         );
     })
+
+    right_nav.forEach((item, index) => {
+
+        const location = `translate(50% , ${index * 150 + 350}%)`;
+
+        divs.push(
+            <div
+                className="nav-circle"
+                name="right"
+                id={item.id}
+                title={item.id}
+                style={{
+                    borderColor: color_themes,
+                    backgroundColor: color_themes,
+                    zIndex: "0",
+                    transform: location,
+                    // rotate: "-90deg"
+                }}
+                onClick={(e) => {
+                    // console.log(e.target.id)
+                    if (e.target.id == "logout") {
+                        Cookies.remove("user");
+                        Cookies.remove("remember");
+                        localStorage.clear();
+                        window.location.reload();
+                        return;
+                    }
+
+                    window.location.href = item.href;
+                }}
+            >
+                <FontAwesomeIcon icon={item.icon} id={item.id} style={{
+                    rotate: "-270deg"
+                }} />
+            </div>
+        );
+    })
+
+    // nav.forEach((item, index) => {
+    //     // const angle = index * anglePerDiv + Math.PI * 1 / 10 - ((nav.length == 7) ? 1 / 11 : 1 / 19);
+    //     // // console.log(angle);
+    //     // const xPos = radius + radius * Math.cos(angle) - 20;
+    //     // const yPos = radius - radius * (1 - Math.sin(angle)) - 65;
+
+    //     // // console.log(xPos, ' ', yPos)
+    //     // lmao.push({ x: xPos, y: yPos, id: item.id })
+
+    //     // console.log(themes)
+
+    //     const location = `translate(${(index < nav.length / 2) ? "50" : "-50"}%, ${(index % Math.floor(nav.length / 2)) * 100 + 300}%)`
+
+    //     // console.log(location`
+
+    //     divs.push(
+    //         <div
+    //             className="nav-circle"
+    //             id={item.id}
+    //             title={item.id}
+    //             style={{
+    //                 borderColor: color_themes,
+    //                 backgroundColor: color_themes,
+    //                 zIndex: "0",
+    //                 transform: location,
+    //                 rotate: `${(index > nav.length / 2) ? "90deg" : "-90deg"}`
+    //                 // transform: `translate(${xPos}px, ${yPos}px})`
+    //                 // transform: `translate(${xPos}px, ${yPos}px)`
+    //             }}
+    //             onClick={(e) => {
+    //                 // console.log(e.target.id)
+    //                 if (e.target.id == "logout") {
+    //                     Cookies.remove("user");
+    //                     Cookies.remove("remember");
+    //                     localStorage.clear();
+    //                     // document.location.reload();
+    //                 }
+
+    //                 window.location.href = item.href;
+    //             }}
+    //         >
+    //             <FontAwesomeIcon icon={item.icon} id={item.id} style={{
+    //                 rotate: `${(index > nav.length / 2) ? "270deg" : "-270deg"}`
+    //             }} />
+    //         </div>
+    //     );
+    // })
 
     // console.log(user.role.includes("admin"))
     return (
@@ -171,7 +337,7 @@ export function Navigator({ mode }) {
                 className="nav-center"
                 // title="Home"
                 style={{
-                    width: (!opened || ! (user.role == User_role.administrator || user.role == User_role.moderator)) ? "50px" : "100px",
+                    width: (!opened || !(user.role == User_role.administrator || user.role == User_role.moderator)) ? "50px" : "100px",
                     borderColor: color_themes,
                     backgroundColor: color_themes,
                     zIndex: "10"
@@ -180,7 +346,7 @@ export function Navigator({ mode }) {
                     setopen(true);
                 }}
             >
-                <div style={(opened &&  (user.role == User_role.administrator || user.role == User_role.moderator)) ?
+                <div style={(opened && (user.role == User_role.administrator || user.role == User_role.moderator)) ?
                     {
                         borderRight: "1px solid black",
                         borderRadius: "50px",

@@ -71,7 +71,7 @@ lmao().then(async (res) => {
 
         if (direct == "") {
             return (
-                <HomePage />
+                <HomePage users={ress} />
             )
         }
 

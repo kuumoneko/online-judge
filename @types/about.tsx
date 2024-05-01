@@ -81,7 +81,7 @@ export function About() {
                         {" kuumoneko"}
                     </a>
                 </span>
-                - tRẠI cỪ
+                {" - tRẠI cỪ"}
             </p>
 
 

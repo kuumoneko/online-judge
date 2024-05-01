@@ -66,7 +66,7 @@ export function About() {
             "Hệ thống được phát triển và duy trì bởi ",
             React.createElement("span", { className: "rating rate-none admin" },
                 React.createElement("a", { href: "/user/kuumoneko", className: "font-bold", style: { display: "inline-block", color: themes.font } }, " kuumoneko")),
-            "- tR\u1EA0I c\u1EEA"),
+            " - tRẠI cỪ"),
         React.createElement("h4", null, "C\u00E1c m\u00E3 tr\u1EA1ng th\u00E1i ch\u1EA5m"),
         React.createElement("p", null,
             React.createElement("table", null,

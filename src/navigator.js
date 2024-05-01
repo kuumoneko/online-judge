@@ -10,14 +10,22 @@ export function Navigator({ mode }) {
     const [opened, setopen] = useState(false);
     useEffect(() => {
         const nav_circle = document.getElementsByClassName("nav-circle");
-        for (let i = 0; i < nav_circle.length; i++) {
-            nav_circle[i].style.transform = (opened) ? `translate(${lmao.find(item => item.id == nav_circle[i].id).x}px, ${lmao.find(item => item.id == nav_circle[i].id).y}px)` : "";
-            nav_circle[i].style.left = (opened) ? "44.5%" : "50%";
+        console.log(nav_circle);
+        if (opened) {
+            for (let i = 0; i < nav_circle.length; i++) {
+                nav_circle[i].style.rotate = (nav_circle[i].attributes[1].value == "right") ? "-90deg" : "90deg";
+            }
+        }
+        else {
+            for (let i = 0; i < nav_circle.length; i++) {
+                nav_circle[i].style.rotate = "0deg";
+            }
         }
     }, [opened]);
     let nav;
+    let left_nav = [], right_nav = [];
     if (mode == "admin") {
-        nav = [
+        left_nav = [
             {
                 id: "Problems",
                 href: "/admin/problems",
@@ -38,6 +46,13 @@ export function Navigator({ mode }) {
                 href: "/admin/contests",
                 icon: faCode,
             },
+        ];
+        right_nav = [
+            {
+                id: "About",
+                href: "/about",
+                icon: faInfo,
+            },
             {
                 id: "Me",
                 href: (user.username == undefined || user.username == null) ? "/user" : `/user/${user.username}`,
@@ -46,7 +61,7 @@ export function Navigator({ mode }) {
         ];
     }
     else if (mode == "normal") {
-        nav = [
+        left_nav = [
             {
                 id: "Problems",
                 href: "/problems",
@@ -67,6 +82,8 @@ export function Navigator({ mode }) {
                 href: "/contests",
                 icon: faCode,
             },
+        ];
+        right_nav = [
             {
                 id: "About",
                 href: "/about",
@@ -80,33 +97,54 @@ export function Navigator({ mode }) {
         ];
     }
     if (user.username != undefined && user.username != null) {
-        nav.push({
+        right_nav.push({
             id: "logout",
             href: "/",
             icon: faRightFromBracket
         });
     }
-    const radius = 120;
-    const anglePerDiv = (Math.PI * 2) / nav.length / 2;
-    const lmao = [];
     const divs = [];
-    nav.reverse().forEach((item, index) => {
-        const angle = index * anglePerDiv + Math.PI * 1 / 10 - ((nav.length == 7) ? 1 / 11 : 1 / 19);
-        const xPos = radius + radius * Math.cos(angle) - 20;
-        const yPos = radius - radius * (1 - Math.sin(angle)) - 65;
-        lmao.push({ x: xPos, y: yPos, id: item.id });
-        divs.push(React.createElement("div", { className: "nav-circle", id: item.id, title: item.id, style: {
+    left_nav.reverse().forEach((item, index) => {
+        const location = `translate(-50% , ${index * 150 + 450}%)`;
+        divs.push(React.createElement("div", { className: "nav-circle", name: "left", id: item.id, title: item.id, style: {
                 borderColor: color_themes,
                 backgroundColor: color_themes,
+                zIndex: "0",
+                transform: location,
             }, onClick: (e) => {
                 if (e.target.id == "logout") {
                     Cookies.remove("user");
                     Cookies.remove("remember");
                     localStorage.clear();
+                    window.location.reload();
+                    return;
                 }
                 window.location.href = item.href;
             } },
-            React.createElement(FontAwesomeIcon, { icon: item.icon, id: item.id })));
+            React.createElement(FontAwesomeIcon, { icon: item.icon, id: item.id, style: {
+                    rotate: "270deg"
+                } })));
+    });
+    right_nav.forEach((item, index) => {
+        const location = `translate(50% , ${index * 150 + 350}%)`;
+        divs.push(React.createElement("div", { className: "nav-circle", name: "right", id: item.id, title: item.id, style: {
+                borderColor: color_themes,
+                backgroundColor: color_themes,
+                zIndex: "0",
+                transform: location,
+            }, onClick: (e) => {
+                if (e.target.id == "logout") {
+                    Cookies.remove("user");
+                    Cookies.remove("remember");
+                    localStorage.clear();
+                    window.location.reload();
+                    return;
+                }
+                window.location.href = item.href;
+            } },
+            React.createElement(FontAwesomeIcon, { icon: item.icon, id: item.id, style: {
+                    rotate: "-270deg"
+                } })));
     });
     return (React.createElement("div", { className: "navigator", style: { backgroundColor: themes.content }, onMouseLeave: () => setopen(false) },
         React.createElement("div", { className: "nav-center", style: {

@@ -101,7 +101,7 @@ function Editprofile({ user }: { user: User }) {
 
     return (
         <>
-            <div>
+            <div style={{ width: "max-content" }}>
                 <form>
                     <div style={{ paddingBottom: "10px", width: "100%", borderBottom: "1px solid #ccc" }}>
                         <table>
@@ -395,7 +395,7 @@ function Profile({ users, user }: { users: User[], user: User }) {
     return (
         <>
             <div >
-                <div style={{ float: "left", height: "400px", width: "250px", border: "1px 1px 1px 1px" }}>
+                <div style={{ float: "left", height: "400px", minWidth: "15%", border: "1px 1px 1px 1px" }}>
                     <div >
                         <img src={getGravatarURL(user.email, 200)} style={{ borderRadius: "100px" }} />
 
@@ -443,7 +443,7 @@ function Profile({ users, user }: { users: User[], user: User }) {
                             </a>
                         </h4> */}
 
-                        <a style={{ display: "block", borderBottom: "1px solid #d2d2d2", width: "250px" }} />
+                        <a style={{ display: "block", borderBottom: "1px solid #d2d2d2", minWidth: "30%" }} />
 
                         <h4 style={{ borderBottom: "0px" }}>
                             <a className="font-bold">
@@ -465,7 +465,7 @@ function Profile({ users, user }: { users: User[], user: User }) {
 
                     </div>
                 </div>
-                <div style={{ float: "right", height: "400px", width: "1600px" }}>
+                <div style={{ height: "400px", minWidth: "60%" }}>
                     {
                         (user.group.length != 0) ? (
                             <>

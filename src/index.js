@@ -57,7 +57,7 @@ lmao().then((res) => __awaiter(void 0, void 0, void 0, function* () {
             return (React.createElement(Already, null));
         }
         if (direct == "") {
-            return (React.createElement(HomePage, null));
+            return (React.createElement(HomePage, { users: ress }));
         }
         if (direct == "users" || direct == "contributors" || direct == "groups") {
             return (React.createElement(Users, { mode: direct, users: ress }));
