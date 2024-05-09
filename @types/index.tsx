@@ -1,21 +1,13 @@
 // @ts-nocheck
-import React, { useEffect } from 'react';
+import React from 'react';
 import { createRoot } from "react-dom/client";
 import "./index.css";
-
 import { Navigator } from "./navigator.js";
-// import { Already, Singupform } from "./signup.js";
-// import { Loginform } from "./login.js";
 import Cookies from 'js-cookie';
-import { color, color_themes, cookie, get_rank_color, getdata, geturl, replaceAll } from './ulti.js';
-import { Users } from './users.js';
-import { About } from './about.js';
-import { Admin } from './admin.js';
-import { User } from './user.js';
-import { Userring } from './account.js';
-import { HomePage } from './home.js';
-import { Theme_mode, User_role } from './classes/enum.js';
-// import { Blog } from './blog.js';
+import { color, color_themes, cookie, get_rank_color, getdata, geturl, replaceAll } from './@classes/ultility.js';
+import { Theme_mode, User_role } from './@classes/enum.js';
+import { Home } from './home/index.js';
+import { Admin } from './admin/index.js';
 
 const root = createRoot(document.getElementById("root"));
 
@@ -65,51 +57,67 @@ lmao().then(async (res) => {
 
         if (cookies.user && (direct == "login" || direct == "signup")) {
             return (
-                <Already />
+                <Already url={url} />
             )
         }
 
-        if (direct == "") {
+        if (direct != "admin") {
             return (
-                <HomePage users={ress} />
+                <Home users={ress} />
             )
         }
-
-        if (direct == "users" || direct == "contributors" || direct == "groups") {
-
-            return (
-                <Users mode={direct} users={ress} />
-            )
-        }
-        else if (direct == "user") {
-            if (url[1] == undefined) {
-                window.location.href = "/account"
-            }
-            return (
-                <User url={url} users={ress} />
-            )
-        }
-        else if (direct == "about") {
-            return (
-                <About user={res} />
-            )
-        }
-        else if (direct == "admin") {
+        else {
             return (
                 <Admin />
             )
         }
-        else if (direct == "account") {
-            return (
-                <Userring />
 
-            )
-        }
+
+        // if (direct == "") {
+        //     return (
+        //         <HomePage />
+        //     )
+        // }
+
+        // if (direct == "users") {
+        //     return (
+        //         <Home_Users />
+        //     )
+        // }
+        // else if (direct == "groups") {
+        //     return (
+        //         <Home_Groups />
+        //     )
+        // }
+        // // else if (direct == "user") {
+        // //     if (url[1] == undefined) {
+        // //         window.location.href = "/account"
+        // //     }
+        // //     return (
+        // //         <User url={url} users={ress} />
+        // //     )
+        // // }
+        // else if (direct == "about") {
+        //     return (
+        //         <About user={res} />
+        //     )
+        // }
+        // else if (direct == "admin") {
+        //     return (
+        //         <Admin />
+        //     )
+        // }
+        // // else if (direct == "account") {
+        //     return (
+        //         <Userring />
+
+        //     )
+        // }
     }
 
     function Userss({ mode }) {
 
-        function resss(modee) {
+        function resss(modee: string) {
 
             return {
                 borderRadius: "4px 4px 0 0",
@@ -139,7 +147,7 @@ lmao().then(async (res) => {
 
     function Userr({ mode }) {
 
-        function resss(modee) {
+        function resss(modee: string | undefined) {
             // console.log(modee, ' ', mode)
             return {
                 borderRadius: "4px 4px 0 0",
@@ -149,7 +157,6 @@ lmao().then(async (res) => {
                 borderRight: (modee == mode[2]) ? "1px solid #dddddd" : `1px solid ${themes.content}`,
             }
         }
-
         return (
             <ul style={{ paddingLeft: "0px", backgroundColor: `${themes.content}`, color: `${themes.font}`, borderBottom: "0px", display: "flex", margin: "0", height: "45px", float: "right", marginBottom: "-1px", flexWrap: "nowrap", alignItems: "flex-end" }
             }>
@@ -170,18 +177,15 @@ lmao().then(async (res) => {
                 </li>
 
                 {
-                    (cookies.user == mode[1]) ?
-                        (
-                            <li>
-                                <a id="users" href={`/user/${mode[1]}/edit_profile`
-                                } style={resss("edit_profile")} >
-                                    Edit profile
-                                </a>
-                            </li>
-                        ) : (
-                            <>
-                            </>
-                        )
+                    (cookies.user == mode[1]) &&
+                    (
+                        <li>
+                            <a id="users" href={`/user/${mode[1]}/edit_profile`
+                            } style={resss("edit_profile")} >
+                                Edit profile
+                            </a>
+                        </li>
+                    )
                 }
 
             </ul >
@@ -192,37 +196,14 @@ lmao().then(async (res) => {
 
     function Create_title({ url }) {
         // let temp = url.split("/")[url.split("/").length - 1].split("#")[0].toLowerCase()
-
+        // console.log(url)
         let temp = url[0]
 
 
         temp = replaceAll(temp, "_", " ");
-        // console.log(temp)
 
 
-        if (temp == "user") {
-            useEffect(() => {
-                async function lmao() {
-
-                    const res = await getdata("get", "users", url[1])
-                    // console.log(tempp)
-                    if (temp == "user") {
-                        const temp = createRoot(document.getElementById("title"));
-                        temp.render(
-                            <a className='font-bold' style={{ color: get_rank_color(res.rank, res.role, themes.font) }}>
-                                {
-                                    (res.username) ? res.username : ""
-                                }
-                            </a>
-                        )
-                    }
-                }
-
-                lmao();
-            }, [])
-        }
-
-
+        console.log(temp)
 
         return (
             <>
@@ -245,14 +226,14 @@ lmao().then(async (res) => {
                                 ?
                                 "Site administration"
                                 :
-                                (temp == "user")
-                                    ?
-                                    "" :
-                                    (
-                                        <a className='font-bold' >
-                                            {(temp) ? temp.toUpperCase() : ""}
-                                        </a>
-                                    )
+                                (temp == "user") &&
+                                (
+                                    <a className='font-bold' style={{ color: get_rank_color(JSON.parse(localStorage.getItem("user")).rank, User_role.user, themes.content) }}>
+                                        {
+                                            url[1] && url[1]
+                                        }
+                                    </a>
+                                )
                         }
                     </h2>
                     {

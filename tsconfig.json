@@ -25,7 +25,8 @@
         "strict": true, /* Enable all strict type-checking options. */
         /* Completeness */
         "skipLibCheck": true,
-        "jsx": "react"
+        "jsx": "react",
+        "noImplicitAny": false
     },
     // "include": [
     //     "./**/*"

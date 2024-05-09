@@ -13,6 +13,18 @@
         "eject": "react-scripts eject",
         "ts_build": "node G:\\online-judge\\@scripts\\delete.js  && tsc -p tsconfig.json"
     },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^6.5.2",
         "@fortawesome/free-solid-svg-icons": "^6.5.2",
@@ -43,18 +55,6 @@
         "tailwindcss": "^3.4.1",
         "vfile": "^6.0.1",
         "yup": "^1.4.0"
-    },
-    "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
     },
     "devDependencies": {
         "@types/cookie-parser": "^1.4.7",

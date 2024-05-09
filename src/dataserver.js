@@ -5,8 +5,8 @@ import cors from "cors";
 const app = express();
 const port = 3001;
 const corsOptions = {
-    origin: ['http://192.168.1.8:3000', 'http://localhost:3000'],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin: ["http://192.168.1.8:3000", "http://localhost:3000"],
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
 };
 app.use(cors(corsOptions));
@@ -42,7 +42,7 @@ app.post("/post/users", (req, res) => {
         data[receivedData.data.username] = receivedData.data;
         writeFileSync(`./data/users.json`, JSON.stringify(data));
         status = 200;
-        data = undefined;
+        data = {};
     }
     catch (e) {
         status = 400;
@@ -80,7 +80,7 @@ app.post("/post/groups", (req, res) => {
         data[receivedData.data.group] = receivedData.data;
         writeFileSync(`./data/groups.json`, JSON.stringify(data));
         status = 200;
-        data = undefined;
+        data = {};
     }
     catch (e) {
         status = 400;
@@ -99,8 +99,13 @@ app.post("/get/blogs", (req, res) => {
             data = data = Object.keys(dataa).map((item) => dataa[item]);
         }
         else {
+            if (receivedData.data.id != undefined) {
+                data = dataa[receivedData.data.id.split("_")[0]].filter((item) => item.id == receivedData.data.id);
+            }
+            else {
+                data = [dataa[receivedData.data.host]];
+            }
             status = dataa[receivedData.data] ? 404 : 200;
-            data = [dataa[receivedData.data]];
         }
     }
     catch (e) {
@@ -114,12 +119,16 @@ app.post("/post/blogs", (req, res) => {
     let status = 200, data = {};
     try {
         const json = readFileSync(`./data/blogs.json`, { encoding: "utf-8" });
-        let data = JSON.parse(json);
-        console.log(data[receivedData.data.host][data[receivedData.data.host].length - 1].id, ' ', receivedData.data.id);
-        if (data[receivedData.data.host][data[receivedData.data.host].length - 1].id != receivedData.data.id) {
-            data[receivedData.data.host].push(receivedData.data);
+        let dataa = JSON.parse(json);
+        console.log(dataa[receivedData.data.host].find((item) => item.id == receivedData.data.id));
+        if (dataa[receivedData.data.host].find((item) => item.id == receivedData.data.id) != undefined) {
+            dataa[receivedData.data.host] = dataa[receivedData.data.host].map((item) => item.id == receivedData.data.id ? receivedData.data : item);
         }
-        writeFileSync(`./data/blogs.json`, JSON.stringify(data));
+        else {
+            dataa[receivedData.data.host].push(receivedData.data);
+        }
+        console.log(dataa[receivedData.data.host]);
+        writeFileSync(`./data/blogs.json`, JSON.stringify(dataa));
         status = 200;
         data = undefined;
     }
@@ -133,7 +142,9 @@ app.post("/data", function (req, res) {
     const receivedData = req.body;
     let status = 200, data = {};
     try {
-        const res = readFileSync(`./data/${receivedData.mode}.json`, { encoding: "utf-8" }) || "{}";
+        const res = readFileSync(`./data/${receivedData.mode}.json`, {
+            encoding: "utf-8",
+        }) || "{}";
         const dataa = JSON.parse(res);
         if (receivedData.method == "get") {
             if (receivedData.data == "all") {
@@ -152,7 +163,7 @@ app.post("/data", function (req, res) {
     }
     res.json({ status: status, data: data });
 });
-app.post('/api/data', (req, res) => {
+app.post("/api/data", (req, res) => {
     const receivedData = req.body;
     let mess = "";
     let status = 200;
@@ -165,7 +176,9 @@ app.post('/api/data', (req, res) => {
     else {
         try {
             if (receivedData.method != "get") {
-                const temp = readFileSync(`./data/${receivedData.mode}.json`, { encoding: "utf-8" }) || "{}";
+                const temp = readFileSync(`./data/${receivedData.mode}.json`, {
+                    encoding: "utf-8",
+                }) || "{}";
                 const lmao = JSON.parse(temp);
                 console.log(receivedData.data);
                 if (receivedData.mode == "users") {
@@ -177,10 +190,15 @@ app.post('/api/data', (req, res) => {
                 writeFileSync(`./data/${receivedData.mode}.json`, JSON.stringify(lmao));
             }
             else {
-                const temp = readFileSync(`./data/${receivedData.mode}.json`, { encoding: "utf-8" });
+                const temp = readFileSync(`./data/${receivedData.mode}.json`, {
+                    encoding: "utf-8",
+                });
                 status = 200;
                 mess = "oke";
-                data = (receivedData.data != "all") ? JSON.parse(temp)[receivedData.data] : JSON.parse(temp);
+                data =
+                    receivedData.data != "all"
+                        ? JSON.parse(temp)[receivedData.data]
+                        : JSON.parse(temp);
             }
             mess = "done";
         }

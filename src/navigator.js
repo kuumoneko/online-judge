@@ -1,16 +1,15 @@
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
-import { color, color_themes, getGravatarURL } from "./ulti.js";
+import { color, color_themes, getGravatarURL } from "./@classes/ultility.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faCode, faFolder, faHammer, faHome, faInfo, faRightFromBracket, faTerminal, faUser, faUserGroup, faUsers, } from "@fortawesome/free-solid-svg-icons";
-import { User_role } from "./classes/enum.js";
+import { User_role } from "./@classes/enum.js";
 export function Navigator({ mode }) {
     const themes = color[JSON.parse(localStorage.getItem("user")).themes.mode];
     const user = JSON.parse(localStorage.getItem("user"));
     const [opened, setopen] = useState(false);
     useEffect(() => {
         const nav_circle = document.getElementsByClassName("nav-circle");
-        console.log(nav_circle);
         if (opened) {
             for (let i = 0; i < nav_circle.length; i++) {
                 nav_circle[i].style.rotate = (nav_circle[i].attributes[1].value == "right") ? "-90deg" : "90deg";
@@ -22,7 +21,6 @@ export function Navigator({ mode }) {
             }
         }
     }, [opened]);
-    let nav;
     let left_nav = [], right_nav = [];
     if (mode == "admin") {
         left_nav = [

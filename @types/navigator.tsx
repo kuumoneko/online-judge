@@ -1,7 +1,7 @@
 // @ts-nocheck
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
-import { color, color_themes, getGravatarURL } from "./ulti.js";
+import { color, color_themes, getGravatarURL } from "./@classes/ultility.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faBars,
@@ -16,7 +16,7 @@ import {
     faUserGroup,
     faUsers,
 } from "@fortawesome/free-solid-svg-icons";
-import { User_role } from "./classes/enum.js";
+import { User_role } from "./@classes/enum.js";
 
 export function Navigator({ mode }) {
 
@@ -29,7 +29,7 @@ export function Navigator({ mode }) {
         // console.log(opened)
 
         const nav_circle: HTMLElement[] = document.getElementsByClassName("nav-circle")
-        console.log(nav_circle)
+        // console.log(nav_circle)
 
         if (opened) {
             for (let i = 0; i < nav_circle.length; i++) {
@@ -45,8 +45,6 @@ export function Navigator({ mode }) {
 
     }, [opened])
 
-
-    let nav;
 
     let left_nav = [],
         right_nav = [];
@@ -88,33 +86,6 @@ export function Navigator({ mode }) {
             }
         ];
 
-        // nav = [
-        //     {
-        //         id: "Problems",
-        //         href: "/admin/problems",
-        //         icon: faFolder,
-        //     },
-        //     {
-        //         id: "Groups",
-        //         href: "/admin/groups",
-        //         icon: faUserGroup,
-        //     },
-        //     {
-        //         id: "Users",
-        //         href: "/admin/users",
-        //         icon: faUsers,
-        //     },
-        //     {
-        //         id: "Contests",
-        //         href: "/admin/contests",
-        //         icon: faCode,
-        //     },
-        //     {
-        //         id: "Me",
-        //         href: (user.username == undefined || user.username == null) ? "/user" : `/user/${user.username}`,
-        //         icon: faUser
-        //     }
-        // ];
     }
     else if (mode == "normal") {
 
@@ -155,38 +126,6 @@ export function Navigator({ mode }) {
         ];
 
 
-        // nav = [
-        //     {
-        //         id: "Problems",
-        //         href: "/problems",
-        //         icon: faFolder,
-        //     },
-        //     {
-        //         id: "Submissions",
-        //         href: "/submissions",
-        //         icon: faTerminal,
-        //     },
-        //     {
-        //         id: "Users",
-        //         href: "/users",
-        //         icon: faUsers,
-        //     },
-        //     {
-        //         id: "Contests",
-        //         href: "/contests",
-        //         icon: faCode,
-        //     },
-        //     {
-        //         id: "About",
-        //         href: "/about",
-        //         icon: faInfo,
-        //     },
-        //     {
-        //         id: "Me",
-        //         href: (user.username == undefined || user.username == null) ? "/user" : `/user/${user.username}`,
-        //         icon: faUser
-        //     }
-        // ];
     }
 
     if (user.username != undefined && user.username != null) {
@@ -278,55 +217,6 @@ export function Navigator({ mode }) {
         );
     })
 
-    // nav.forEach((item, index) => {
-    //     // const angle = index * anglePerDiv + Math.PI * 1 / 10 - ((nav.length == 7) ? 1 / 11 : 1 / 19);
-    //     // // console.log(angle);
-    //     // const xPos = radius + radius * Math.cos(angle) - 20;
-    //     // const yPos = radius - radius * (1 - Math.sin(angle)) - 65;
-
-    //     // // console.log(xPos, ' ', yPos)
-    //     // lmao.push({ x: xPos, y: yPos, id: item.id })
-
-    //     // console.log(themes)
-
-    //     const location = `translate(${(index < nav.length / 2) ? "50" : "-50"}%, ${(index % Math.floor(nav.length / 2)) * 100 + 300}%)`
-
-    //     // console.log(location`
-
-    //     divs.push(
-    //         <div
-    //             className="nav-circle"
-    //             id={item.id}
-    //             title={item.id}
-    //             style={{
-    //                 borderColor: color_themes,
-    //                 backgroundColor: color_themes,
-    //                 zIndex: "0",
-    //                 transform: location,
-    //                 rotate: `${(index > nav.length / 2) ? "90deg" : "-90deg"}`
-    //                 // transform: `translate(${xPos}px, ${yPos}px})`
-    //                 // transform: `translate(${xPos}px, ${yPos}px)`
-    //             }}
-    //             onClick={(e) => {
-    //                 // console.log(e.target.id)
-    //                 if (e.target.id == "logout") {
-    //                     Cookies.remove("user");
-    //                     Cookies.remove("remember");
-    //                     localStorage.clear();
-    //                     // document.location.reload();
-    //                 }
-
-    //                 window.location.href = item.href;
-    //             }}
-    //         >
-    //             <FontAwesomeIcon icon={item.icon} id={item.id} style={{
-    //                 rotate: `${(index > nav.length / 2) ? "270deg" : "-270deg"}`
-    //             }} />
-    //         </div>
-    //     );
-    // })
-
-    // console.log(user.role.includes("admin"))
     return (
         <div
             className="navigator"

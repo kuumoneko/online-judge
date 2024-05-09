@@ -7,19 +7,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import React, { useEffect } from 'react';
+import React from 'react';
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { Navigator } from "./navigator.js";
 import Cookies from 'js-cookie';
-import { color, color_themes, cookie, get_rank_color, getdata, geturl, replaceAll } from './ulti.js';
-import { Users } from './users.js';
-import { About } from './about.js';
-import { Admin } from './admin.js';
-import { User } from './user.js';
-import { Userring } from './account.js';
-import { HomePage } from './home.js';
-import { Theme_mode, User_role } from './classes/enum.js';
+import { color, color_themes, cookie, get_rank_color, getdata, geturl, replaceAll } from './@classes/ultility.js';
+import { Theme_mode, User_role } from './@classes/enum.js';
+import { Home } from './home/index.js';
+import { Admin } from './admin/index.js';
 const root = createRoot(document.getElementById("root"));
 if (!document.referrer && Cookies.get("remember") == "false") {
     Cookies.remove("user");
@@ -54,28 +50,13 @@ lmao().then((res) => __awaiter(void 0, void 0, void 0, function* () {
     function Checking({ url }) {
         const direct = url[0];
         if (cookies.user && (direct == "login" || direct == "signup")) {
-            return (React.createElement(Already, null));
+            return (React.createElement(Already, { url: url }));
         }
-        if (direct == "") {
-            return (React.createElement(HomePage, { users: ress }));
+        if (direct != "admin") {
+            return (React.createElement(Home, { users: ress }));
         }
-        if (direct == "users" || direct == "contributors" || direct == "groups") {
-            return (React.createElement(Users, { mode: direct, users: ress }));
-        }
-        else if (direct == "user") {
-            if (url[1] == undefined) {
-                window.location.href = "/account";
-            }
-            return (React.createElement(User, { url: url, users: ress }));
-        }
-        else if (direct == "about") {
-            return (React.createElement(About, { user: res }));
-        }
-        else if (direct == "admin") {
+        else {
             return (React.createElement(Admin, null));
-        }
-        else if (direct == "account") {
-            return (React.createElement(Userring, null));
         }
     }
     function Userss({ mode }) {
@@ -111,27 +92,14 @@ lmao().then((res) => __awaiter(void 0, void 0, void 0, function* () {
                 React.createElement("a", { id: "users", href: `/user/${mode[1]}/statistics`, style: resss("statistics") }, "Statistics")),
             React.createElement("li", null,
                 React.createElement("a", { id: "users", href: `/user/${mode[1]}/blogs`, style: resss("blogs") }, "Blogs")),
-            (cookies.user == mode[1]) ?
+            (cookies.user == mode[1]) &&
                 (React.createElement("li", null,
-                    React.createElement("a", { id: "users", href: `/user/${mode[1]}/edit_profile`, style: resss("edit_profile") }, "Edit profile"))) : (React.createElement(React.Fragment, null))));
+                    React.createElement("a", { id: "users", href: `/user/${mode[1]}/edit_profile`, style: resss("edit_profile") }, "Edit profile")))));
     }
     function Create_title({ url }) {
         let temp = url[0];
         temp = replaceAll(temp, "_", " ");
-        if (temp == "user") {
-            useEffect(() => {
-                function lmao() {
-                    return __awaiter(this, void 0, void 0, function* () {
-                        const res = yield getdata("get", "users", url[1]);
-                        if (temp == "user") {
-                            const temp = createRoot(document.getElementById("title"));
-                            temp.render(React.createElement("a", { className: 'font-bold', style: { color: get_rank_color(res.rank, res.role, themes.font) } }, (res.username) ? res.username : ""));
-                        }
-                    });
-                }
-                lmao();
-            }, []);
-        }
+        console.log(temp);
         return (React.createElement(React.Fragment, null,
             React.createElement("br", { style: { paddingBottom: "10px" } }),
             React.createElement("div", { className: 'tabs', style: {
@@ -147,10 +115,8 @@ lmao().then((res) => __awaiter(void 0, void 0, void 0, function* () {
                     ?
                         "Site administration"
                     :
-                        (temp == "user")
-                            ?
-                                "" :
-                            (React.createElement("a", { className: 'font-bold' }, (temp) ? temp.toUpperCase() : ""))),
+                        (temp == "user") &&
+                            (React.createElement("a", { className: 'font-bold', style: { color: get_rank_color(JSON.parse(localStorage.getItem("user")).rank, User_role.user, themes.content) } }, url[1] && url[1]))),
                 (temp == "users" || temp == "groups") ? (React.createElement(Userss, { mode: temp })) : (temp == "user") ? (React.createElement(Userr, { mode: url })) : (React.createElement(React.Fragment, null)))));
     }
     root.render(React.createElement(React.Fragment, null,
