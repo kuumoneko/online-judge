@@ -5,7 +5,7 @@ import { Blog } from "./blogs.js";
 export function Userr({ mode, users, user }) {
     const username = document.URL.split("//")[1].split("/")[2] || user.username;
     if (mode == undefined) {
-        return (React.createElement(Profile, { users: users, user: users.find(item => item.username == username) }));
+        return (React.createElement(Profile, { user: users.find(item => item.username == username) }));
     }
     else if (mode == "edit_profile") {
         return (React.createElement(Editprofile, { user: user }));

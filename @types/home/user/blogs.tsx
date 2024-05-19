@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { color, color_themes, getdata, sort_blogs } from "../../@classes/ultility.js";
+import { color, color_themes, getdata } from "../../@classes/ultility.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Markdown from "react-markdown";
 import { sanitize } from "dompurify";
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
-import { createRoot } from "react-dom/client";
+// import { createRoot } from "react-dom/client";
 import { User } from "../../@classes/type.js";
 
 
@@ -43,32 +43,32 @@ function Add_blog({ user }: { user: User }) {
     // console.log(all_language_code)
     const contentRef = useRef(null);
 
-    const oninput = (e: { preventDefault: () => void; target: { innerText: string; innerHTML: React.SetStateAction<string>; }; }) => {
-        e.preventDefault()
+    // const oninput = (e: { preventDefault: () => void; target: { innerText: string; innerHTML: React.SetStateAction<string>; }; }) => {
+    //     e.preventDefault()
 
-        setdata(e.target.innerText.replace(/\n\n/g, '\n'))
-        sethtml(e.target.innerHTML)
+    //     setdata(e.target.innerText.replace(/\n\n/g, '\n'))
+    //     sethtml(e.target.innerHTML)
 
-        type temping = {
-            line: number,
-            more: number
-        }
-        const temp: temping[] = []
+    //     type temping = {
+    //         line: number,
+    //         more: number
+    //     }
+    //     const temp: temping[] = []
 
-        e.target.innerText.replace(/\n\n/g, '\n').split("\n").forEach((item: string | any[], index: number) => {
-            // console.log(item.split("\n"))
-            if (item.length <= 303) {
-                temp.push({ line: index + 1, more: Math.floor(item.length / 215) })
-                return;
-            }
-            const length = item.length - 95;
-            temp.push({ line: index + 1, more: Math.floor(length / 208) + 1 })
-        })
+    //     e.target.innerText.replace(/\n\n/g, '\n').split("\n").forEach((item: string | any[], index: number) => {
+    //         // console.log(item.split("\n"))
+    //         if (item.length <= 303) {
+    //             temp.push({ line: index + 1, more: Math.floor(item.length / 215) })
+    //             return;
+    //         }
+    //         const length = item.length - 95;
+    //         temp.push({ line: index + 1, more: Math.floor(length / 208) + 1 })
+    //     })
 
 
 
-        setlines((e.target.innerText != "" && e.target.innerText != "\n") ? temp : [{ line: 1, more: 0 }])
-    }
+    //     setlines((e.target.innerText != "" && e.target.innerText != "\n") ? temp : [{ line: 1, more: 0 }])
+    // }
 
     useEffect(() => {
         const lmao = document.getElementById("editorr");
@@ -203,16 +203,6 @@ function Add_blog({ user }: { user: User }) {
                                     <>
                                         <div id="row" style={
                                             {
-                                                overflowY: "auto",
-
-                                                overflow: "hidden",
-                                                // top: "0",
-                                                // position: "sticky",
-                                                width: "3%",
-                                                height: "100%",
-                                                borderRight: "2px solid",
-                                                backgroundColor: "#e8e8e8",
-                                                marginTop: "5px",
                                                 color: color[JSON.parse(localStorage.getItem("user") as string).themes.mode].background
                                             }}>
                                             {lines.map((item, index) => (
@@ -333,22 +323,25 @@ function sanitizeHtml(html: string) {
 export function Blog({ url }: { url: string[] }) {
     // console.log(url[3])
     const user = JSON.parse(localStorage.getItem("user") as string)
-    // console.log(url[2] , ' ' , user.username)
 
+    const [html, sethtml] = useState(<></>)
     useEffect(() => {
         async function blogs() {
-            const blogs = await getdata("get", "blogs", { host: url[2] })
+            const blogs = await getdata("sort", "blogs", { mode: "publish_time", search: url[2], reverser: true, page: 1, lineperpage: 100000 })
+
+            // const blogs = await getdata("get", "blogs", { host: url[2] })
             // console.log(blogs)
 
 
 
             // const blogs = user.blogs;
-            const root = createRoot(document.getElementById("blogs") as HTMLElement);
+            // const root = createRoot(document.getElementById("blogs") as HTMLElement);
             // console.log(url[3] == "add")
-            const html = (
+
+            sethtml(
                 <div>
                     {
-                        sort_blogs(blogs).map((item, index) => {
+                        blogs.map((item, index) => {
                             // console.log(item)
                             if (new Date(item.publish_time).getTime() < new Date().getTime())
                                 return (
@@ -380,12 +373,17 @@ export function Blog({ url }: { url: string[] }) {
                     }
                 </div>
             )
+            // const html = (
 
-            root.render(html)
+            // )
+
+            // root.render(html)
         }
         if (url[3] != "add")
             blogs();
     })
+
+
     return (
         <div style={{ width: "100%" }}>
 
@@ -429,7 +427,7 @@ export function Blog({ url }: { url: string[] }) {
             }
 
             <div id="blogs">
-
+                {html}
             </div>
 
 

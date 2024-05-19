@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react"
-import { createRoot } from "react-dom/client";
+// import { createRoot } from "react-dom/client";
 import Markdown from "react-markdown";
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
-import { all_language, color, get_rank_color, getdata, getGravatarURL, getrank } from "../../@classes/ultility.js";
+import { all_language, color, get_rank_color, getdata, getGravatarURL } from "../../@classes/ultility.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 // import { Blog } from "./blog.js";
@@ -273,16 +273,6 @@ export function Editprofile({ user }: { user: User }) {
                                     <>
                                         <div id="row" style={
                                             {
-                                                overflowY: "auto",
-
-                                                overflow: "hidden",
-                                                // top: "0",
-                                                // position: "sticky",
-                                                width: "3%",
-                                                height: "100%",
-                                                borderRight: "2px solid",
-                                                backgroundColor: "#e8e8e8",
-                                                marginTop: "5px",
                                                 color: color[JSON.parse(localStorage.getItem("user") as string).themes.mode].background
                                             }}>
                                             {lines.map((item, index) => (

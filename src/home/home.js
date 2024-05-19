@@ -7,9 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import React, { useEffect } from "react";
-import { getdata, sort_blogs, color_themes, SortUser, get_rank_color } from "../@classes/ultility.js";
-import { createRoot } from "react-dom/client";
+import React, { useEffect, useState } from "react";
+import { getdata, color_themes, get_rank_color } from "../@classes/ultility.js";
 import Markdown from "react-markdown";
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
@@ -20,13 +19,15 @@ function sanitizeHtml(html) {
     scripts.forEach(script => script.parentNode.removeChild(script));
     return doc.body.innerHTML;
 }
-export function HomePage({ users }) {
+export function HomePage() {
+    const [html, sethtml] = useState(React.createElement(React.Fragment, null));
+    const [top_users, settop] = useState(React.createElement(React.Fragment, null));
     useEffect(() => {
         function blogs() {
             return __awaiter(this, void 0, void 0, function* () {
-                const blogs = yield getdata("get", "blogs", "all");
-                const root = createRoot(document.getElementById("blogs"));
-                const html = (React.createElement("div", null, sort_blogs(blogs).map((item, _index) => {
+                const blogs = yield getdata("sort", "blogs", { mode: "publish_time", search: "", reverser: true, page: 1, lineperpage: 100000 });
+                const users = yield getdata("sort", "users", { mode: "points", search: "", reverse: true, page: 1, lineperpage: 10 });
+                sethtml(React.createElement("div", null, blogs.data.data.map((item, _index) => {
                     if (new Date(item.publish_time).getTime() < new Date().getTime())
                         return (React.createElement("div", { className: "blogs" },
                             React.createElement("h2", { className: "font-bold", style: { marginBottom: "10px", color: color_themes } },
@@ -36,12 +37,24 @@ export function HomePage({ users }) {
                             React.createElement("br", { style: { width: "100px" } }),
                             React.createElement(Markdown, { children: sanitizeHtml(item.html), rehypePlugins: [rehypeRaw, rehypeSanitize] })));
                 })));
-                root.render(html);
+                settop(React.createElement("tbody", null,
+                    React.createElement("tr", null,
+                        React.createElement("th", { id: "top_users" }, "#"),
+                        React.createElement("th", { id: "top_users" }, "Name"),
+                        React.createElement("th", { id: "top_users" }, "Points")),
+                    users.data.data.map((user, index) => {
+                        return (React.createElement("tr", null,
+                            React.createElement("th", { id: "top_users", style: { width: "15%" } }, index + 1),
+                            React.createElement("th", { id: "top_users", style: { width: "70%" } },
+                                React.createElement("a", { href: `/user/${user.username}`, style: {
+                                        color: get_rank_color(user.points, user.role, color_themes)
+                                    } }, user.username)),
+                            React.createElement("th", { id: "top_users", style: { width: "15%" } }, user.points)));
+                    })));
             });
         }
         blogs();
-    });
-    const temp = SortUser(users, "points", true);
+    }, []);
     return (React.createElement("div", { style: {
             width: "100%"
         } },
@@ -49,26 +62,13 @@ export function HomePage({ users }) {
             React.createElement("h1", { style: { marginBottom: "5px" } }, "Home Page"),
             React.createElement("div", null,
                 React.createElement("h1", null, "Blogs"),
-                React.createElement("div", { id: "blogs" }))),
+                React.createElement("div", { id: "blogs" }, html))),
         React.createElement("div", { style: { float: 'right', width: "20%" } },
             React.createElement("h1", null, "Top Users"),
-            React.createElement("div", null,
+            React.createElement("div", { id: "topusers" },
                 React.createElement("table", { style: {
                         width: "100%",
                         border: "1px solid white"
-                    } },
-                    React.createElement("tr", null,
-                        React.createElement("th", { id: "top_users" }, "#"),
-                        React.createElement("th", { id: "top_users" }, "Name"),
-                        React.createElement("th", { id: "top_users" }, "Points")),
-                    temp.slice(0, 10).map((item, index) => {
-                        return (React.createElement("tr", null,
-                            React.createElement("th", { id: "top_users" }, index + 1),
-                            React.createElement("th", { id: "top_users" },
-                                React.createElement("a", { href: `/user/${item.user.username}`, style: {
-                                        color: get_rank_color(item.user.points, item.user.role, color_themes)
-                                    } }, item.user.username)),
-                            React.createElement("th", { id: "top_users" }, item.user.points)));
-                    }))))));
+                    } }, top_users)))));
 }
 //# sourceMappingURL=home.js.map

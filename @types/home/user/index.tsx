@@ -12,7 +12,7 @@ export function Userr({ mode, users, user }: { mode: string, users: User[], user
     const username = document.URL.split("//")[1].split("/")[2] || user.username
     if (mode == undefined) {
         return (
-            <Profile users={users} user={users.find(item => item.username == username) as User} />
+            <Profile user={users.find(item => item.username == username) as User} />
         )
     }
     else if (mode == "edit_profile") {

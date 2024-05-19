@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { color, color_themes, getdata, sort_blogs } from "../@classes/ultility.js";
+import { color, color_themes, getdata } from "../@classes/ultility.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Markdown from "react-markdown";
 import { sanitize } from "dompurify";
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
-import { createRoot } from "react-dom/client";
 import { User } from "../@classes/type.js";
 
 
@@ -341,21 +340,16 @@ function sanitizeHtml(html: string) {
 
 export function Blog({ url }: { url: string[] }) {
     // console.log(url[3])
-    const user = JSON.parse(localStorage.getItem("user") as string)
+    // const user = JSON.parse(localStorage.getItem("user") as string)
     // console.log(url[1] , ' ' , user.username)
+
+    const [html, sethtml] = useState(<></>);
 
     useEffect(() => {
         async function blogs() {
-            // console.log(url[2])
-            const blogs = await getdata("get", "blogs", { id: url[2] })
-            // console.log(blogs)
+            const blogs = await getdata("get", "blogs", url[2])
 
-
-
-            // const blogs = user.blogs;
-            const root = createRoot(document.getElementById("blogs") as HTMLElement);
-            // console.log(url[2])
-            const html = (
+            const htmll = (
                 <div className="blogs" style={{ width: "100%", minHeight: "25vh" }}>
                     <h2 className="font-bold" style={{ marginBottom: "10px", color: color_themes }}>
                         <a href={`/blogs/${blogs.id}`}>
@@ -375,9 +369,6 @@ export function Blog({ url }: { url: string[] }) {
                         )
                     }
 
-
-
-
                     <br style={{ width: "100px" }} />
                     <Markdown
                         children={sanitizeHtml(blogs.html)}
@@ -386,14 +377,15 @@ export function Blog({ url }: { url: string[] }) {
                 </div>
             )
 
-            root.render(html)
+            sethtml(htmll)
+
         }
         if (url[3] != "add")
             blogs();
     })
     return (
         <div id="blogs" style={{ width: "100%" }}>
-
+            {html}
         </div>
     )
 }

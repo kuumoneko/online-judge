@@ -69,8 +69,8 @@ function Login() {
                 username: true,
                 password: true
             });
-            Cookies.set("user", username);
-            Cookies.set("remember", (remember) ? "true" : "false");
+            Cookies.set("user", username, { expires: 28 });
+            Cookies.set("remember", (remember) ? "true" : "false", { expires: 28 });
             window.location.href = "/";
         }
     });
@@ -251,8 +251,8 @@ function Singupform() {
                 blogs: []
             };
             yield getdata("post", "users", user);
-            Cookies.set("user", username);
-            Cookies.set("remember", (remember) ? "true" : "false");
+            Cookies.set("user", username, { expires: 28 });
+            Cookies.set("remember", (remember) ? "true" : "false", { expires: 28 });
             window.location.href = "/";
         }
     });

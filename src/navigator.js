@@ -2,7 +2,7 @@ import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { color, color_themes, getGravatarURL } from "./@classes/ultility.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faCode, faFolder, faHammer, faHome, faInfo, faRightFromBracket, faTerminal, faUser, faUserGroup, faUsers, } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faBlog, faCode, faFolder, faHammer, faHome, faInfo, faRightFromBracket, faTerminal, faUser, faUserGroup, faUsers, } from "@fortawesome/free-solid-svg-icons";
 import { User_role } from "./@classes/enum.js";
 export function Navigator({ mode }) {
     const themes = color[JSON.parse(localStorage.getItem("user")).themes.mode];
@@ -46,6 +46,11 @@ export function Navigator({ mode }) {
             },
         ];
         right_nav = [
+            {
+                id: "Blogs",
+                href: "/admin/blogs",
+                icon: faBlog
+            },
             {
                 id: "About",
                 href: "/about",
@@ -104,7 +109,7 @@ export function Navigator({ mode }) {
     const divs = [];
     left_nav.reverse().forEach((item, index) => {
         const location = `translate(-50% , ${index * 150 + 450}%)`;
-        divs.push(React.createElement("div", { className: "nav-circle", name: "left", id: item.id, title: item.id, style: {
+        divs.push(React.createElement("div", { className: "nav-circle", name: "left", id: item.id, title: item.id, key: `left_${index + 1}`, style: {
                 borderColor: color_themes,
                 backgroundColor: color_themes,
                 zIndex: "0",
@@ -125,7 +130,7 @@ export function Navigator({ mode }) {
     });
     right_nav.forEach((item, index) => {
         const location = `translate(50% , ${index * 150 + 350}%)`;
-        divs.push(React.createElement("div", { className: "nav-circle", name: "right", id: item.id, title: item.id, style: {
+        divs.push(React.createElement("div", { className: "nav-circle", name: "right", id: item.id, title: item.id, key: `right_${index + 1}`, style: {
                 borderColor: color_themes,
                 backgroundColor: color_themes,
                 zIndex: "0",
@@ -193,6 +198,6 @@ export function Navigator({ mode }) {
                     }
                 }, title: "Admin" },
                 React.createElement(FontAwesomeIcon, { icon: faHammer })))),
-        divs.map((item) => (React.createElement(React.Fragment, null, item)))));
+        divs.map((item) => (item))));
 }
 //# sourceMappingURL=navigator.js.map

@@ -5,6 +5,7 @@ import { color, color_themes, getGravatarURL } from "./@classes/ultility.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faBars,
+    faBlog,
     faCode,
     faFolder,
     faHammer,
@@ -74,6 +75,11 @@ export function Navigator({ mode }) {
             },
         ];
         right_nav = [
+            {
+                id: "Blogs",
+                href: "/admin/blogs",
+                icon: faBlog
+            },
             {
                 id: "About",
                 href: "/about",
@@ -153,6 +159,7 @@ export function Navigator({ mode }) {
                 name="left"
                 id={item.id}
                 title={item.id}
+                key={`left_${index + 1}`}
                 style={{
                     borderColor: color_themes,
                     backgroundColor: color_themes,
@@ -190,6 +197,7 @@ export function Navigator({ mode }) {
                 name="right"
                 id={item.id}
                 title={item.id}
+                key={`right_${index + 1}`}
                 style={{
                     borderColor: color_themes,
                     backgroundColor: color_themes,
@@ -308,12 +316,9 @@ export function Navigator({ mode }) {
 
             {
                 divs.map((item) => (
-                    <>
-                        {
-                            item
-                        }
-                    </>
-                ))
+                    item
+                )
+                )
             }
 
         </div>

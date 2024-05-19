@@ -8,14 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import React, { useEffect, useRef, useState } from "react";
-import { color, color_themes, getdata, sort_blogs } from "../../@classes/ultility.js";
+import { color, color_themes, getdata } from "../../@classes/ultility.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Markdown from "react-markdown";
 import { sanitize } from "dompurify";
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
-import { createRoot } from "react-dom/client";
 function Add_blog({ user }) {
     const now = new Date();
     const [Title, settitle] = useState("");
@@ -28,21 +27,6 @@ function Add_blog({ user }) {
     const [timecheck, checktime] = useState(false);
     const [publish, setpublish] = useState("");
     const contentRef = useRef(null);
-    const oninput = (e) => {
-        e.preventDefault();
-        setdata(e.target.innerText.replace(/\n\n/g, '\n'));
-        sethtml(e.target.innerHTML);
-        const temp = [];
-        e.target.innerText.replace(/\n\n/g, '\n').split("\n").forEach((item, index) => {
-            if (item.length <= 303) {
-                temp.push({ line: index + 1, more: Math.floor(item.length / 215) });
-                return;
-            }
-            const length = item.length - 95;
-            temp.push({ line: index + 1, more: Math.floor(length / 208) + 1 });
-        });
-        setlines((e.target.innerText != "" && e.target.innerText != "\n") ? temp : [{ line: 1, more: 0 }]);
-    };
     useEffect(() => {
         const lmao = document.getElementById("editorr");
         if (lmao != null && lmao.innerHTML == "") {
@@ -111,13 +95,6 @@ function Add_blog({ user }) {
                             React.createElement("a", { onClick: onClick, id: "preview", style: { paddingLeft: "5px" } }, "Preview"))),
                     React.createElement("div", { style: { height: "350px", width: "1500px", display: "flex", flexDirection: "row" } }, (mode == "editor") ? (React.createElement(React.Fragment, null,
                         React.createElement("div", { id: "row", style: {
-                                overflowY: "auto",
-                                overflow: "hidden",
-                                width: "3%",
-                                height: "100%",
-                                borderRight: "2px solid",
-                                backgroundColor: "#e8e8e8",
-                                marginTop: "5px",
                                 color: color[JSON.parse(localStorage.getItem("user")).themes.mode].background
                             } }, lines.map((item, index) => (React.createElement("div", { style: { display: "flex", justifyContent: "space-around", paddingTop: "0px", paddingBottom: `${item.more * 20}px` } }, index + 1)))),
                         React.createElement("div", { id: "editorr", contentEditable: "true", ref: contentRef, style: {
@@ -175,12 +152,12 @@ function sanitizeHtml(html) {
 }
 export function Blog({ url }) {
     const user = JSON.parse(localStorage.getItem("user"));
+    const [html, sethtml] = useState(React.createElement(React.Fragment, null));
     useEffect(() => {
         function blogs() {
             return __awaiter(this, void 0, void 0, function* () {
-                const blogs = yield getdata("get", "blogs", { host: url[2] });
-                const root = createRoot(document.getElementById("blogs"));
-                const html = (React.createElement("div", null, sort_blogs(blogs).map((item, index) => {
+                const blogs = yield getdata("sort", "blogs", { mode: "publish_time", search: url[2], reverser: true, page: 1, lineperpage: 100000 });
+                sethtml(React.createElement("div", null, blogs.map((item, index) => {
                     if (new Date(item.publish_time).getTime() < new Date().getTime())
                         return (React.createElement("div", { className: "blogs" },
                             React.createElement("h2", { className: "font-bold", style: { marginBottom: "10px", color: color_themes } },
@@ -191,7 +168,6 @@ export function Blog({ url }) {
                             React.createElement("br", { style: { width: "100px" } }),
                             React.createElement(Markdown, { children: sanitizeHtml(item.html), rehypePlugins: [rehypeRaw, rehypeSanitize] })));
                 })));
-                root.render(html);
             });
         }
         if (url[3] != "add")
@@ -210,6 +186,6 @@ export function Blog({ url }) {
                         } }, "Create a blog"))),
             React.createElement("br", null))),
         (url[3] === "add") && (React.createElement(Add_blog, { user: user })),
-        React.createElement("div", { id: "blogs" })));
+        React.createElement("div", { id: "blogs" }, html)));
 }
 //# sourceMappingURL=blogs.js.map

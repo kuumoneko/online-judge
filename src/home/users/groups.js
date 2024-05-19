@@ -8,214 +8,134 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import React, { StrictMode, useEffect, useState } from "react";
-import { createRoot } from "react-dom/client";
-import { color, ConvertToPage, get_rank_color, getdata, SortGroup, getGroup } from "../../@classes/ultility.js";
-function Pages(users, page, modee, search = "") {
-    return __awaiter(this, void 0, void 0, function* () {
-        const handleClick = (e) => {
-            if (e.target.attributes.id.value == "pre") {
-                render_users(modee, page - 1, search);
-            }
-            else if (e.target.attributes.id.value == "next") {
-                render_users(modee, page + 1, search);
-            }
-            else if (e.target.attributes.id.value == "begin") {
-                render_users(modee, 1, search);
-            }
-            else if (e.target.attributes.id.value == "end") {
-                render_users(modee, users.length, search);
-            }
-            else {
-                page = e.target.attributes.id.value;
-                render_users(modee, Number(page), search);
-            }
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        };
-        const root = createRoot(document.getElementById("page"));
-        const root2 = createRoot(document.getElementById("page2"));
-        const themes = color[JSON.parse(localStorage.getItem("user")).themes.mode];
-        let temp = false;
-        const res = (React.createElement(StrictMode, null,
-            React.createElement("button", { id: "begin", onClick: handleClick, style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }, disabled: (page == 1) },
-                React.createElement("a", { id: "begin", onClick: handleClick }, "<<")),
-            React.createElement("button", { id: "pre", onClick: handleClick, style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }, disabled: (page == 1) },
-                React.createElement("a", { id: "pre", onClick: handleClick }, "<")),
-            users.map((item, index) => {
-                const color = (index + 1 == page) ? "#999900" : "";
-                if (page <= 5) {
-                    if (index < page + 2) {
-                        return (React.createElement("button", { id: String(index + 1), onClick: handleClick, style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px", backgroundColor: color }, disabled: false },
-                            React.createElement("a", { id: String(index + 1), onClick: handleClick }, ` ${index + 1} `)));
+import { color, getdata } from "../../@classes/ultility.js";
+export function Home_Groups() {
+    const [search, Setsearch] = useState("");
+    const [curr_page, setCurr_page] = useState(1);
+    const [mode, setmode] = useState("points");
+    const [reverse, setreverse] = useState(true);
+    const [page, setpage] = useState(React.createElement(React.Fragment, null));
+    const [table, settable] = useState(React.createElement(React.Fragment, null));
+    useEffect(() => {
+        function lmao() {
+            return __awaiter(this, void 0, void 0, function* () {
+                const res = yield getdata("sort", "groups", { mode: mode, search: search, reverse: reverse, page: curr_page, lineperpage: 100 });
+                let users;
+                let totalPage;
+                if (res == undefined) {
+                    users = [{
+                            stt: 1,
+                            groupname: "Unable to find this group, try to search another word",
+                            unt: 0
+                        }];
+                    totalPage = 1;
+                }
+                else if (res.groupname != undefined) {
+                    users = [res];
+                    totalPage = 1;
+                }
+                else {
+                    users = res.data.data;
+                    totalPage = res.data.totalPage;
+                }
+                const themes = color[JSON.parse(localStorage.getItem("user")).themes.mode];
+                const element = users.map((user, index) => {
+                    return (React.createElement("tr", null,
+                        React.createElement("td", { style: { border: `1px solid ${themes.font}` } }, user.stt),
+                        React.createElement("td", { style: { border: `1px solid ${themes.font}` } }, user.groupname),
+                        React.createElement("td", { style: { border: `1px solid ${themes.font}` } }, user.unt)));
+                });
+                const table = (React.createElement("tbody", null,
+                    React.createElement("tr", { style: { borderTop: `1px solid ${themes.font}` } },
+                        React.createElement("th", { id: "users", style: { width: "5%" } }, "STT"),
+                        React.createElement("th", { id: "users", style: { width: "55%", border: `1px solid ${themes.font}` } }, "Group name"),
+                        React.createElement("th", { id: "users_unt", style: { width: "10%", border: `1px solid ${themes.font}` } },
+                            React.createElement("button", { name: "users_unt" }, "Users"))),
+                    element.map((item) => {
+                        return item;
+                    })));
+                const handleClick = (e) => {
+                    if (e.target.attributes.id.value == "pre") {
+                        setCurr_page(curr_page - 1);
                     }
-                }
-                else if (index < 2 || (index >= page - 3 && index <= page + 1)) {
-                    return (React.createElement("button", { id: String(index + 1), onClick: handleClick, style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px", backgroundColor: color }, disabled: false },
-                        React.createElement("a", { id: String(index + 1), onClick: handleClick }, ` ${index + 1} `)));
-                }
-                else if (!temp) {
-                    temp = true;
-                    return (React.createElement("button", { id: "...", style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }, disabled: true },
-                        React.createElement("a", { id: "..." }, `...`)));
-                }
-            }),
-            (page != users.length) && (React.createElement("button", { id: "...", style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }, disabled: true },
-                React.createElement("a", { id: "..." }, `...`))),
-            React.createElement("button", { id: "next", onClick: handleClick, style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }, disabled: (page == users.length) },
-                React.createElement("a", { id: "next", onClick: handleClick }, ">")),
-            React.createElement("button", { id: "end", onClick: handleClick, style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }, disabled: (page == users.length) },
-                React.createElement("a", { id: "end", onClick: handleClick }, ">>"))));
-        root.render(res);
-        root2.render(res);
-    });
-}
-function test(users, page, modee, search = "") {
-    return __awaiter(this, void 0, void 0, function* () {
-        const pages = ConvertToPage(users, 100);
-        Pages(pages, page, modee, search);
-        const lists = pages[page - 1];
-        const headers = ["group", "unt"];
-        const lmao = createRoot(document.getElementById("userss"));
-        const temp = (modee.mode == "users") ? (React.createElement(React.Fragment, null,
-            React.createElement("th", { id: "users", style: { width: "5%" } }, "STT"),
-            React.createElement("th", { id: "users", style: { width: "10%" } },
-                React.createElement("button", { name: "rank" }, "Rank")),
-            React.createElement("th", { id: "users", style: { width: "55%" } }, "Username"),
-            React.createElement("th", { id: "users", style: { width: "10%" } },
-                React.createElement("button", { name: "prlcnt" }, "Problems count")),
-            React.createElement("th", { id: "users", style: { width: "10%" } },
-                React.createElement("button", { name: "pnt" }, "Points")))) : (React.createElement(React.Fragment, null,
-            React.createElement("th", { id: "users", style: { width: "5%" } }, "STT"),
-            React.createElement("th", { id: "users", style: { width: "55%" } }, "Group name"),
-            React.createElement("th", { id: "users", style: { width: "10%" } },
-                React.createElement("button", { name: "unt" }, "Users count"))));
-        const themes = color[JSON.parse(localStorage.getItem("user")).themes.mode];
-        lmao.render(React.createElement(StrictMode, null,
-            React.createElement("tbody", { style: { display: "table-row-group", verticalAlign: "middle", borderColor: "inherit" } },
-                React.createElement("tr", { style: { borderTop: "1px solid #dddddd" } }, temp),
-                lists.map((user, index) => {
-                    if (modee.mode == "users") {
-                        const item = user.user;
-                        const color = get_rank_color(item.rank, item.role, themes.font);
-                        return (React.createElement("tr", null,
-                            React.createElement("td", { style: { border: "1px solid #dddddd" } }, user.stt),
-                            headers.map((header) => {
-                                if (item[header] != undefined) {
-                                    if (header == "rank") {
-                                        return (React.createElement("td", { style: { border: "1px solid #dddddd", color: color, fontWeight: "bold" } }, item[header]));
-                                    }
-                                    else {
-                                        return (React.createElement("td", { style: { border: "1px solid #dddddd" } }, item[header]));
-                                    }
-                                }
-                                else {
-                                    const groups = item.group;
-                                    const fn_color = "#808080";
-                                    let group = "";
-                                    groups.forEach((item) => {
-                                        group += `${item} | `;
-                                    });
-                                    return (React.createElement("td", { style: { border: "1px solid #dddddd" } },
-                                        React.createElement("div", { style: { float: "left", paddingLeft: "10px" } },
-                                            React.createElement("div", null,
-                                                React.createElement("a", { className: "font-bold", style: { float: "left", color: color }, href: `/user/${user.username}` }, item.username)),
-                                            React.createElement("span", null,
-                                                React.createElement("a", { className: "font-light", style: { float: "left", color: fn_color, fontWeight: "600" } }, item.fullname))),
-                                        React.createElement("div", { style: { float: "right", paddingRight: "10px", fontWeight: "bold", color: "#808080" } }, groups.map((group, index) => {
-                                            if (index != groups.length - 1) {
-                                                return (React.createElement(React.Fragment, null,
-                                                    React.createElement("em", null,
-                                                        React.createElement("a", { href: `/group/${group}` }, group)),
-                                                    React.createElement("em", { style: { color: themes.font } }, " | ")));
-                                            }
-                                            else {
-                                                return (React.createElement("em", null,
-                                                    React.createElement("a", { href: `/group/${group}` }, group)));
-                                            }
-                                        }))));
-                                }
-                            })));
+                    else if (e.target.attributes.id.value == "next") {
+                        setCurr_page(curr_page + 1);
+                    }
+                    else if (e.target.attributes.id.value == "begin") {
+                        setCurr_page(1);
+                    }
+                    else if (e.target.attributes.id.value == "end") {
+                        setCurr_page(totalPage);
                     }
                     else {
-                        const item = user.group;
-                        return (React.createElement("tr", null,
-                            React.createElement("td", { style: { border: "1px solid #dddddd" } }, user.stt),
-                            headers.map((header, index) => {
-                                return (React.createElement("td", { style: { border: "1px solid #dddddd" } }, (header == "group") ? (React.createElement("a", { href: `/group/${item[header]}` }, item[header])) : (React.createElement("a", null, item[header]))));
-                            })));
+                        setCurr_page(Number(e.target.attributes.id.value));
                     }
-                }))));
-    });
-}
-function render_users(modee, curr_page, search = "") {
-    return __awaiter(this, void 0, void 0, function* () {
-        const res = yield getdata("get", "users", "all");
-        const headers = ["stt", "username", "points", "problems_count", "contribute", "unt"];
-        let mode = { mode: "", reverse: true };
-        if (modee.unt != "auto") {
-            mode = {
-                mode: "unt",
-                reverse: (modee.unt == "down") ? false : true
-            };
-        }
-        const groups = SortGroup(getGroup(res), mode.mode, mode.reverse, search || "");
-        if (groups.length == 0) {
-            groups.push({
-                stt: 1,
-                group: {
-                    group: "Unable to find this user, try to search another word",
-                    unt: 0
-                },
-                name: ""
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+                };
+                let temp = false;
+                const pages = Array(totalPage).fill(0);
+                const paging = (React.createElement(StrictMode, null,
+                    React.createElement("button", { key: "begin", id: "begin", onClick: handleClick, style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }, disabled: (curr_page == 1) },
+                        React.createElement("a", { id: "begin", onClick: handleClick }, "<<")),
+                    React.createElement("button", { id: "pre", onClick: handleClick, style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }, disabled: (curr_page == 1) },
+                        React.createElement("a", { id: "pre", onClick: handleClick }, "<")),
+                    pages.map((item, index) => {
+                        const color = (index + 1 == curr_page) ? "#999900" : "";
+                        if (curr_page <= 5) {
+                            if (index < curr_page + 2) {
+                                return (React.createElement("button", { id: String(index + 1), onClick: handleClick, style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px", backgroundColor: color }, disabled: false },
+                                    React.createElement("a", { id: String(index + 1), onClick: handleClick }, ` ${index + 1} `)));
+                            }
+                        }
+                        else if (index < 2 || (index >= curr_page - 3 && index <= curr_page + 1)) {
+                            return (React.createElement("button", { id: String(index + 1), onClick: handleClick, style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px", backgroundColor: color }, disabled: false },
+                                React.createElement("a", { id: String(index + 1), onClick: handleClick }, ` ${index + 1} `)));
+                        }
+                        else if (!temp) {
+                            temp = true;
+                            return (React.createElement("button", { id: "...", style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }, disabled: true },
+                                React.createElement("a", { id: "..." }, `...`)));
+                        }
+                    }),
+                    (curr_page != pages.length) && (React.createElement("button", { id: "...", style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }, disabled: true },
+                        React.createElement("a", { id: "..." }, `...`))),
+                    React.createElement("button", { id: "next", onClick: handleClick, style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }, disabled: (curr_page == pages.length) },
+                        React.createElement("a", { id: "next", onClick: handleClick }, ">")),
+                    React.createElement("button", { id: "end", onClick: handleClick, style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }, disabled: (curr_page == pages.length) },
+                        React.createElement("a", { id: "end", onClick: handleClick }, ">>"))));
+                setpage(paging);
+                settable(table);
             });
         }
-        test(groups, curr_page, modee, search);
-    });
-}
-export function Home_Groups() {
-    let ctb = "auto", unt = "up";
-    let curr_page = 1;
-    const [searching, Setsearching] = useState(false);
-    const [search, Setsearch] = useState("");
-    useEffect(() => {
-        render_users({ ctb: ctb, unt: unt }, curr_page);
-    }, []);
+        lmao();
+    }, [mode, reverse, curr_page, search]);
     return (React.createElement("div", { style: { width: "4095px" } },
-        React.createElement("div", { id: "page", style: { float: "left", paddingBottom: "10px" } },
-            React.createElement("a", null, "loading....")),
+        React.createElement("div", { id: "page", style: { float: "left", paddingBottom: "10px" } }, page),
         React.createElement("div", { style: { float: "right", paddingBottom: "10px" } },
             React.createElement("span", null,
                 React.createElement("input", { className: "search", type: "text", placeholder: "Enter search here", onChange: (e) => {
                         Setsearch(e.target.value);
-                        let temp;
-                        if (searching == false) {
-                            Setsearching(true);
-                            temp = setTimeout(() => {
-                                if (e != undefined) {
-                                    render_users({ ctb: ctb, unt: unt }, curr_page, e.target.value);
-                                }
-                                Setsearching(false);
-                            }, 2000);
-                        }
-                        else if (searching == true) {
-                            clearTimeout(temp);
-                        }
                     }, value: search || "" }))),
         React.createElement("div", { style: { float: "left", width: "100%" } },
             React.createElement("table", { style: { borderCollapse: "collapse", width: "100%", textAlign: "center" }, id: "userss", onClick: (e) => {
-                    const target = e.target.attributes[0].value;
+                    const target = e.target.attributes[0].value.split("_")[1];
+                    console.log(target);
                     if (target == undefined) {
                         return;
                     }
-                    else if (target == "unt") {
-                        unt = (unt == "up") ? "down" : "up";
+                    else if (target != mode) {
+                        setmode(target);
+                        setreverse(true);
+                        setCurr_page(1);
                     }
-                    render_users({ ctb: ctb, unt: unt }, curr_page);
-                } },
-                React.createElement("a", { style: { fontSize: "30px" } }, "Loading..."))),
-        React.createElement("div", { id: "page2", style: { float: "left", paddingTop: "10px" } },
-            React.createElement("a", null, "loading...."))));
+                    else {
+                        setreverse(!reverse);
+                        setCurr_page(1);
+                    }
+                } }, table)),
+        React.createElement("div", { id: "page2", style: { float: "left", paddingTop: "10px" } }, page)));
 }
 //# sourceMappingURL=groups.js.map

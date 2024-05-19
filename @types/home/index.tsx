@@ -7,7 +7,6 @@ import { Userr } from "./user/index.js"
 import { Blog } from "./blogs.js"
 import { Home_Users } from "./users/users.js"
 import { Home_Groups } from "./users/groups.js"
-import { getdata } from "../@classes/ultility.js"
 import { Edit_blog } from "./user/edit_blog.js"
 import { About } from "./about.js"
 
@@ -19,7 +18,7 @@ export function Home({ users }: { users: User[] }) {
 
     if (url[1] == "") {
         return (
-            <HomePage users={users} />
+            <HomePage />
         )
     }
     else if (url[1] == "user") {
@@ -42,8 +41,6 @@ export function Home({ users }: { users: User[] }) {
         )
     }
     else if (url[1] == "blogs") {
-
-        // console.log(url[3] == "edit")
         if (url[3] == "edit") {
 
             return (

@@ -8,7 +8,7 @@ import { Coding_status, Languages, Theme_mode, User_role } from "./enum.js"
 //     content: string
 // }
 
-export interface Problems {
+export interface User_Problems {
     user: string,
     time: string,
     status: Coding_status,
@@ -42,7 +42,7 @@ export interface User {
 
 
 export interface Group {
-    group: ReactElement | string,
+    groupname: ReactElement | string,
     unt: number
 }
 
@@ -66,4 +66,32 @@ export interface Users_Mode {
     rank: string,
     prlcnt: string,
     pnt: string,
+}
+
+export interface Problems {
+
+    host: string[],
+    pushlish_time: string,
+    public: boolean,
+    id: string,
+
+    title: string,
+    data: string,
+    html: string,
+
+
+    points: number,
+    time_limit: number,
+    memory: number,
+    input: string,
+    output: string,
+    hint: {
+        nani: boolean,
+        data: string,
+        html: string
+    }
+
+    src: string,
+    type: string,
+    supported_language: string[],
 }

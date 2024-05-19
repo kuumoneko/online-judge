@@ -11,7 +11,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Markdown from "react-markdown";
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
-import { all_language, color, get_rank_color, getdata, getGravatarURL, getrank } from "../../@classes/ultility.js";
+import { all_language, color, get_rank_color, getdata, getGravatarURL } from "../../@classes/ultility.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { Theme_mode, Languages, User_role } from "../../@classes/enum.js";
@@ -218,10 +218,21 @@ export function Editprofile({ user }) {
                         }, onClick: saveClick },
                         React.createElement("a", { id: "save", onClick: saveClick }, "Update Profile")))))));
 }
-export function Profile({ users, user }) {
-    const rank_by_points = getrank(users, "points", user.username);
-    const rank_by_rank = getrank(users, "rank", user.username);
-    const color = get_rank_color(2900, User_role.user, "#ff9797");
+export function Profile({ user }) {
+    const [pointsRank, setPR] = useState(0);
+    const [rankRank, setRR] = useState(0);
+    useEffect(() => {
+        function lmao() {
+            return __awaiter(this, void 0, void 0, function* () {
+                const rank_by_points = yield getdata("sort", "users", { mode: "points", search: user.username, reverse: true, page: 1, lineperpage: 100 });
+                const rank_by_rank = yield getdata("sort", "users", { mode: "rank", search: user.username, reverse: true, page: 1, lineperpage: 100 });
+                setRR(rank_by_rank.stt);
+                setPR(rank_by_points.stt);
+            });
+        }
+        lmao();
+    });
+    const color = get_rank_color(user.rank, User_role.user, "#ff9797");
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { style: { width: "100%" } },
             React.createElement("div", { style: { float: "left", height: "400px", minWidth: "15%", border: "1px 1px 1px 1px" } },
@@ -236,14 +247,14 @@ export function Profile({ users, user }) {
                         React.createElement("a", { style: { fontSize: "20px" } }, user.points)),
                     React.createElement("h4", { style: { borderBottom: "0px" } },
                         React.createElement("a", { className: "font-bold" }, "Rank by points: "),
-                        React.createElement("a", { style: { fontSize: "20px" } }, `#${rank_by_points}`)),
+                        React.createElement("a", { style: { fontSize: "20px" } }, `#${pointsRank}`)),
                     React.createElement("h4", { style: { borderBottom: "0px" } },
                         React.createElement("a", { className: "font-bold" }, "Problems solved: "),
                         React.createElement("a", { style: { fontSize: "20px" } }, user.problems_count)),
                     React.createElement("a", { style: { display: "block", borderBottom: "1px solid #d2d2d2", minWidth: "30%" } }),
                     React.createElement("h4", { style: { borderBottom: "0px" } },
                         React.createElement("a", { className: "font-bold" }, "Rank by rating: "),
-                        React.createElement("a", { style: { fontSize: "20px" } }, `#${rank_by_rank}`)),
+                        React.createElement("a", { style: { fontSize: "20px" } }, `#${rankRank}`)),
                     React.createElement("h4", { style: { borderBottom: "0px" } },
                         React.createElement("a", { className: "font-bold" }, "Rating: "),
                         React.createElement("a", { className: "font-bold", style: { fontSize: "20px", color: color } }, user.rank)))),

@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react"
-import { createRoot } from "react-dom/client";
+// import { createRoot } from "react-dom/client";
 import Markdown from "react-markdown";
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
-import { all_language, color, get_rank_color, getdata, getGravatarURL, getrank } from "../../@classes/ultility.js";
+import { all_language, color, get_rank_color, getdata, getGravatarURL } from "../../@classes/ultility.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 // import { Blog } from "./blog.js";
@@ -377,13 +377,28 @@ export function Editprofile({ user }: { user: User }) {
     )
 }
 
-export function Profile({ users, user }: { users: User[], user: User }) {
+export function Profile({ user }: { user: User }) {
     // console.log(user)
-    const rank_by_points = getrank(users, "points", user.username as string)
-    const rank_by_rank = getrank(users, "rank", user.username as string)
+
+    const [pointsRank, setPR] = useState(0);
+    const [rankRank, setRR] = useState(0);
 
 
-    const color = get_rank_color(2900, User_role.user, "#ff9797")
+    useEffect(() => {
+        async function lmao() {
+
+            const rank_by_points = await getdata("sort", "users", { mode: "points", search: user.username, reverse: true, page: 1, lineperpage: 100 })
+            const rank_by_rank = await getdata("sort", "users", { mode: "rank", search: user.username, reverse: true, page: 1, lineperpage: 100 })
+
+            setRR(rank_by_rank.stt)
+            setPR(rank_by_points.stt)
+        }
+
+        lmao()
+    })
+
+
+    const color = get_rank_color(user.rank, User_role.user, "#ff9797")
     return (
         <>
             <div style={{ width: "100%" }}>
@@ -413,7 +428,7 @@ export function Profile({ users, user }: { users: User[], user: User }) {
                                 {"Rank by points: "}
                             </a>
                             <a style={{ fontSize: "20px" }}>
-                                {`#${rank_by_points}`}
+                                {`#${pointsRank}`}
                             </a>
                         </h4>
 
@@ -442,7 +457,7 @@ export function Profile({ users, user }: { users: User[], user: User }) {
                                 {"Rank by rating: "}
                             </a>
                             <a style={{ fontSize: "20px" }}>
-                                {`#${rank_by_rank}`}
+                                {`#${rankRank}`}
                             </a>
                         </h4>
 

@@ -1,99 +1,199 @@
-import React, { StrictMode, useEffect, useState } from "react";
-import { createRoot } from "react-dom/client";
-import { color, ConvertToPage, get_rank_color, getdata, SortGroup, getGroup } from "../../@classes/ultility.js";
-import { User, Groups_Mode } from "../../@classes/type.js";
+import React, { ReactElement, StrictMode, useEffect, useState } from "react";
+import { color, get_rank_color, getdata } from "../../@classes/ultility.js";
+import { Group, User } from "../../@classes/type.js";
 import { Languages, Theme_mode, User_role } from "../../@classes/enum.js";
 
-async function Pages(users: User[], page: number, modee: Groups_Mode, search: string = "") {
+export function Home_Groups() {
+    const [search, Setsearch] = useState("")
+    const [curr_page, setCurr_page] = useState(1);
+    const [mode, setmode] = useState("points")
+    const [reverse, setreverse] = useState(true);
+    const [page, setpage] = useState(<></>);
+    const [table, settable] = useState(<></>);
 
-    // const [pages, setpages] = useState(1);
 
-    const handleClick = (e: any) => {
-        // console.log(search)
-        if (e.target.attributes.id.value == "pre") {
-            render_users(modee, page - 1, search)
-        }
-        else if (e.target.attributes.id.value == "next") {
-            render_users(modee, page + 1, search)
-        }
-        else if (e.target.attributes.id.value == "begin") {
-            render_users(modee, 1, search)
-        }
-        else if (e.target.attributes.id.value == "end") {
-            render_users(modee, users.length, search)
-        }
-        else {
-            page = e.target.attributes.id.value;
-            render_users(modee, Number(page), search)
-        }
+    useEffect(() => {
 
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        })
+        async function lmao() {
+            const res = await getdata("sort", "groups", { mode: mode, search: search, reverse: reverse, page: curr_page, lineperpage: 100 });
 
-    }
-    const root = createRoot(document.getElementById("page") as HTMLElement)
+            let users: any[];
+            let totalPage: number;
+            if (res == undefined) {
+                users = [{
+                    stt: 1,
+                    groupname: "Unable to find this group, try to search another word",
+                    unt: 0
 
-    const root2 = createRoot(document.getElementById("page2") as HTMLElement)
+                }]
+                totalPage = 1;
+            }
+            else if (res.groupname != undefined) {
+                users = [res]
+                totalPage = 1;
+            }
+            else {
+                users = res.data.data;
+                totalPage = res.data.totalPage
+            }
 
-    // while (root.firstChild) {
-    //     root.removeChild(root.firstChild);
-    // }
+            // console.log(users.length)
 
-    // while (root2.firstChild) {
-    //     root2.removeChild(root2.firstChild);
-    // }
+            const themes = color[JSON.parse(localStorage.getItem("user") as string).themes.mode];
+            // console.log(themes)
+            const element: ReactElement[] = users.map((user: { stt: number, unt: number, groupname: string }, index) => {
+                // console.log(user.stt)
+                return (
+                    <tr>
+                        <td style={{ border: `1px solid ${themes.font}` }}>
+                            {user.stt}
+                        </td>
 
-    // console.log(users.length > 5 , '\n' , page >= 5)
-    const themes = color[JSON.parse(localStorage.getItem("user") as string).themes.mode];
-    // console.log(themes)
-    let temp = false;
-    const res = (
-        <StrictMode>
-            <button id="begin" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(page == 1)}>
-                <a id="begin" onClick={handleClick}>
-                    {"<<"}
-                </a>
-            </button>
-            <button id="pre" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(page == 1)}>
-                <a id="pre" onClick={handleClick}>
-                    {"<"}
-                </a>
-            </button>
-            {
+                        {/* <td style={{ border: `1px solid ${themes.font}` }}>
+                            {user.rank}
+                        </td> */}
+                        <td style={{ border: `1px solid ${themes.font}` }}>
 
-                users.map((item, index) => {
-                    const color = (index + 1 == page) ? "#999900" : ""
+                            {user.groupname}
 
-                    if (page <= 5) {
-                        // console.log( page + 2)
-                        if (index < page + 2) {
-                            // console.log(index + 1)
-                            return (
-                                <button id={String(index + 1)} onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px", backgroundColor: color }} disabled={false}>
-                                    <a id={String(index + 1)} onClick={handleClick}>
-                                        {` ${index + 1} `}
-                                    </a>
-                                </button>
-                            )
-                        }
+                        </td>
+                        {/* <td style={{ border: `1px solid ${themes.font}` }}>
+                            {user.problems_count}
+                        </td> */}
+                        <td style={{ border: `1px solid ${themes.font}` }}>
+                            {user.unt}
+                        </td>
+                    </tr >
+                )
+            })
+
+            const table = (
+                <tbody>
+                    <tr style={{ borderTop: `1px solid ${themes.font}` }}>
+                        <th id="users" style={{ width: "5%" }}>
+                            STT
+                        </th>
+                        {/* <th id="users_rank" style={{ width: "10%", border: `1px solid ${themes.font}` }}>
+                            <button name={"users_rank"}>
+                                Rank
+                            </button>
+                        </th> */}
+                        <th id="users" style={{ width: "55%", border: `1px solid ${themes.font}` }}>
+                            Group name
+                        </th>
+                        {/* <th id="users_prlcnt" style={{ width: "10%", border: `1px solid ${themes.font}` }}>
+                            <button name={"users_prlcnt"}>
+                                Problems count
+                            </button>
+                        </th> */}
+                        <th id="users_unt" style={{ width: "10%", border: `1px solid ${themes.font}` }}>
+                            <button name={"users_unt"}>
+                                Users
+                            </button>
+                        </th>
+                    </tr>
+                    {
+                        element.map((item: any) => {
+                            return item
+                        })
+
                     }
-                    else if (index < 2 || (index >= page - 3 && index <= page + 1)) {
-                        // console.log(index + 1)
-                        return (
-                            <button id={String(index + 1)} onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px", backgroundColor: color }} disabled={false}>
-                                <a id={String(index + 1)} onClick={handleClick}>
-                                    {` ${index + 1} `}
-                                </a>
-                            </button >
-                        )
-                    }
-                    else if (!temp) {
-                        // console.log("...")
-                        temp = true
+                </tbody>
+            )
 
-                        return (
+
+
+
+            // Create Page line
+
+
+            const handleClick = (e: any) => {
+                // console.log(search)
+                if (e.target.attributes.id.value == "pre") {
+                    setCurr_page(curr_page - 1)
+                }
+                else if (e.target.attributes.id.value == "next") {
+                    setCurr_page(curr_page + 1)
+                }
+                else if (e.target.attributes.id.value == "begin") {
+                    setCurr_page(1)
+                }
+                else if (e.target.attributes.id.value == "end") {
+                    setCurr_page(totalPage)
+                }
+                else {
+                    setCurr_page(Number(e.target.attributes.id.value));
+                }
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                })
+
+            }
+            let temp = false;
+
+            // console.log(users.length)
+            const pages = Array(totalPage).fill(0)
+
+            const paging = (
+                <StrictMode>
+                    <button key="begin" id="begin" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(curr_page == 1)}>
+                        <a id="begin" onClick={handleClick}>
+                            {"<<"}
+                        </a>
+                    </button>
+                    <button id="pre" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(curr_page == 1)}>
+                        <a id="pre" onClick={handleClick}>
+                            {"<"}
+                        </a>
+                    </button>
+                    {
+
+                        pages.map((item, index) => {
+                            const color = (index + 1 == curr_page) ? "#999900" : ""
+
+                            if (curr_page <= 5) {
+                                // console.log( curr_page + 2)
+                                if (index < curr_page + 2) {
+                                    // console.log(index + 1)
+                                    return (
+                                        <button id={String(index + 1)} onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px", backgroundColor: color }} disabled={false}>
+                                            <a id={String(index + 1)} onClick={handleClick}>
+                                                {` ${index + 1} `}
+                                            </a>
+                                        </button>
+                                    )
+                                }
+                            }
+                            else if (index < 2 || (index >= curr_page - 3 && index <= curr_page + 1)) {
+                                // console.log(index + 1)
+                                return (
+                                    <button id={String(index + 1)} onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px", backgroundColor: color }} disabled={false}>
+                                        <a id={String(index + 1)} onClick={handleClick}>
+                                            {` ${index + 1} `}
+                                        </a>
+                                    </button >
+                                )
+                            }
+                            else if (!temp) {
+                                // console.log("...")
+                                temp = true
+
+                                return (
+                                    <button id={"..."} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={true}>
+                                        <a id={"..."}>
+                                            {`...`}
+                                        </a>
+                                    </button>
+                                )
+                            }
+
+
+                        })
+                    }
+                    {
+                        (curr_page != pages.length) && (
                             <button id={"..."} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={true}>
                                 <a id={"..."}>
                                     {`...`}
@@ -102,305 +202,34 @@ async function Pages(users: User[], page: number, modee: Groups_Mode, search: st
                         )
                     }
 
-
-                })
-            }
-            {
-                (page != users.length) && (
-                    <button id={"..."} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={true}>
-                        <a id={"..."}>
-                            {`...`}
+                    <button id="next" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(curr_page == pages.length)}>
+                        <a id="next" onClick={handleClick}>
+                            {">"}
                         </a>
                     </button>
-                )
-            }
+                    <button id="end" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(curr_page == pages.length)}>
+                        <a id="end" onClick={handleClick}>
+                            {">>"}
+                        </a>
+                    </button>
+                </StrictMode >
+            )
 
-            <button id="next" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(page == users.length)}>
-                <a id="next" onClick={handleClick}>
-                    {">"}
-                </a>
-            </button>
-            <button id="end" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(page == users.length)}>
-                <a id="end" onClick={handleClick}>
-                    {">>"}
-                </a>
-            </button>
-        </StrictMode >
-    )
-
-    root.render(res)
-
-    root2.render(res)
-}
-
-/**
- * 
- * @param {*} users 
- * @param {number} page 
- * @param { {rank:string , prlcnt:string , pnt:string, ctb:string, unt:string, mode:string} } modee 
- * @param {string} search 
- */
-async function test(users: any, page: number, modee: any, search: string = "") {
-    // console.log(users)
-    const pages = ConvertToPage(users, 100);
-    // console.log(page)
-    Pages(pages, page, modee, search)
-    // let i = 1
-
-    const lists = pages[page - 1]
-    // console.log(page)
-    // console.log(lists)
-
-    const headers: any[] = ["group", "unt"]
-    const lmao = createRoot(document.getElementById("userss") as HTMLElement)
-
-    // while ((lmao as ReactHTML).firstChild) {
-    //     lmao.removeChild(lmao.firstChild);
-    // }
-
-    const temp = (modee.mode == "users") ? (
-        <>
-            <th id="users" style={{ width: "5%" }}>
-                STT
-            </th>
-            <th id="users" style={{ width: "10%" }}>
-                <button name={"rank"}>
-                    Rank
-                </button>
-            </th>
-            <th id="users" style={{ width: "55%" }}>
-                Username
-            </th>
-            <th id="users" style={{ width: "10%" }}>
-                <button name={"prlcnt"}>
-                    Problems count
-                </button>
-            </th>
-            <th id="users" style={{ width: "10%" }}>
-                <button name={"pnt"}>
-                    Points
-                </button>
-            </th>
-            {/* <th id="users" style={{ width: "10%" }}>
-                <button name={"ctb"}>
-                    Contribution points
-                </button>
-            </th> */}
-        </>
-    ) : (
-        <>
-            <th id="users" style={{ width: "5%" }}>
-                STT
-            </th>
-            <th id="users" style={{ width: "55%" }}>
-                Group name
-            </th>
-            <th id="users" style={{ width: "10%" }}>
-                <button name={"unt"}>
-                    Users count
-                </button>
-            </th>
-        </>
-    )
-    const themes = color[JSON.parse(localStorage.getItem("user") as string).themes.mode];
-    lmao.render(
-        <StrictMode>
-            <tbody style={{ display: "table-row-group", verticalAlign: "middle", borderColor: "inherit" }}>
-                <tr style={{ borderTop: "1px solid #dddddd" }}>
-                    {temp}
-                </tr>
-                {
-                    lists.map((user: any, index: number) => {
-                        if (modee.mode == "users") {
-                            const item: any = user.user
-                            // console.log(item)
-                            const color = get_rank_color(item.rank, item.role, themes.font);
-                            // if (item.role == "admin")
-
-                            return (
-                                <tr>
-                                    <td style={{ border: "1px solid #dddddd" }}>
-                                        {user.stt}
-                                    </td>
-                                    {
-                                        headers.map((header) => {
-                                            if (item[header] != undefined) {
-                                                if (header == "rank") {
-                                                    return (
-                                                        <td style={{ border: "1px solid #dddddd", color: color, fontWeight: "bold" }}>
-                                                            {item[header]}
-                                                        </td>
-                                                    )
-                                                } else {
-                                                    return (
-                                                        <td style={{ border: "1px solid #dddddd" }}>
-                                                            {item[header]}
-                                                        </td>
-                                                    )
-                                                }
-                                            } else {
-                                                const groups = item.group;
-                                                const fn_color = "#808080"
-                                                let group = ""
-                                                groups.forEach((item: string) => {
-                                                    group += `${item} | `
-                                                })
-                                                return (
-                                                    <td style={{ border: "1px solid #dddddd" }}>
-                                                        <div style={{ float: "left", paddingLeft: "10px" }}>
-                                                            <div>
-                                                                <a className="font-bold" style={{ float: "left", color: color }} href={`/user/${user.username}`}>
-                                                                    {item.username}
-                                                                </a>
-                                                            </div>
-                                                            <span>
-                                                                <a className="font-light" style={{ float: "left", color: fn_color, fontWeight: "600" }}>
-                                                                    {item.fullname}
-                                                                </a>
-                                                            </span>
-                                                        </div>
-                                                        <div style={{ float: "right", paddingRight: "10px", fontWeight: "bold", color: "#808080" }}>
-                                                            {
-                                                                groups.map((group: string, index: number) => {
-                                                                    if (index != groups.length - 1) {
-                                                                        return (
-                                                                            <>
-                                                                                <em >
-                                                                                    <a href={`/group/${group}`}>
-                                                                                        {group}
-                                                                                    </a>
-                                                                                </em>
-                                                                                <em style={{ color: themes.font }}>
-                                                                                    {" | "}
-                                                                                </em>
-                                                                            </>
-                                                                        )
-                                                                    } else {
-                                                                        return (
-                                                                            <em >
-                                                                                <a href={`/group/${group}`}>
-                                                                                    {group}
-                                                                                </a>
-                                                                            </em>
-                                                                        )
-                                                                    }
-                                                                })
-                                                            }
-                                                        </div>
-                                                    </td>
-                                                )
-                                            }
-                                        })
-                                    }
-                                </tr>
-                            )
-                        }
-                        else {
-                            const item = user.group;
-                            return (
-                                <tr>
-                                    <td style={{ border: "1px solid #dddddd" }}>
-                                        {user.stt}
-                                    </td>
-                                    {
-                                        headers.map((header, index) => {
-                                            return (
-                                                <td style={{ border: "1px solid #dddddd" }}>
-                                                    {
-                                                        (header == "group") ? (
-                                                            <a href={`/group/${item[header]}`}>
-                                                                {
-                                                                    item[header]
-                                                                }
-                                                            </a>
-                                                        ) : (
-                                                            <a >
-                                                                {
-                                                                    item[header]
-                                                                }
-                                                            </a>
-                                                        )
-                                                    }
-                                                </td>
-                                            )
-                                        })
-                                    }
-                                    {/* <td>
-                                        a
-                                    </td> */}
-                                </tr>
-
-                            )
-                        }
-                    })
-                }
-            </tbody>
-        </StrictMode>
-    )
-
-}
-
-async function render_users(modee: Groups_Mode, curr_page: number, search: string = "") {
-
-    const res = await getdata("get", "users", "all");
-
-    // const res = []
-    // Object.keys(data).forEach((item) => {
-    //     res.push(data[item])
-    // })
-
-    type moding = {
-        mode: string,
-        reverse: boolean
-    }
-
-    const headers = ["stt", "username", "points", "problems_count", "contribute", "unt"];
-
-    let mode: moding = { mode: "", reverse: true };
+            setpage(paging)
+            settable(table)
 
 
-    if (modee.unt != "auto") {
-        mode = {
-            mode: "unt",
-            reverse: (modee.unt == "down") ? false : true
         }
-    }
 
-
-    const groups = SortGroup(getGroup(res), mode.mode, mode.reverse, search || "")
-
-    if (groups.length == 0) {
-        groups.push({
-            stt: 1,
-            group: {
-                group: "Unable to find this user, try to search another word",
-                unt: 0
-            },
-            name: ""
-        })
-    }
-    test(groups, curr_page, modee, search)
-}
-
-export function Home_Groups() {
-    let ctb = "auto",
-        unt = "up";
-
-    let curr_page = 1;
-
-    const [searching, Setsearching] = useState(false)
-    const [search, Setsearch] = useState("")
-
-    useEffect(() => {
-        render_users({ ctb: ctb, unt: unt }, curr_page)
-    }, [])
+        lmao()
+    }, [mode, reverse, curr_page, search])
 
     return (
         <div style={{ width: "4095px" }}>
             <div id="page" style={{ float: "left", paddingBottom: "10px" }}>
-                <a>
-                    loading....
-                </a>
+                {
+                    page
+                }
             </div>
             <div style={{ float: "right", paddingBottom: "10px" }}>
                 <span>
@@ -410,24 +239,6 @@ export function Home_Groups() {
                         placeholder="Enter search here"
                         onChange={(e) => {
                             Setsearch(e.target.value)
-                            let temp: any;
-                            if (searching == false) {
-                                Setsearching(true)
-                                temp = setTimeout(() => {
-                                    if (e != undefined) {
-
-                                        // console.log(e.target.value)
-                                        // console.log(search)
-                                        render_users({ ctb: ctb, unt: unt }, curr_page, e.target.value)
-                                    }
-
-
-                                    Setsearching(false)
-                                }, 2000)
-                            }
-                            else if (searching == true) {
-                                clearTimeout(temp)
-                            }
                         }}
                         value={search || ""}
                     >
@@ -439,30 +250,28 @@ export function Home_Groups() {
                     style={{ borderCollapse: "collapse", width: "100%", textAlign: "center" }}
                     id="userss"
                     onClick={(e) => {
-                        const target = (e.target as HTMLInputElement).attributes[0].value;
-
-
-
+                        const target = (e.target as HTMLInputElement).attributes[0].value.split("_")[1];
+                        console.log(target)
                         if (target == undefined) {
                             return;
-                        }                     
-                        else if (target == "unt") {
-                            unt = (unt == "up") ? "down" : "up";
                         }
-
-                        // console.log(unt)
-
-                        render_users({ ctb: ctb, unt: unt }, curr_page)
+                        else if (target != mode) {
+                            setmode(target)
+                            setreverse(true)
+                            setCurr_page(1)
+                        }
+                        else {
+                            setreverse(!reverse)
+                            setCurr_page(1)
+                        }
                     }}>
-                    <a style={{ fontSize: "30px" }}>
-                        Loading...
-                    </a>
+                    {
+                        table
+                    }
                 </table>
             </div>
             <div id="page2" style={{ float: "left", paddingTop: "10px" }}>
-                <a>
-                    loading....
-                </a>
+                {page}
             </div>
         </div>
     )

@@ -63,15 +63,19 @@ export function About() {
     return (
         <div>
             <p>
-                OJ.LEQUYDON.NET là hệ thống chấm điểm trực tuyến môn Tin học. Hệ thống này được xây dựng dựa trên open-source
-                <a rel="nofollow" href="https://dmoj.ca/" style={{ color: themes.font }}>
+                OJ.KUUMOOJ.NET là hệ thống chấm điểm trực tuyến môn Tin học. Hệ thống này được xây dựng dựa trên open-source
+                <a target="_blank" rel="noopener noreferrer" href="https://dmoj.ca/" style={{ color: themes.font }}>
                     {" DMOJ "}
                 </a>
                 và
-                <a rel="nofollow" href="https://oj.vnoi.info/" style={{ color: themes.font }}>
+                <a target="_blank" rel="noopener noreferrer" href="https://oj.vnoi.info/" style={{ color: themes.font }}>
                     {" VNOJ "}
                 </a>
-                nhưng được sử dụng react.js, xây dựng với mục đích giúp học sinh học tập - trau dồi kiến thức lập trình và khoa học máy tính cũng như tổ chức các cuộc thi liên quan.
+                nhưng được xây dựng trên nền
+                <a target="_blank" rel="noopener noreferrer" href="https://react.dev/?uwu=true">
+                    {" React.js "}
+                </a>
+                , xây dựng với mục đích giúp học sinh học tập - trau dồi kiến thức lập trình và khoa học máy tính cũng như tổ chức các cuộc thi liên quan.
             </p>
 
             <p>

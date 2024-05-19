@@ -6,7 +6,7 @@ import Markdown from "react-markdown";
 import { sanitize } from "dompurify";
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
-import { createRoot } from "react-dom/client";
+// import { createRoot } from "react-dom/client";
 import { Blogs, User } from "../../@classes/type.js";
 
 

@@ -86,8 +86,8 @@ function Login() {
                 username: true,
                 password: true
             })
-            Cookies.set("user", username);
-            Cookies.set("remember", (remember) ? "true" : "false")
+            Cookies.set("user", username, { expires: 28 });
+            Cookies.set("remember", (remember) ? "true" : "false", { expires: 28 })
             // const item = {
             //     username: res.username,
             //     role: res.role,
@@ -415,8 +415,8 @@ function Singupform() {
             // await axios.post("http://localhost:3001/api/data", { method: "post", mode: "users", data: user }, {})
 
             await getdata("post", "users", user)
-            Cookies.set("user", username);
-            Cookies.set("remember", (remember) ? "true" : "false");
+            Cookies.set("user", username, { expires: 28 });
+            Cookies.set("remember", (remember) ? "true" : "false", { expires: 28 });
             // localStorage.setItem("user", JSON.stringify({ username: username, role: "User" }))
             window.location.href = "/";
         }

@@ -15,7 +15,6 @@ import Markdown from "react-markdown";
 import { sanitize } from "dompurify";
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
-import { createRoot } from "react-dom/client";
 function Add_blog({ user }) {
     const now = new Date();
     const [Title, settitle] = useState("");
@@ -174,13 +173,12 @@ function sanitizeHtml(html) {
     return doc.body.innerHTML;
 }
 export function Blog({ url }) {
-    const user = JSON.parse(localStorage.getItem("user"));
+    const [html, sethtml] = useState(React.createElement(React.Fragment, null));
     useEffect(() => {
         function blogs() {
             return __awaiter(this, void 0, void 0, function* () {
-                const blogs = yield getdata("get", "blogs", { id: url[2] });
-                const root = createRoot(document.getElementById("blogs"));
-                const html = (React.createElement("div", { className: "blogs", style: { width: "100%", minHeight: "25vh" } },
+                const blogs = yield getdata("get", "blogs", url[2]);
+                const htmll = (React.createElement("div", { className: "blogs", style: { width: "100%", minHeight: "25vh" } },
                     React.createElement("h2", { className: "font-bold", style: { marginBottom: "10px", color: color_themes } },
                         React.createElement("a", { href: `/blogs/${blogs.id}` }, blogs.title)),
                     React.createElement("a", { style: { marginBottom: "15px", marginRight: "10px" } }, `${blogs.host} published on ${blogs.publish_time.replace("T", " ")}`),
@@ -188,12 +186,12 @@ export function Blog({ url }) {
                         React.createElement(FontAwesomeIcon, { icon: faPenToSquare }))),
                     React.createElement("br", { style: { width: "100px" } }),
                     React.createElement(Markdown, { children: sanitizeHtml(blogs.html), rehypePlugins: [rehypeRaw, rehypeSanitize] })));
-                root.render(html);
+                sethtml(htmll);
             });
         }
         if (url[3] != "add")
             blogs();
     });
-    return (React.createElement("div", { id: "blogs", style: { width: "100%" } }));
+    return (React.createElement("div", { id: "blogs", style: { width: "100%" } }, html));
 }
 //# sourceMappingURL=blogs.js.map

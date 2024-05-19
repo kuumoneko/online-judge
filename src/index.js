@@ -12,16 +12,16 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import { Navigator } from "./navigator.js";
 import Cookies from 'js-cookie';
-import { color, color_themes, cookie, get_rank_color, getdata, geturl, replaceAll } from './@classes/ultility.js';
+import { color, color_themes, cookie, getdata, geturl } from './@classes/ultility.js';
 import { Theme_mode, User_role } from './@classes/enum.js';
 import { Home } from './home/index.js';
 import { Admin } from './admin/index.js';
+import { Title } from './title.js';
 const root = createRoot(document.getElementById("root"));
 if (!document.referrer && Cookies.get("remember") == "false") {
     Cookies.remove("user");
     Cookies.remove("remember");
 }
-const url = document.URL;
 const urll = geturl();
 let cookies = cookie(document);
 function lmao() {
@@ -45,7 +45,21 @@ function lmao() {
     });
 }
 lmao().then((res) => __awaiter(void 0, void 0, void 0, function* () {
-    const themes = (res) ? color[res.themes.mode] : color.light;
+    let temp = "";
+    if (urll[0] == "admin") {
+        temp = `Adminisrator ${urll[1] ? `for ${urll[1]}` : "Dashboard"}`;
+    }
+    else {
+        temp = (urll[0]) ? urll[0].replace(urll[0][0], urll[0][0].toUpperCase()) : "Home page";
+    }
+    document.title = temp;
+    if (Cookies.get("themes") == undefined) {
+        Cookies.set("themes", "light", { expires: 400000 });
+    }
+    else {
+        Cookies.set("themes", res.themes.mode, { expires: 400000 });
+    }
+    const themes = (res) ? color[res.themes.mode] : color[Cookies.get("themes")];
     const ress = yield getdata("get", "users", "all");
     function Checking({ url }) {
         const direct = url[0];
@@ -59,66 +73,6 @@ lmao().then((res) => __awaiter(void 0, void 0, void 0, function* () {
             return (React.createElement(Admin, null));
         }
     }
-    function Userss({ mode }) {
-        function resss(modee) {
-            return {
-                borderRadius: "4px 4px 0 0",
-                borderTop: (modee == mode) ? "3px solid #ff99cc" : `1px solid ${themes.content}`,
-                borderBottom: (modee == mode) ? `1px solid ${themes.content}` : "1px solid #dddddd",
-                borderLeft: (modee == mode) ? "1px solid #dddddd" : `1px solid ${themes.content}`,
-                borderRight: (modee == mode) ? "1px solid #dddddd" : `1px solid ${themes.content}`,
-            };
-        }
-        return (React.createElement("ul", { style: { paddingLeft: "0px", backgroundColor: `${themes.content}`, color: `${themes.font}`, borderBottom: "0px", display: "flex", margin: "0", height: "45px", float: "right", marginBottom: "-1px", flexWrap: "nowrap", alignItems: "flex-end" } },
-            React.createElement("li", null,
-                React.createElement("a", { id: "users", href: '/users', style: resss("users") }, "User")),
-            React.createElement("li", null,
-                React.createElement("a", { id: "users", href: '/groups', style: resss("groups") }, "Groups"))));
-    }
-    function Userr({ mode }) {
-        function resss(modee) {
-            return {
-                borderRadius: "4px 4px 0 0",
-                borderTop: (modee == mode[2]) ? "3px solid #ff99cc" : `1px solid ${themes.content}`,
-                borderBottom: (modee == mode[2]) ? `1px solid ${themes.content}` : "1px solid #dddddd",
-                borderLeft: (modee == mode[2]) ? "1px solid #dddddd" : `1px solid ${themes.content}`,
-                borderRight: (modee == mode[2]) ? "1px solid #dddddd" : `1px solid ${themes.content}`,
-            };
-        }
-        return (React.createElement("ul", { style: { paddingLeft: "0px", backgroundColor: `${themes.content}`, color: `${themes.font}`, borderBottom: "0px", display: "flex", margin: "0", height: "45px", float: "right", marginBottom: "-1px", flexWrap: "nowrap", alignItems: "flex-end" } },
-            React.createElement("li", null,
-                React.createElement("a", { id: "users", href: `/user/${mode[1]}`, style: resss(undefined) }, "About")),
-            React.createElement("li", null,
-                React.createElement("a", { id: "users", href: `/user/${mode[1]}/statistics`, style: resss("statistics") }, "Statistics")),
-            React.createElement("li", null,
-                React.createElement("a", { id: "users", href: `/user/${mode[1]}/blogs`, style: resss("blogs") }, "Blogs")),
-            (cookies.user == mode[1]) &&
-                (React.createElement("li", null,
-                    React.createElement("a", { id: "users", href: `/user/${mode[1]}/edit_profile`, style: resss("edit_profile") }, "Edit profile")))));
-    }
-    function Create_title({ url }) {
-        let temp = url[0];
-        temp = replaceAll(temp, "_", " ");
-        console.log(temp);
-        return (React.createElement(React.Fragment, null,
-            React.createElement("br", { style: { paddingBottom: "10px" } }),
-            React.createElement("div", { className: 'tabs', style: {
-                    borderBottom: `1px  solid ${themes.font}`,
-                    display: "flex",
-                    margin: "0 0 8px",
-                    width: "100%",
-                    justifyContent: "space-between",
-                    flexWrap: "wrap",
-                    height: "45px"
-                } },
-                React.createElement("h2", { id: "title", style: { maxWidth: "10em", fontSize: "2em" } }, (temp == "admin")
-                    ?
-                        "Site administration"
-                    :
-                        (temp == "user") &&
-                            (React.createElement("a", { className: 'font-bold', style: { color: get_rank_color(JSON.parse(localStorage.getItem("user")).rank, User_role.user, themes.content) } }, url[1] && url[1]))),
-                (temp == "users" || temp == "groups") ? (React.createElement(Userss, { mode: temp })) : (temp == "user") ? (React.createElement(Userr, { mode: url })) : (React.createElement(React.Fragment, null)))));
-    }
     root.render(React.createElement(React.Fragment, null,
         React.createElement(Navigator, { mode: (urll[0] == "admin") ? "admin" : "normal" }),
         React.createElement("div", { id: 'page-container', style: { backgroundColor: themes.content, color: themes.font } },
@@ -126,7 +80,7 @@ lmao().then((res) => __awaiter(void 0, void 0, void 0, function* () {
                 React.createElement("div", { id: "noscript" }, " This site works best with JavaScript enabled.")),
             React.createElement("br", null),
             React.createElement("main", { id: 'content' },
-                React.createElement(Create_title, { url: urll }),
+                React.createElement(Title, { url: urll, themes: themes }),
                 React.createElement("div", { className: "content-body", style: { paddingBottom: "4em", display: "flex", justifyContent: "space-around" } },
                     React.createElement(Checking, { url: urll }))),
             React.createElement("footer", { style: {
@@ -135,10 +89,12 @@ lmao().then((res) => __awaiter(void 0, void 0, void 0, function* () {
                 } },
                 React.createElement("span", { style: { color: "black" } },
                     "proudly powered by ",
-                    React.createElement("a", { href: "https://dmoj.ca" }, "DMOJ"),
+                    React.createElement("a", { href: "https://dmoj.ca", target: "_blank", rel: "noopener noreferrer" }, "DMOJ"),
                     " & ",
-                    React.createElement("a", { href: "https://oj.vnoi.info/" }, "VNOJ"),
-                    " using React.js | ",
-                    React.createElement("a", { href: "/user/kuumoneko" }, "kuumoneko"))))));
+                    React.createElement("a", { href: "https://oj.vnoi.info/", target: "_blank", rel: "noopener noreferrer" }, "VNOJ"),
+                    " using ",
+                    React.createElement("a", { target: "_blank", rel: "noopener noreferrer", href: "https://react.dev/?uwu=true" }, " React.js "),
+                    " | ",
+                    React.createElement("a", { href: "/user/kuumoneko", target: "_blank", rel: "noopener noreferrer" }, "kuumoneko"))))));
 }));
 //# sourceMappingURL=index.js.map

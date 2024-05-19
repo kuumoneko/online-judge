@@ -166,13 +166,6 @@ export function Editprofile({ user }) {
                             React.createElement("a", { onClick: onClick, id: "preview", style: { paddingLeft: "5px" } }, "Preview"))),
                     React.createElement("div", { style: { height: "350px", width: "1500px", display: "flex", flexDirection: "row" } }, (mode == "editor") ? (React.createElement(React.Fragment, null,
                         React.createElement("div", { id: "row", style: {
-                                overflowY: "auto",
-                                overflow: "hidden",
-                                width: "3%",
-                                height: "100%",
-                                borderRight: "2px solid",
-                                backgroundColor: "#e8e8e8",
-                                marginTop: "5px",
                                 color: color[JSON.parse(localStorage.getItem("user")).themes.mode].background
                             } }, lines.map((item, index) => (React.createElement("div", { style: { display: "flex", justifyContent: "space-around", paddingTop: "0px", paddingBottom: `${item.more * 20}px` } }, index + 1)))),
                         React.createElement("div", { id: "editorr", contentEditable: "true", ref: contentRef, style: {

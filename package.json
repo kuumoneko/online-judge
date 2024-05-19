@@ -5,13 +5,13 @@
     "type": "module",
     "scripts": {
         "start": "concurrently \"npm run ts-react-server \" \"npm run side-server\"  \"npm run react-server\"",
-        "side-server": "nodemon G:\\online-judge\\src\\dataserver.js",
+        "side-server": "nodemon \"G:\\Online Judge\\src\\dataserver\\server.js\"",
         "react-server": "react-scripts start",
-        "ts-react-server": "tsc --watch -p G:\\online-judge\\tsconfig.json",
+        "ts-react-server": "tsc --watch -p \"G:\\Online Judge\\tsconfig.json\"",
         "build": "react-scripts build",
         "test": "react-scripts test --env=jsdom",
         "eject": "react-scripts eject",
-        "ts_build": "node G:\\online-judge\\@scripts\\delete.js  && tsc -p tsconfig.json"
+        "ts_build": "node \"g:\\Online Judge\\@scripts\\delete.js\"  && tsc -p tsconfig.json"
     },
     "browserslist": {
         "production": [
@@ -41,8 +41,6 @@
         "hast-util-raw": "^9.0.2",
         "js-cookie": "^3.0.5",
         "js-sha256": "^0.11.0",
-        "nodemon": "^3.1.0",
-        "react": "^18.0.0",
         "react-dom": "^18.0.0",
         "react-hook-form": "^7.51.0",
         "react-markdown": "^9.0.1",
@@ -62,6 +60,9 @@
         "@types/dompurify": "^3.0.5",
         "@types/js-cookie": "^3.0.6",
         "@types/react": "^18.3.1",
-        "concurrently": "^8.2.2"
+        "concurrently": "^8.2.2",
+        "typescript": "^5.4.5",
+        "nodemon": "^3.1.0",
+        "react": "^18.0.0"
     }
 }

@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import { getdata, sort_blogs, color_themes, SortUser, get_rank_color } from "../@classes/ultility.js";
-import { createRoot } from "react-dom/client";
+import React, { useEffect, useState } from "react";
+import { getdata, color_themes, get_rank_color } from "../@classes/ultility.js";
 import Markdown from "react-markdown";
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
@@ -19,23 +18,21 @@ function sanitizeHtml(html: string) {
 
 
 
-export function HomePage({ users }: { users: User[] }) {
+export function HomePage() {
+
+    const [html, sethtml] = useState(<></>)
+    const [top_users, settop] = useState(<></>)
 
 
     useEffect(() => {
         async function blogs() {
-            const blogs = await getdata("get", "blogs", "all")
+            const blogs = await getdata("sort", "blogs", { mode: "publish_time", search: "", reverser: true, page: 1, lineperpage: 100000 })
+            const users = await getdata("sort", "users", { mode: "points", search: "", reverse: true, page: 1, lineperpage: 10 });
             // console.log(blogs)
-
-
-
-            // const blogs = user.blogs;
-            const root = createRoot(document.getElementById("blogs") as HTMLElement);
-            // console.log(url[3] == "add")
-            const html = (
+            sethtml(
                 <div>
                     {
-                        sort_blogs(blogs).map((item, _index) => {
+                        blogs.data.data.map((item, _index) => {
                             // console.log(item)
                             if (new Date(item.publish_time).getTime() < new Date().getTime())
                                 return (
@@ -68,13 +65,48 @@ export function HomePage({ users }: { users: User[] }) {
                 </div>
             )
 
-            root.render(html)
-        }
-        // if (url[3] != "add")
-        blogs();
-    })
+            settop(
+                <tbody>
+                    <tr>
+                        <th id="top_users">
+                            #
+                        </th>
+                        <th id="top_users">
+                            Name
+                        </th>
+                        <th id="top_users">
+                            Points
+                        </th>
+                    </tr>
+                    {
+                        users.data.data.map((user: User, index: number) => {
+                            return (
+                                <tr>
+                                    <th id="top_users" style={{ width: "15%" }}>
+                                        {index + 1}
+                                    </th>
+                                    <th id="top_users" style={{ width: "70%" }}>
+                                        <a href={`/user/${user.username}`} style={{
+                                            color: get_rank_color(user.points, user.role, color_themes)
+                                        }}>
+                                            {user.username}
+                                        </a>
 
-    const temp = SortUser(users, "points", true);
+                                    </th>
+                                    <th id="top_users" style={{ width: "15%" }}>
+                                        {user.points}
+                                    </th>
+                                </tr>
+                            )
+                        })
+                    }
+                </tbody>
+            )
+        }
+        blogs();
+    }, [])
+
+
 
     return (
         <div style={{
@@ -89,7 +121,7 @@ export function HomePage({ users }: { users: User[] }) {
                         Blogs
                     </h1>
                     <div id="blogs" >
-
+                        {html}
                     </div>
 
                 </div>
@@ -99,46 +131,12 @@ export function HomePage({ users }: { users: User[] }) {
                 <h1>
                     Top Users
                 </h1>
-                <div>
+                <div id="topusers">
                     <table style={{
                         width: "100%",
                         border: "1px solid white"
                     }}>
-
-                        <tr>
-                            <th id="top_users">
-                                #
-                            </th>
-                            <th id="top_users">
-                                Name
-                            </th>
-                            <th id="top_users">
-                                Points
-                            </th>
-                        </tr>
-
-                        {
-                            temp.slice(0, 10).map((item, index) => {
-                                return (
-                                    <tr>
-                                        <th id="top_users">
-                                            {index + 1}
-                                        </th>
-                                        <th id="top_users" >
-                                            <a href={`/user/${item.user.username}`} style={{
-                                                color: get_rank_color(item.user.points, item.user.role, color_themes)
-                                            }}>
-                                                {item.user.username}
-                                            </a>
-
-                                        </th>
-                                        <th id="top_users">
-                                            {item.user.points}
-                                        </th>
-                                    </tr>
-                                )
-                            })
-                        }
+                        {top_users}
                     </table>
                 </div>
             </div>

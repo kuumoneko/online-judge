@@ -10,7 +10,7 @@ import { About } from "./about.js";
 export function Home({ users }) {
     const url = document.URL.split("//")[1].split("/");
     if (url[1] == "") {
-        return (React.createElement(HomePage, { users: users }));
+        return (React.createElement(HomePage, null));
     }
     else if (url[1] == "user") {
         if (url[2] == undefined) {
