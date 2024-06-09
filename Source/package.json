@@ -1,17 +1,8 @@
 {
-  "name": "kuumooj",
-  "version": "0.0.1",
+  "name": "kuumo-online-judge",
+  "version": "0.0.5",
   "main": "/dist/index.js",
   "type": "module",
-  "scripts": {
-    "run-server": "concurrently \"npm run ts-react-server \" \"npm run side-server\"  \"npm run react-server\" \"npm run data-server\" \"npm run package-server\"",
-    "react-server": "react-scripts start",
-    "ts-react-server": "tsc --watch -p \"G:\\Project\\tsconfig.json\"",
-    "side-server": "nodemon --config \"G:\\Project\\nodemon-servers.json\"",
-    "data-server": "nodemon --config \"G:\\Project\\nodemon-running.json\"",
-    "package-server": "tsc --watch -p \"G:\\Project\\package\\online-judge-types\\tsconfig.json\"",
-    "build": "tsc -p \"G:\\Project\\Source\\tsconfig.json\""
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -66,6 +57,6 @@
     "typescript": "^4.9.5"
   },
   "workspaces": [
-    "/package/*"
+    "../package/*"
   ]
 }

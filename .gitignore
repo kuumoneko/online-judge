@@ -134,6 +134,10 @@ dist
 /build
 /test
 /.vscode
-/data
-/chonkpengu
 /@scripts
+nodemon-running.json
+nodemon-servers.json
+nodemon.json
+tsconfig.json
+.gitignore
+online-judge-data/data
