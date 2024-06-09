@@ -137,3 +137,8 @@ dist
 /data
 /chonkpengu
 /@scripts
+nodemon-running.json
+nodemon-servers.json
+nodemon.json
+tsconfig.json
+.gitignore
