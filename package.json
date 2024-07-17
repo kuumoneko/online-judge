@@ -1,16 +1,51 @@
 {
   "name": "kuumooj",
-  "version": "0.0.1",
-  "main": "/dist/index.js",
+  "version": "1.0.0",
+  "description": "Online Judge using React.js",
+  "main": "/@types/index.tsx",
   "type": "module",
   "scripts": {
-    "run-server": "concurrently \"npm run ts-react-server \" \"npm run side-server\"  \"npm run react-server\" \"npm run data-server\" \"npm run package-server\"",
-    "react-server": "react-scripts start",
-    "ts-react-server": "tsc --watch -p \"G:\\Project\\tsconfig.json\"",
-    "side-server": "nodemon --config \"G:\\Project\\nodemon-servers.json\"",
-    "data-server": "nodemon --config \"G:\\Project\\nodemon-running.json\"",
-    "package-server": "tsc --watch -p \"G:\\Project\\package\\online-judge-types\\tsconfig.json\"",
-    "build": "tsc -p \"G:\\Project\\Source\\tsconfig.json\""
+    "run": "concurrently -n \" Discord bot , data server , react server , react run \" -c \"bgCyan.bold,bgGreen.bold,bgMagenta.bold,bgBlue.bold\" \"npm run discord_bot\" \"npm run data_server\" \"npm run react_server\" \"npm run start\"",
+    "react_server": "nodemon --watch ./@types --ext .ts,.tsx,.css --exec \"tsc\"",
+    "css_check": "nodemon --watch ./@type/index.css --exec \"ncp @types/index.css src/index.css\"",
+    "data_server": "nodemon --watch ./server --ext .ts  \" --exec \"cd server && node --no-warnings=ExperimentalWarning --loader ts-node/esm server.ts\"",
+    "discord_bot": "nodemon --watch ./bot --ext .ts,.js  \" --exec \"cd bot && node --no-warnings=ExperimentalWarning --loader ts-node/esm index.ts\"",
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  },
+  "author": "https://github.com/kuumoneko",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuumoneko/online-judge.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "axios": "^1.7.2",
+    "babel-loader": "^9.1.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "discord.js": "^14.11.0",
+    "dompurify": "^3.1.4",
+    "express": "^4.19.2",
+    "fs": "^0.0.1-security",
+    "hast-util-raw": "^9.0.3",
+    "js-cookie": "^3.0.5",
+    "js-sha256": "^0.11.0",
+    "nodemailer": "^6.9.14",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.51.5",
+    "react-markdown": "^9.0.1",
+    "react-router-dom": "^6.23.1",
+    "react-scripts": "^5.0.1",
+    "rehype-raw": "^7.0.0",
+    "rehype-sanitize": "^6.0.0",
+    "source-map-loader": "^5.0.0",
+    "swear": "^1.1.2",
+    "validator": "^13.12.0",
+    "vfile": "^6.0.1"
   },
   "browserslist": {
     "production": [
@@ -24,46 +59,25 @@
       "last 1 safari version"
     ]
   },
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.5.2",
-    "@fortawesome/free-solid-svg-icons": "^6.5.2",
-    "@fortawesome/react-fontawesome": "^0.2.2",
-    "axios": "^1.7.2",
-    "babel-loader": "^9.1.3",
-    "cookie-parser": "^1.4.6",
-    "cors": "^2.8.5",
-    "dompurify": "^3.1.4",
-    "express": "^4.19.2",
-    "fs": "^0.0.1-security",
-    "hast-util-raw": "^9.0.3",
-    "js-cookie": "^3.0.5",
-    "js-sha256": "^0.11.0",
-    "nodemailer": "^6.9.13",
-    "react-dom": "^18.3.1",
-    "react-hook-form": "^7.51.5",
-    "react-markdown": "^9.0.1",
-    "react-router-dom": "^6.23.1",
-    "react-scripts": "^5.0.1",
-    "rehype-raw": "^7.0.0",
-    "rehype-sanitize": "^6.0.0",
-    "source-map-loader": "^5.0.0",
-    "swear": "^1.1.2",
-    "validator": "^13.12.0",
-    "vfile": "^6.0.1"
-  },
   "devDependencies": {
     "@hookform/resolvers": "^3.4.2",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
     "@types/dompurify": "^3.0.5",
     "@types/js-cookie": "^3.0.6",
+    "@types/nodemailer": "^6.4.15",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "concurrently": "^8.2.2",
+    "gts": "^5.3.1",
+    "ncp": "^2.0.0",
     "nodemon": "^3.1.3",
     "react": "^18.3.1",
     "tailwindcss": "^3.4.3",
-    "typescript": "^4.9.5"
+    "ts-node": "^10.9.2"
+  },
+  "overrides": {
+    "typescript": "^5.5.2"
   },
   "workspaces": [
     "/package/*"
