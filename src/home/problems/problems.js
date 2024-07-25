@@ -193,11 +193,11 @@ export function Problem() {
                         }
                         return (React.createElement("tr", null,
                             React.createElement("th", null,
-                                React.createElement("a", { href: `/problems.${problem.id}` }, problem.id)),
+                                React.createElement("a", { href: `/problem/${problem.id}` }, problem.id)),
                             React.createElement("th", null,
                                 React.createElement("a", { style: {
                                         color: coloring
-                                    }, href: `/problems.${problem.id}` }, problem.name)),
+                                    }, href: `/problem/${problem.id}` }, problem.name)),
                             React.createElement("th", null, problem.groups.join(" | ")),
                             React.createElement("th", null, problem.types.join(" | ")),
                             React.createElement("th", null, problem.points),

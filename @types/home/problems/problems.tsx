@@ -295,7 +295,7 @@ export function Problem() {
                                 return (
                                     <tr>
                                         <th>
-                                            <a href={`/problems.${problem.id}`}>
+                                            <a href={`/problem/${problem.id}`}>
                                                 {problem.id}
                                             </a>
                                         </th>
@@ -305,7 +305,7 @@ export function Problem() {
                                                 style={{
                                                     color: coloring
                                                 }}
-                                                href={`/problems.${problem.id}`}
+                                                href={`/problem/${problem.id}`}
                                             >
                                                 {problem.name}
                                             </a>
