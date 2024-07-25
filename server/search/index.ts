@@ -7,7 +7,7 @@ interface lmao {
     [keys: string]: string[]
 }
 
-export function searching(search: string) {
+export function searching(search: any) {
 
     const prio = [
         "users", "problems", "comments", "contests", "submissions", "groups", "blogs",

@@ -22,31 +22,37 @@ export function get_problems(condition: string, items: any[] = []) {
     return problems.filter((problem: any) => problem.name.toLowerCase().includes(condition.toLowerCase()));
 }
 
-export function sort_problems(mode: string, search: any, IsReverse: any) {
+export function sort_problems(mode: string, search: {
+    name: string,
+    type: string,
+    group: string,
+    point: {
+        min: number,
+        max: number
+    },
+    IsSample: boolean,
+    AC: number
+}, IsReverse: any) {
 
     // search: name , groups , types , %AC (AC / total) , time , IsSample
-    // console.log(search)
 
     let problems = get_problems(search.name);
 
 
-    // console.log(problems)
-
     if (search.type != "all") {
         problems = problems.filter((problem: Problems) => problem.types.includes(search.type))
     }
-
-
+    
 
     if (search.group != "all") {
         problems = problems.filter((problem: Problems) => problem.groups.includes(search.group))
     }
 
+
     problems = problems.filter((problem: Problems) => problem.points >= search.point.min && problem.points <= search.point.max)
 
-    // console.log(problems)
 
-    // console.log(problems);
+
     try {
         // console.log(condition.toString())
         const prio = ["name", "points", "publishTime", "host"];

@@ -17,7 +17,7 @@ function Render_Problems({ problems }) {
     }, []);
     const [res, setres] = useState(React.createElement(React.Fragment, null));
     useEffect(() => {
-        console.log(user);
+        // console.log(user)
         if (user != undefined) {
             setres(React.createElement("table", { style: {
                     width: "100%",
@@ -80,17 +80,29 @@ function Render_Problems({ problems }) {
 export function Problem() {
     const url = geturl();
     const theme = Cookies.get("theme");
-    // console.log(url)
     // UI
     const [Problems_Element, setproblems] = useState(React.createElement(React.Fragment, null));
+    const [problems, setProblems] = useState([]);
     const [submit, setsubmit] = useState(false);
     // info
     const [problems_groups, set_problems_groups] = useState([]);
     const [problems_types, set_problems_types] = useState([]);
+    // input
+    const [search, setsearch] = useState("");
+    const [group, setgroup] = useState("all");
+    const [type, settype] = useState("all");
+    const [min_point, setmin_point] = useState(0);
+    const [max_point, setmax_point] = useState(2000);
+    const [user, setuser] = useState();
+    const [touch, settouch] = useState("");
+    const [minX, setminX] = useState(0);
+    const [maxX, setmaxX] = useState(0);
     useEffect(() => {
         async function dataa() {
             const types = await getdata("get", "problem_types", "all");
             const groups = await getdata("get", "problem_groups", "all");
+            types.data.data.push("all");
+            groups.data.data.push("all");
             set_problems_types(types.data.data.map((value) => {
                 return value.name;
             }));
@@ -100,26 +112,22 @@ export function Problem() {
         }
         dataa();
     }, []);
-    // input
-    const [search, setsearch] = useState("");
-    const [group, setgroup] = useState("");
-    const [type, settype] = useState("");
-    const [min_point, setmin_point] = useState(0);
-    const [max_point, setmax_point] = useState(2000);
     async function get_problem() {
-        const res = await getdata("sort", "problems", {
+        const option = {
             name: search == "" ? "all" : search,
-            group: group == "" ? "all" : group,
-            type: type == "" ? "all" : SVGUnitTypes,
+            group: group,
+            type: type,
             point: {
                 min: min_point,
                 max: max_point
             },
             lineperpage: 100,
             page: 1
-        });
+        };
+        console.log(option);
+        const res = await getdata("sort", "problems", option);
         console.log(res.data);
-        setproblems(React.createElement(Render_Problems, { problems: res.data.data }));
+        setProblems(res.data.data);
         setsubmit(false);
     }
     useEffect(() => {
@@ -130,9 +138,74 @@ export function Problem() {
             get_problem();
         }
     }, [submit]);
-    const [touch, settouch] = useState("");
-    const [minX, setminX] = useState(0);
-    const [maxX, setmaxX] = useState(0);
+    useEffect(() => {
+        async function lmao() {
+            const res = await getdata("get", "users", localStorage.getItem("username"));
+            // console.log(res.data.data[0])
+            setuser(res.data.data[0]);
+        }
+        lmao();
+    }, []);
+    useEffect(() => {
+        // console.log(user)
+        if (user != undefined) {
+            setproblems(React.createElement("table", { style: {
+                    width: "100%",
+                    border: "1px",
+                    textAlign: "center",
+                } },
+                React.createElement("tbody", null,
+                    React.createElement("tr", null,
+                        React.createElement("th", { style: {
+                                width: "10%"
+                            } }, "ID"),
+                        React.createElement("th", { style: {
+                                width: "20%"
+                            } }, "Problem"),
+                        React.createElement("th", { style: {
+                                width: "10%"
+                            } }, "Group"),
+                        React.createElement("th", { style: {
+                                width: "10%"
+                            } }, "Type"),
+                        React.createElement("th", { style: {
+                                width: "10%"
+                            } }, "Point"),
+                        React.createElement("th", { style: {
+                                width: "5%"
+                            } }, "# AC"),
+                        React.createElement("th", { style: {
+                                width: "3%"
+                            } },
+                            React.createElement(FontAwesomeIcon, { icon: faBook }))),
+                    problems.map((problem) => {
+                        const temp = user.problems.filter((sub) => {
+                            return sub.id == problem.id;
+                        });
+                        // console.log(temp)
+                        // console.log(temp.filter((sub) => sub.status == Coding_status.AC))
+                        let coloring;
+                        if (temp.length == 0) {
+                            coloring = "white";
+                        }
+                        else {
+                            coloring = temp.filter((sub) => sub.status == Coding_status.AC).length > 0 ? "green" : "yellow";
+                        }
+                        return (React.createElement("tr", null,
+                            React.createElement("th", null,
+                                React.createElement("a", { href: `/problems.${problem.id}` }, problem.id)),
+                            React.createElement("th", null,
+                                React.createElement("a", { style: {
+                                        color: coloring
+                                    }, href: `/problems.${problem.id}` }, problem.name)),
+                            React.createElement("th", null, problem.groups.join(" | ")),
+                            React.createElement("th", null, problem.types.join(" | ")),
+                            React.createElement("th", null, problem.points),
+                            React.createElement("th", null, problem.SubmissionStatus.AC),
+                            React.createElement("th", null, problem.body.support.nani ? (React.createElement(FontAwesomeIcon, { icon: faCheck })) : (React.createElement(FontAwesomeIcon, { icon: faXmark })))));
+                    }))));
+        }
+    }, [user, problems]);
     return (React.createElement("div", { style: {
             width: "100%",
             display: "flex",
@@ -148,7 +221,7 @@ export function Problem() {
                 React.createElement(FontAwesomeIcon, { icon: faCircleQuestion, style: { "marginLeft": "10px" } })),
             React.createElement("form", null,
                 React.createElement("div", null,
-                    React.createElement("input", { type: "text", value: search, onChange: (e) => { setsearch(e.target.value); }, style: {
+                    React.createElement("input", { type: "text", value: search || "", onChange: (e) => { setsearch(e.target.value); }, style: {
                             backgroundColor: color[theme].background,
                             color: color[theme].font,
                             marginBottom: "5px"
@@ -227,7 +300,7 @@ export function Problem() {
                             position: "relative",
                             width: "145px"
                         } },
-                        React.createElement("div", { className: "point_search_range", style: {} }),
+                        React.createElement("div", { className: "point_search_range" }),
                         React.createElement("div", { className: "min point_search", id: "min_point_search", onMouseDown: (e) => {
                                 // console.log(e.clientX)
                                 if (minX == 0) {

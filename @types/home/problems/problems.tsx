@@ -1,7 +1,7 @@
 import { faBook, faCircleQuestion, faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getdata, geturl } from "ultility/ulti.js"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, StrictMode } from "react"
 import Cookies from "js-cookie";
 import { color } from "ultility/color.js";
 import { Problems, User, User_Submission } from "ultility/types.js";
@@ -25,7 +25,7 @@ function Render_Problems({ problems }: { problems: Problems[] }) {
     const [res, setres] = useState(<></>)
 
     useEffect(() => {
-        console.log(user)
+        // console.log(user)
         if (user != undefined) {
             setres(
                 <table
@@ -85,6 +85,7 @@ function Render_Problems({ problems }: { problems: Problems[] }) {
                                 else {
                                     coloring = temp.filter((sub) => sub.status == Coding_status.AC).length > 0 ? "green" : "yellow"
                                 }
+
                                 return (
                                     <tr>
                                         <th>
@@ -134,20 +135,36 @@ export function Problem() {
     const url = geturl();
     const theme: "dark" | "light" = Cookies.get("theme") as "dark" | "light";
 
-    // console.log(url)
-
     // UI
     const [Problems_Element, setproblems] = useState(<></>);
+    const [problems, setProblems] = useState([]);
     const [submit, setsubmit] = useState(false)
 
     // info
     const [problems_groups, set_problems_groups] = useState([]);
     const [problems_types, set_problems_types] = useState([]);
 
+    // input
+    const [search, setsearch] = useState("");
+    const [group, setgroup] = useState("all");
+    const [type, settype] = useState("all");
+    const [min_point, setmin_point] = useState(0);
+    const [max_point, setmax_point] = useState(2000);
+
+    const [user, setuser] = useState();
+
+    const [touch, settouch] = useState("");
+    const [minX, setminX] = useState(0);
+    const [maxX, setmaxX] = useState(0);
+
     useEffect(() => {
         async function dataa() {
             const types = await getdata("get", "problem_types", "all");
             const groups = await getdata("get", "problem_groups", "all")
+
+
+            types.data.data.push("all")
+            groups.data.data.push("all")
 
             set_problems_types(types.data.data.map((value: { name: string }) => {
                 return value.name;
@@ -161,32 +178,29 @@ export function Problem() {
         dataa();
     }, [])
 
-    // input
-    const [search, setsearch] = useState("");
-    const [group, setgroup] = useState("");
-    const [type, settype] = useState("");
-    const [min_point, setmin_point] = useState(0);
-    const [max_point, setmax_point] = useState(2000);
+
 
     async function get_problem() {
-        const res = await getdata("sort", "problems", {
+        const option = {
             name: search == "" ? "all" : search,
-            group: group == "" ? "all" : group,
-            type: type == "" ? "all" : SVGUnitTypes,
+            group: group,
+            type: type,
             point: {
                 min: min_point,
                 max: max_point
             },
             lineperpage: 100,
             page: 1
-        })
+        }
+
+        console.log(option)
+
+        const res = await getdata("sort", "problems", option)
 
         console.log(res.data)
 
-        setproblems(
-            <Render_Problems problems={res.data.data} />
-        )
 
+        setProblems(res.data.data)
         setsubmit(false)
 
     }
@@ -203,9 +217,126 @@ export function Problem() {
 
     }, [submit])
 
-    const [touch, settouch] = useState("");
-    const [minX, setminX] = useState(0);
-    const [maxX, setmaxX] = useState(0);
+
+
+    useEffect(() => {
+        async function lmao() {
+            const res = await getdata("get", "users", localStorage.getItem("username"));
+            // console.log(res.data.data[0])
+
+            setuser(res.data.data[0])
+        }
+
+        lmao()
+    }, [])
+
+    useEffect(() => {
+        // console.log(user)
+        if (user != undefined) {
+            setproblems(
+                <table
+                    style={{
+                        width: "100%",
+                        border: "1px",
+                        textAlign: "center",
+
+                    }}>
+                    <tbody>
+                        <tr>
+                            <th style={{
+                                width: "10%"
+                            }}
+                            >ID</th>
+                            <th style={{
+                                width: "20%"
+                            }}
+                            >Problem</th>
+                            <th style={{
+                                width: "10%"
+                            }}
+                            >Group</th>
+                            <th style={{
+                                width: "10%"
+                            }}
+                            >Type</th>
+                            <th style={{
+                                width: "10%"
+                            }}
+                            >Point</th>
+                            <th style={{
+                                width: "5%"
+                            }}
+                            ># AC</th>
+                            <th style={{
+                                width: "3%"
+                            }
+                            }>
+                                <FontAwesomeIcon icon={faBook} />
+                            </th>
+                        </tr>
+                        {
+                            problems.map((problem: Problems) => {
+                                const temp = (user as User).problems.filter((sub: User_Submission) => {
+                                    return sub.id == problem.id
+                                });
+
+                                // console.log(temp)
+
+                                // console.log(temp.filter((sub) => sub.status == Coding_status.AC))
+
+                                let coloring: string;
+                                if (temp.length == 0) {
+                                    coloring = "white"
+                                }
+                                else {
+                                    coloring = temp.filter((sub) => sub.status == Coding_status.AC).length > 0 ? "green" : "yellow"
+                                }
+
+                                return (
+                                    <tr>
+                                        <th>
+                                            <a href={`/problems.${problem.id}`}>
+                                                {problem.id}
+                                            </a>
+                                        </th>
+
+                                        <th>
+                                            <a
+                                                style={{
+                                                    color: coloring
+                                                }}
+                                                href={`/problems.${problem.id}`}
+                                            >
+                                                {problem.name}
+                                            </a>
+                                        </th>
+                                        <th>
+                                            {problem.groups.join(" | ")}
+                                        </th>
+                                        <th>
+                                            {problem.types.join(" | ")}
+                                        </th>
+                                        <th>
+                                            {problem.points}
+                                        </th>
+                                        <th>
+                                            {problem.SubmissionStatus.AC}
+                                        </th>
+                                        <th>
+                                            {
+                                                problem.body.support.nani ? (<FontAwesomeIcon icon={faCheck} />) : (<FontAwesomeIcon icon={faXmark} />)
+                                            }
+                                        </th>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                </table >
+            )
+        }
+
+    }, [user, problems])
 
     return (
         <div
@@ -228,7 +359,7 @@ export function Problem() {
                 </h3>
                 <form>
                     <div>
-                        <input type="text" value={search} onChange={(e) => { setsearch(e.target.value) }}
+                        <input type="text" value={search || ""} onChange={(e) => { setsearch(e.target.value) }}
                             style={{
                                 backgroundColor: color[theme].background,
                                 color: color[theme].font,
@@ -352,14 +483,7 @@ export function Problem() {
                                 width: "145px"
                             }}
                         >
-                            <div
-                                className="point_search_range"
-                                style={{
-                                }}
-
-                            >
-
-                            </div>
+                            <div className="point_search_range"></div>
                             <div className="min point_search" id="min_point_search"
                                 onMouseDown={(e) => {
                                     // console.log(e.clientX)

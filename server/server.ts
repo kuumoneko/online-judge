@@ -425,7 +425,19 @@ app.patch("/data", (req, res) => {
                 temp = [
                     {
                         stt: 1,
-                        title: "Unable to find this problem, try to search another word"
+                        name: "Unable to find this problem, try to search another word",
+                        id: "",
+                        points: 0,
+                        types: [],
+                        groups: [],
+                        SubmissionStatus: {
+                            AC: 0
+                        },
+                        body: {
+                            support: {
+                                nani: false
+                            }
+                        }
                     }
                 ]
                 break;

@@ -766,9 +766,7 @@ select {
 
 .problem_search {
   width: 10%;
-  position: sticky;
-  position: -webkit-sticky;
-  
+
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
