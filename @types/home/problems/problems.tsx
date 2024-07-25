@@ -7,138 +7,18 @@ import { color } from "ultility/color.js";
 import { Problems, User, User_Submission } from "ultility/types.js";
 import { Coding_status } from "ultility/enum.js"
 
-function Render_Problems({ problems }: { problems: Problems[] }) {
-
-    const [user, setuser] = useState();
-
-    useEffect(() => {
-        async function lmao() {
-            const res = await getdata("get", "users", localStorage.getItem("username"));
-            // console.log(res.data.data[0])
-
-            setuser(res.data.data[0])
-        }
-
-        lmao()
-    }, [])
-
-    const [res, setres] = useState(<></>)
-
-    useEffect(() => {
-        // console.log(user)
-        if (user != undefined) {
-            setres(
-                <table
-                    style={{
-                        width: "100%",
-                        border: "1px",
-                        textAlign: "center",
-
-                    }}>
-                    <tbody>
-                        <tr>
-                            <th style={{
-                                width: "10%"
-                            }}
-                            >ID</th>
-                            <th style={{
-                                width: "20%"
-                            }}
-                            >Problem</th>
-                            <th style={{
-                                width: "10%"
-                            }}
-                            >Group</th>
-                            <th style={{
-                                width: "10%"
-                            }}
-                            >Type</th>
-                            <th style={{
-                                width: "10%"
-                            }}
-                            >Point</th>
-                            <th style={{
-                                width: "5%"
-                            }}
-                            ># AC</th>
-                            <th style={{
-                                width: "3%"
-                            }
-                            }>
-                                <FontAwesomeIcon icon={faBook} />
-                            </th>
-                        </tr>
-                        {
-                            problems.map((problem: Problems) => {
-                                const temp = (user as User).problems.filter((sub: User_Submission) => {
-                                    return sub.id == problem.id
-                                });
-
-                                // console.log(temp)
-
-                                // console.log(temp.filter((sub) => sub.status == Coding_status.AC))
-
-                                let coloring: string;
-                                if (temp.length == 0) {
-                                    coloring = "white"
-                                }
-                                else {
-                                    coloring = temp.filter((sub) => sub.status == Coding_status.AC).length > 0 ? "green" : "yellow"
-                                }
-
-                                return (
-                                    <tr>
-                                        <th>
-                                            {problem.id}
-                                        </th>
-
-                                        <th>
-                                            <a
-                                                style={{
-                                                    color: coloring
-                                                }}>
-                                                {problem.name}
-                                            </a>
-                                        </th>
-                                        <th>
-                                            {problem.groups.join(" | ")}
-                                        </th>
-                                        <th>
-                                            {problem.types.join(" | ")}
-                                        </th>
-                                        <th>
-                                            {problem.points}
-                                        </th>
-                                        <th>
-                                            {problem.SubmissionStatus.AC}
-                                        </th>
-                                        <th>
-                                            {
-                                                problem.body.support.nani ? (<FontAwesomeIcon icon={faCheck} />) : (<FontAwesomeIcon icon={faXmark} />)
-                                            }
-                                        </th>
-                                    </tr>
-                                )
-                            })
-                        }
-                    </tbody>
-                </table >
-            )
-        }
-
-    }, [user])
-    return res;
-}
-
-
 export function Problem() {
-    const url = geturl();
     const theme: "dark" | "light" = Cookies.get("theme") as "dark" | "light";
+    const themes = color[Cookies.get("theme") as "dark" | "light"];
 
     // UI
     const [Problems_Element, setproblems] = useState(<></>);
+    const [page, setpage] = useState(<></>)
     const [problems, setProblems] = useState([]);
     const [submit, setsubmit] = useState(false)
+
+    const [curr_page, setCurr_page] = useState(1);
+    const [total, settotal] = useState(1);
 
     // info
     const [problems_groups, set_problems_groups] = useState([]);
@@ -190,7 +70,7 @@ export function Problem() {
                 max: max_point
             },
             lineperpage: 100,
-            page: 1
+            page: curr_page
         }
 
         console.log(option)
@@ -198,8 +78,8 @@ export function Problem() {
         const res = await getdata("sort", "problems", option)
 
         console.log(res.data)
-
-
+        settotal(res.data.totalPage)
+        // totalPage = res.data.totalPage;
         setProblems(res.data.data)
         setsubmit(false)
 
@@ -212,12 +92,11 @@ export function Problem() {
     useEffect(() => {
 
         if (submit == true) {
+            setCurr_page(1);
             get_problem();
         }
 
     }, [submit])
-
-
 
     useEffect(() => {
         async function lmao() {
@@ -231,8 +110,39 @@ export function Problem() {
     }, [])
 
     useEffect(() => {
+        get_problem();
+    }, [curr_page])
+
+    const handleClick = (e: any) => {
+        // console.log(search)
+        if (e.target.attributes.id.value == "pre") {
+            setCurr_page(curr_page - 1)
+        }
+        else if (e.target.attributes.id.value == "next") {
+            setCurr_page(curr_page + 1)
+        }
+        else if (e.target.attributes.id.value == "begin") {
+            setCurr_page(1)
+        }
+        else if (e.target.attributes.id.value == "end") {
+            setCurr_page(total)
+        }
+        else {
+            setCurr_page(Number(e.target.attributes.id.value));
+        }
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        })
+
+    }
+
+    useEffect(() => {
         // console.log(user)
         if (user != undefined) {
+
+
             setproblems(
                 <table
                     style={{
@@ -347,6 +257,93 @@ export function Problem() {
 
     }, [user, problems])
 
+    useEffect(() => {
+        console.log(total)
+
+        const pages = Array(total).fill(0)
+        let temp = false;
+
+
+        setpage(
+            <StrictMode>
+                <button key="begin" id="begin" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(curr_page == 1)}>
+                    <a id="begin" onClick={handleClick}>
+                        {"<<"}
+                    </a>
+                </button>
+                <button id="pre" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(curr_page == 1)}>
+                    <a id="pre" onClick={handleClick}>
+                        {"<"}
+                    </a>
+                </button>
+                {
+
+                    pages.map((item, index) => {
+                        const color = (index + 1 == curr_page) ? "#999900" : ""
+
+                        if (curr_page <= 5) {
+                            // console.log( curr_page + 2)
+                            if (index < curr_page + 2) {
+                                // console.log(index + 1)
+                                return (
+                                    <button id={String(index + 1)} onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px", backgroundColor: color }} disabled={false}>
+                                        <a id={String(index + 1)} onClick={handleClick}>
+                                            {` ${index + 1} `}
+                                        </a>
+                                    </button>
+                                )
+                            }
+                        }
+                        else if (index < 2 || (index >= curr_page - 3 && index <= curr_page + 1)) {
+                            // console.log(index + 1)
+                            return (
+                                <button id={String(index + 1)} onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px", backgroundColor: color }} disabled={false}>
+                                    <a id={String(index + 1)} onClick={handleClick}>
+                                        {` ${index + 1} `}
+                                    </a>
+                                </button >
+                            )
+                        }
+                        else if (!temp) {
+                            // console.log("...")
+                            temp = true
+
+                            return (
+                                <button id={"..."} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={true}>
+                                    <a id={"..."}>
+                                        {`...`}
+                                    </a>
+                                </button>
+                            )
+                        }
+
+
+                    })
+                }
+                {
+                    (curr_page != pages.length) && (
+                        <button id={"..."} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={true}>
+                            <a id={"..."}>
+                                {`...`}
+                            </a>
+                        </button>
+                    )
+                }
+
+                <button id="next" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(curr_page == pages.length)}>
+                    <a id="next" onClick={handleClick}>
+                        {">"}
+                    </a>
+                </button>
+                <button id="end" onClick={handleClick} style={{ paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }} disabled={(curr_page == pages.length)}>
+                    <a id="end" onClick={handleClick}>
+                        {">>"}
+                    </a>
+                </button>
+            </StrictMode >
+        )
+    }, [total, curr_page])
+
     return (
         <div
             style={{
@@ -359,7 +356,11 @@ export function Problem() {
             <div style={{
                 width: "85%"
             }}>
+                {page}
+                <br />
                 {Problems_Element}
+                <br />
+                {page}
             </div>
             <div className="problem_search">
                 <h3>

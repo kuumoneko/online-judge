@@ -1,89 +1,20 @@
 import { faBook, faCircleQuestion, faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getdata, geturl } from "ultility/ulti.js";
-import React, { useEffect, useState } from "react";
+import { getdata } from "ultility/ulti.js";
+import React, { useEffect, useState, StrictMode } from "react";
 import Cookies from "js-cookie";
 import { color } from "ultility/color.js";
 import { Coding_status } from "ultility/enum.js";
-function Render_Problems({ problems }) {
-    const [user, setuser] = useState();
-    useEffect(() => {
-        async function lmao() {
-            const res = await getdata("get", "users", localStorage.getItem("username"));
-            // console.log(res.data.data[0])
-            setuser(res.data.data[0]);
-        }
-        lmao();
-    }, []);
-    const [res, setres] = useState(React.createElement(React.Fragment, null));
-    useEffect(() => {
-        // console.log(user)
-        if (user != undefined) {
-            setres(React.createElement("table", { style: {
-                    width: "100%",
-                    border: "1px",
-                    textAlign: "center",
-                } },
-                React.createElement("tbody", null,
-                    React.createElement("tr", null,
-                        React.createElement("th", { style: {
-                                width: "10%"
-                            } }, "ID"),
-                        React.createElement("th", { style: {
-                                width: "20%"
-                            } }, "Problem"),
-                        React.createElement("th", { style: {
-                                width: "10%"
-                            } }, "Group"),
-                        React.createElement("th", { style: {
-                                width: "10%"
-                            } }, "Type"),
-                        React.createElement("th", { style: {
-                                width: "10%"
-                            } }, "Point"),
-                        React.createElement("th", { style: {
-                                width: "5%"
-                            } }, "# AC"),
-                        React.createElement("th", { style: {
-                                width: "3%"
-                            } },
-                            React.createElement(FontAwesomeIcon, { icon: faBook }))),
-                    problems.map((problem) => {
-                        const temp = user.problems.filter((sub) => {
-                            return sub.id == problem.id;
-                        });
-                        // console.log(temp)
-                        // console.log(temp.filter((sub) => sub.status == Coding_status.AC))
-                        let coloring;
-                        if (temp.length == 0) {
-                            coloring = "white";
-                        }
-                        else {
-                            coloring = temp.filter((sub) => sub.status == Coding_status.AC).length > 0 ? "green" : "yellow";
-                        }
-                        return (React.createElement("tr", null,
-                            React.createElement("th", null, problem.id),
-                            React.createElement("th", null,
-                                React.createElement("a", { style: {
-                                        color: coloring
-                                    } }, problem.name)),
-                            React.createElement("th", null, problem.groups.join(" | ")),
-                            React.createElement("th", null, problem.types.join(" | ")),
-                            React.createElement("th", null, problem.points),
-                            React.createElement("th", null, problem.SubmissionStatus.AC),
-                            React.createElement("th", null, problem.body.support.nani ? (React.createElement(FontAwesomeIcon, { icon: faCheck })) : (React.createElement(FontAwesomeIcon, { icon: faXmark })))));
-                    }))));
-        }
-    }, [user]);
-    return res;
-}
 export function Problem() {
-    const url = geturl();
     const theme = Cookies.get("theme");
+    const themes = color[Cookies.get("theme")];
     // UI
     const [Problems_Element, setproblems] = useState(React.createElement(React.Fragment, null));
+    const [page, setpage] = useState(React.createElement(React.Fragment, null));
     const [problems, setProblems] = useState([]);
     const [submit, setsubmit] = useState(false);
+    const [curr_page, setCurr_page] = useState(1);
+    const [total, settotal] = useState(1);
     // info
     const [problems_groups, set_problems_groups] = useState([]);
     const [problems_types, set_problems_types] = useState([]);
@@ -122,11 +53,13 @@ export function Problem() {
                 max: max_point
             },
             lineperpage: 100,
-            page: 1
+            page: curr_page
         };
         console.log(option);
         const res = await getdata("sort", "problems", option);
         console.log(res.data);
+        settotal(res.data.totalPage);
+        // totalPage = res.data.totalPage;
         setProblems(res.data.data);
         setsubmit(false);
     }
@@ -135,6 +68,7 @@ export function Problem() {
     }, []);
     useEffect(() => {
         if (submit == true) {
+            setCurr_page(1);
             get_problem();
         }
     }, [submit]);
@@ -146,6 +80,31 @@ export function Problem() {
         }
         lmao();
     }, []);
+    useEffect(() => {
+        get_problem();
+    }, [curr_page]);
+    const handleClick = (e) => {
+        // console.log(search)
+        if (e.target.attributes.id.value == "pre") {
+            setCurr_page(curr_page - 1);
+        }
+        else if (e.target.attributes.id.value == "next") {
+            setCurr_page(curr_page + 1);
+        }
+        else if (e.target.attributes.id.value == "begin") {
+            setCurr_page(1);
+        }
+        else if (e.target.attributes.id.value == "end") {
+            setCurr_page(total);
+        }
+        else {
+            setCurr_page(Number(e.target.attributes.id.value));
+        }
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    };
     useEffect(() => {
         // console.log(user)
         if (user != undefined) {
@@ -210,6 +169,44 @@ export function Problem() {
                     }))));
         }
     }, [user, problems]);
+    useEffect(() => {
+        console.log(total);
+        const pages = Array(total).fill(0);
+        let temp = false;
+        setpage(React.createElement(StrictMode, null,
+            React.createElement("button", { key: "begin", id: "begin", onClick: handleClick, style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }, disabled: (curr_page == 1) },
+                React.createElement("a", { id: "begin", onClick: handleClick }, "<<")),
+            React.createElement("button", { id: "pre", onClick: handleClick, style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }, disabled: (curr_page == 1) },
+                React.createElement("a", { id: "pre", onClick: handleClick }, "<")),
+            pages.map((item, index) => {
+                const color = (index + 1 == curr_page) ? "#999900" : "";
+                if (curr_page <= 5) {
+                    // console.log( curr_page + 2)
+                    if (index < curr_page + 2) {
+                        // console.log(index + 1)
+                        return (React.createElement("button", { id: String(index + 1), onClick: handleClick, style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px", backgroundColor: color }, disabled: false },
+                            React.createElement("a", { id: String(index + 1), onClick: handleClick }, ` ${index + 1} `)));
+                    }
+                }
+                else if (index < 2 || (index >= curr_page - 3 && index <= curr_page + 1)) {
+                    // console.log(index + 1)
+                    return (React.createElement("button", { id: String(index + 1), onClick: handleClick, style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px", backgroundColor: color }, disabled: false },
+                        React.createElement("a", { id: String(index + 1), onClick: handleClick }, ` ${index + 1} `)));
+                }
+                else if (!temp) {
+                    // console.log("...")
+                    temp = true;
+                    return (React.createElement("button", { id: "...", style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }, disabled: true },
+                        React.createElement("a", { id: "..." }, `...`)));
+                }
+            }),
+            (curr_page != pages.length) && (React.createElement("button", { id: "...", style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }, disabled: true },
+                React.createElement("a", { id: "..." }, `...`))),
+            React.createElement("button", { id: "next", onClick: handleClick, style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }, disabled: (curr_page == pages.length) },
+                React.createElement("a", { id: "next", onClick: handleClick }, ">")),
+            React.createElement("button", { id: "end", onClick: handleClick, style: { paddingLeft: "2px", paddingRight: "2px", marginRight: "5px", border: `1px solid ${themes.font}`, width: "25px", height: "25px" }, disabled: (curr_page == pages.length) },
+                React.createElement("a", { id: "end", onClick: handleClick }, ">>"))));
+    }, [total, curr_page]);
     return (React.createElement("div", { style: {
             width: "100%",
             display: "flex",
@@ -218,7 +215,12 @@ export function Problem() {
         } },
         React.createElement("div", { style: {
                 width: "85%"
-            } }, Problems_Element),
+            } },
+            page,
+            React.createElement("br", null),
+            Problems_Element,
+            React.createElement("br", null),
+            page),
         React.createElement("div", { className: "problem_search" },
             React.createElement("h3", null,
                 "Search:",
