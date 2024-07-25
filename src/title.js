@@ -78,7 +78,7 @@ export function Title({ url, themes }) {
                 ?
                     `Adminisrator ${url[2] ? `for ${url[2]}` : "Dashboard"}`
                 :
-                    (temp == "user") ?
+                    (temp == "user" || temp == "problem") ?
                         (React.createElement("a", { id: "titlee", className: 'font-bold' }, url[1])) : temp.toUpperCase()),
             (temp == "users" || temp == "groups") ? (React.createElement(Userss, { mode: temp, themes: themes })) : (temp == "user") ? (React.createElement(Userr, { mode: url, themes: themes, user: localStorage.getItem("username") })) : (React.createElement(React.Fragment, null)))));
 }

@@ -134,7 +134,7 @@ export function Title({ url, themes }: { url: string[], themes: { content: strin
                             ?
                             `Adminisrator ${url[2] ? `for ${url[2]}` : "Dashboard"}`
                             :
-                            (temp == "user") ?
+                            (temp == "user" || temp == "problem") ?
                                 (
                                     <a id="titlee" className='font-bold'>
                                         {

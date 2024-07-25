@@ -192,9 +192,13 @@ export function Problem() {
                             coloring = temp.filter((sub) => sub.status == Coding_status.AC).length > 0 ? "green" : "yellow";
                         }
                         return (React.createElement("tr", null,
-                            React.createElement("th", null,
+                            React.createElement("th", { style: {
+                                    cursor: "pointer"
+                                } },
                                 React.createElement("a", { href: `/problem/${problem.id}` }, problem.id)),
-                            React.createElement("th", null,
+                            React.createElement("th", { style: {
+                                    cursor: "pointer"
+                                } },
                                 React.createElement("a", { style: {
                                         color: coloring
                                     }, href: `/problem/${problem.id}` }, problem.name)),

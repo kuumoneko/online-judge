@@ -294,13 +294,22 @@ export function Problem() {
 
                                 return (
                                     <tr>
-                                        <th>
-                                            <a href={`/problem/${problem.id}`}>
+                                        <th
+                                            style={{
+                                                cursor: "pointer"
+                                            }}
+                                        >
+                                            <a
+                                                href={`/problem/${problem.id}`}>
                                                 {problem.id}
                                             </a>
                                         </th>
 
-                                        <th>
+                                        <th
+                                            style={{
+                                                cursor: "pointer"
+                                            }}
+                                        >
                                             <a
                                                 style={{
                                                     color: coloring
