@@ -10,8 +10,8 @@ import { Edit_blog } from "./user//blogs/edit.js"
 import { About } from "./about.js"
 import { Verify_user } from "./verify.js"
 import { ForgotPassword } from "./user/forgot_password.js"
-import { Problem } from "./problems/problems.js"
-
+import { Problems } from "./problems/problems.js"
+import { Problem } from "./problem/problem.js"
 
 export function Home() {
     const url = geturl();
@@ -70,6 +70,11 @@ export function Home() {
         )
     }
     else if (url[0] == "problems") {
+        return (
+            <Problems />
+        )
+    }
+    else if (url[0] == "problem") {
         return (
             <Problem />
         )

@@ -17,9 +17,9 @@ export function get_problems(condition: string, items: any[] = []) {
     // console.log("lmao")
 
     if (condition.includes("_")) {
-        return problems.filter((problem: any) => problem.id.toLowerCase().includes(condition.toLowerCase()));
+        return problems.filter((problem: any) => problem.id.toLowerCase() == condition.toLowerCase());
     }
-    return problems.filter((problem: any) => problem.name.toLowerCase().includes(condition.toLowerCase()));
+    return problems.filter((problem: any) => problem.name.toLowerCase() == condition.toLowerCase());
 }
 
 export function sort_problems(mode: string, search: {
@@ -42,7 +42,7 @@ export function sort_problems(mode: string, search: {
     if (search.type != "all") {
         problems = problems.filter((problem: Problems) => problem.types.includes(search.type))
     }
-    
+
 
     if (search.group != "all") {
         problems = problems.filter((problem: Problems) => problem.groups.includes(search.group))

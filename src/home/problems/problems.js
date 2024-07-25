@@ -5,7 +5,7 @@ import React, { useEffect, useState, StrictMode } from "react";
 import Cookies from "js-cookie";
 import { color } from "ultility/color.js";
 import { Coding_status } from "ultility/enum.js";
-export function Problem() {
+export function Problems() {
     const theme = Cookies.get("theme");
     const themes = color[Cookies.get("theme")];
     // UI

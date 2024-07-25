@@ -7,7 +7,7 @@ import { color } from "ultility/color.js";
 import { Problems, User, User_Submission } from "ultility/types.js";
 import { Coding_status } from "ultility/enum.js"
 
-export function Problem() {
+export function Problems() {
     const theme: "dark" | "light" = Cookies.get("theme") as "dark" | "light";
     const themes = color[Cookies.get("theme") as "dark" | "light"];
 

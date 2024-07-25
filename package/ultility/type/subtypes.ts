@@ -11,7 +11,7 @@ export interface Node {
 
 export interface ProblemsTask {
     points: number, // in %
-    limit: string
+    limit: InputLimit[]
 }
 
 export interface Comment {

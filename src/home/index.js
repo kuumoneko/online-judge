@@ -10,7 +10,8 @@ import { Edit_blog } from "./user//blogs/edit.js";
 import { About } from "./about.js";
 import { Verify_user } from "./verify.js";
 import { ForgotPassword } from "./user/forgot_password.js";
-import { Problem } from "./problems/problems.js";
+import { Problems } from "./problems/problems.js";
+import { Problem } from "./problem/problem.js";
 export function Home() {
     const url = geturl();
     if (url[0] == "") {
@@ -44,6 +45,9 @@ export function Home() {
         return (React.createElement(ForgotPassword, null));
     }
     else if (url[0] == "problems") {
+        return (React.createElement(Problems, null));
+    }
+    else if (url[0] == "problem") {
         return (React.createElement(Problem, null));
     }
     else {
