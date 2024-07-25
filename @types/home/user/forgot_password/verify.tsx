@@ -1,4 +1,4 @@
-import { getdata, geturl } from "types";
+import { getdata, geturl } from "ultility/ulti.js";
 import React, {
     useState, useEffect
 } from "react";

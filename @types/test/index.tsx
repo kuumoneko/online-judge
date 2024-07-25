@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Can, Logarit, Luy_thua, Luy_thua_nguoc, Phanso } from 'math';
 import { Navigator } from "../navigator/index.js";
-import { HomePage } from "../home/home.js";
-import { Problem } from "../home/problems/problems.js";
 import { Home } from "../home/index.js";
-import { geturl, color, getdata } from "types";
+import { geturl, getdata } from "ultility/ulti.js";
+import { color } from "ultility/color.js";
 import { Admin } from "../admin/index.js";
 import { auth_user } from "../pre_run/auth.js";
 import { Title } from "../title.js";
@@ -13,7 +11,7 @@ import Cookies from "js-cookie";
 export function Test() {
 
     const [url, seturl] = useState(geturl());
-    const [themes, setthemes] = useState();
+    const [themes, setthemes] = useState({ content: "", background: "", font: "" });
 
     // const [user, setuser] = useState();
 
@@ -24,12 +22,12 @@ export function Test() {
             if (res.data.username == undefined) {
                 // console.log(Cookies.get("theme") == "undefined")
 
-                Cookies.set("theme", (Cookies.get("theme") == undefined) ? "light" : Cookies.get("theme") as string, {
+                Cookies.set("theme", (Cookies.get("theme") == undefined) ? "light" : Cookies.get("theme") as "dark" | "light", {
                     expires: 365
                 })
 
                 setthemes(
-                    color[Cookies.get("theme") as string]
+                    color[Cookies.get("theme") as "dark" | "light"]
                 )
 
                 localStorage.removeItem("username")
@@ -51,7 +49,7 @@ export function Test() {
                 })
                 // setuser(undefined)
                 setthemes(
-                    color[Cookies.get("theme") as string]
+                    color[Cookies.get("theme") as "dark" | "light"]
                 )
 
                 localStorage.setItem("username", res.data.username)

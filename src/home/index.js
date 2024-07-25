@@ -1,6 +1,6 @@
 import React from "react";
 import { HomePage } from "./home.js";
-import { geturl } from "types";
+import { geturl } from "ultility/ulti.js";
 import { Userring } from "../home/account/index.js";
 import { Userr } from "./user/index.js";
 import { Blog } from "./blogs.js";
@@ -45,6 +45,9 @@ export function Home() {
     }
     else if (url[0] == "problems") {
         return (React.createElement(Problem, null));
+    }
+    else {
+        return (React.createElement(React.Fragment, null));
     }
 }
 //# sourceMappingURL=index.js.map

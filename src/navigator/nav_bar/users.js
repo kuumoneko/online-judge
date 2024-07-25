@@ -1,4 +1,5 @@
-import { color, color_themes, User_role } from 'types';
+import { User_role } from "ultility/enum.js";
+import { color, color_themes } from "ultility/color.js";
 import React, { useState } from 'react';
 import Cookies from 'js-cookie';
 export function Nav_Users() {
@@ -8,16 +9,13 @@ export function Nav_Users() {
     const theme = Cookies.get("theme");
     const role = localStorage.getItem("role");
     return (React.createElement("div", null,
-        React.createElement("div", {
-            className: 'navigator-fi', onMouseEnter: (e) => {
+        React.createElement("div", { className: 'navigator-fi', onMouseEnter: (e) => {
                 settouch(true);
             }, onMouseLeave: (e) => {
                 settouch(false);
-            }
-        },
+            } },
             React.createElement("a", { href: "/users" }, "USERS")),
-        (touch && (role === User_role.administrator || role == User_role.moderator)) && (React.createElement("div", {
-            style: {
+        (touch && (role === User_role.administrator || role == User_role.moderator)) && (React.createElement("div", { style: {
                 width: "100%",
                 height: "40px",
                 backgroundColor: color[theme].content,
@@ -28,10 +26,8 @@ export function Nav_Users() {
                 settouch(true);
             }, onMouseLeave: (e) => {
                 settouch(false);
-            }
-        },
-            React.createElement("div", {
-                style: {
+            } },
+            React.createElement("div", { style: {
                     height: "40px",
                     backgroundColor: color[theme].content,
                     borderLeft: `5px solid ${color_themes}`,
@@ -41,10 +37,8 @@ export function Nav_Users() {
                     flexDirection: "column",
                     justifyContent: "space-around",
                     alignItems: "center"
-                }
-            }, "All"),
-            React.createElement("div", {
-                style: {
+                } }, "All"),
+            React.createElement("div", { style: {
                     height: "40px",
                     backgroundColor: color[theme].content,
                     borderLeft: `5px solid ${color_themes}`,
@@ -54,10 +48,8 @@ export function Nav_Users() {
                     flexDirection: "column",
                     justifyContent: "space-around",
                     alignItems: "center"
-                }
-            }, "Types"),
-            React.createElement("div", {
-                style: {
+                } }, "Types"),
+            React.createElement("div", { style: {
                     height: "40px",
                     backgroundColor: color[theme].content,
                     borderLeft: `5px solid ${color_themes}`,
@@ -67,7 +59,6 @@ export function Nav_Users() {
                     flexDirection: "column",
                     justifyContent: "space-around",
                     alignItems: "center"
-                }
-            }, "Groups")))));
+                } }, "Groups")))));
 }
 //# sourceMappingURL=users.js.map

@@ -1,17 +1,10 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import React, { useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
-import { get_rank_color, getdata, getGravatarURL, User_role, geturl } from "types";
+import { get_rank_color } from "ultility/color.js";
+import { getdata, getGravatarURL, geturl } from "ultility/ulti.js";
+import { User_role } from "ultility/enum.js";
 function sanitizeHtml(html) {
     const domParser = new DOMParser();
     const doc = domParser.parseFromString(html, 'text/html');
@@ -25,17 +18,15 @@ export function Profile() {
     const [rankRank, setRR] = useState(0);
     const [user, setuser] = useState();
     useEffect(() => {
-        function lmao() {
-            return __awaiter(this, void 0, void 0, function* () {
-                const rank_by_points = yield getdata("sort", "users", { mode: "points", search: geturl()[1], reverse: true, page: 1, lineperpage: 100 });
-                const rank_by_rank = yield getdata("sort", "users", { mode: "rank", search: geturl()[1], reverse: true, page: 1, lineperpage: 100 });
-                // console.log(rank_by_points.data.data[0])
-                setRR(rank_by_rank.data.data[0].stt);
-                setPR(rank_by_points.data.data[0].stt);
-                const data = yield getdata("get", "users", geturl()[1]);
-                // console.log(data.data.data[0])
-                setuser(data.data.data[0]);
-            });
+        async function lmao() {
+            const rank_by_points = await getdata("sort", "users", { mode: "points", search: geturl()[1], reverse: true, page: 1, lineperpage: 100 });
+            const rank_by_rank = await getdata("sort", "users", { mode: "rank", search: geturl()[1], reverse: true, page: 1, lineperpage: 100 });
+            // console.log(rank_by_points.data.data[0])
+            setRR(rank_by_rank.data.data[0].stt);
+            setPR(rank_by_points.data.data[0].stt);
+            const data = await getdata("get", "users", geturl()[1]);
+            // console.log(data.data.data[0])
+            setuser(data.data.data[0]);
         }
         lmao();
     }, []);
@@ -91,7 +82,7 @@ export function Profile() {
                             React.createElement("div", null,
                                 React.createElement(Markdown, { children: sanitizeHtml(user.profile), rehypePlugins: [rehypeRaw, rehypeSanitize] }))))
                         :
-                        (React.createElement(React.Fragment, null))))));
+                            (React.createElement(React.Fragment, null))))));
     }, [user]);
     return (html);
 }

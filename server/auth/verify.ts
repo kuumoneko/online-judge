@@ -1,8 +1,7 @@
 import nodemailer from "nodemailer";
-import { User } from "types";
+import { User } from "ultility/types.js";
 import { add_users } from "../users/users.js";
-import { getDataFromDatabase, writeDataToDatabase } from "data";
-import SMTPTransport from "nodemailer/lib/smtp-transport/index.js";
+import { getDataFromDatabase, writeDataToDatabase } from "ultility/data.js";
 import SMTPConnection from "nodemailer/lib/smtp-connection/index.js";
 
 

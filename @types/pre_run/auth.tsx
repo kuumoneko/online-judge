@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { getdata } from "types";
+import { getdata } from "ultility/ulti.js";
 
 
 export async function auth_user() {

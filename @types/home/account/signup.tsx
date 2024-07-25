@@ -1,7 +1,8 @@
 import { faSignature, faUser, faEnvelope, faKey, faEye, faEyeSlash, faCheck } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useState, useEffect } from "react"
-import { color, getdata } from "types"
+import { getdata } from "ultility/ulti.js";
+import { color } from "ultility/color.js"
 import Cookies from 'js-cookie';
 
 export function Singup() {
@@ -18,7 +19,7 @@ export function Singup() {
 
     const [remember, Setremember] = useState(true);
 
-    const theme = color[Cookies.get("theme") as string]
+    const theme = color[Cookies.get("theme") as "dark" | "light"]
 
     useEffect(() => {
         let temp1 = "", temp2 = "";

@@ -1,4 +1,5 @@
-import { color, color_themes, User, User_role } from 'types';
+import { User_role } from "ultility/enum.js";
+import { color, color_themes } from "ultility/color.js";
 import React, { useState } from 'react'
 import Cookies from 'js-cookie';
 
@@ -6,7 +7,7 @@ import Cookies from 'js-cookie';
 export function Nav_Problems() {
     const [touch, settouch] = useState(false);
     const role = localStorage.getItem("role") as string;
-    const theme = Cookies.get("theme") as string
+    const theme: "dark" | "light" = Cookies.get("theme") as "dark" | "light";
 
     return (
         <div

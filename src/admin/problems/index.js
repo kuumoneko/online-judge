@@ -9,7 +9,7 @@ export function Admin_problems() {
     if (url[2] == undefined) {
         temp = (React.createElement(All_Problems, null));
     }
-    else if (url[2] == "types") {
+    else if (url[2] == "ultility/types.js") {
         temp = (React.createElement(Problems_Types, null));
     }
     else if (url[2] == "groups") {

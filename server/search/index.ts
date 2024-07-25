@@ -1,4 +1,4 @@
-import { Problems, User } from "types";
+import { Problems, User } from "ultility/types.js";
 import { sort_problems } from "../problems/problems.js";
 import { sort_users } from "../users/users.js";
 import { sort_comments } from "../general/get.js";
@@ -46,13 +46,13 @@ export function searching(search: string) {
     //         "users", "groups"
     //     ],
     //     "problems": [
-    //         "problems", "groups", "types"
+    //         "problems", "groups", "ultility/types.js"
     //     ],
     //     "comments": [
     //         "comments"
     //     ],
     //     "contests": [
-    //         "contests", "groups", "types"
+    //         "contests", "groups", "ultility/types.js"
     //     ],
     //     "submissions": [
     //         "submissions"

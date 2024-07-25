@@ -1,12 +1,12 @@
 import { faPenToSquare, faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { sanitize } from "dompurify";
-import { color } from "types";
+import { color } from "ultility/color.js";
 import React, { useState, useRef, useEffect } from "react";
 import Markdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
-import { getdata } from "types";
+import { getdata } from "ultility/ulti.js";
 import Cookies from "js-cookie";
 
 
@@ -85,7 +85,7 @@ export function Add_blog() {
                                             settitle(e.target.value)
                                         }}
                                         value={Title}
-                                        style={{ background: color[Cookies.get("theme") as string].background }}
+                                        style={{ background: color[Cookies.get("theme") as "dark" | "light"].background }}
                                     />
                                     {
                                         Titlecheck && (
@@ -108,7 +108,7 @@ export function Add_blog() {
                                 <td>
                                     <input
                                         type="datetime-local"
-                                        style={{ background: color[Cookies.get("theme") as string].background }}
+                                        style={{ background: color[Cookies.get("theme") as "dark" | "light"].background }}
                                         onChange={(e) => {
                                             e.preventDefault();
                                             setpublish(e.target.value)
@@ -160,7 +160,7 @@ export function Add_blog() {
                                     <>
                                         <div id="row" style={
                                             {
-                                                color: color[Cookies.get("theme") as string].background
+                                                color: color[Cookies.get("theme") as "dark" | "light"].background
                                             }}>
                                             {lines.map((item, index) => (
                                                 <div style={{ display: "flex", justifyContent: "space-around", paddingTop: "0px", paddingBottom: `${item.more * 20}px` }}>

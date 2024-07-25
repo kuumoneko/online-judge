@@ -1,16 +1,8 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { faSignature, faUser, faEnvelope, faKey, faEye, faEyeSlash, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
-import { color, getdata } from "types";
+import { getdata } from "ultility/ulti.js";
+import { color } from "ultility/color.js";
 import Cookies from 'js-cookie';
 export function Singup() {
     // fullname , username , email, password, confirm_password 
@@ -40,7 +32,7 @@ export function Singup() {
         ]);
     }, [seeing]);
     // Function to handle form submission
-    const hanldeSubmitForm = (event) => __awaiter(this, void 0, void 0, function* () {
+    const hanldeSubmitForm = async (event) => {
         event.preventDefault(); // Prevent the default form submission behavior
         const checkingg = [
             (data[0] == "") ? false : true,
@@ -58,7 +50,7 @@ export function Singup() {
         // console.log(data[4])
         // console.log(checkingg[0] == checkingg[1] == checkingg[2] == checkingg[3] == checkingg[4] == true)
         if (checkingg[0] == checkingg[1] == checkingg[2] == checkingg[3] == checkingg[4] == true) {
-            const res = yield getdata("signup", "", { fullname: data[0], username: data[1], email: data[2], password: data[3] });
+            const res = await getdata("signup", "", { fullname: data[0], username: data[1], email: data[2], password: data[3] });
             // console.log(res);
             if (res.data.data == "Username existed") {
                 setcheck_data([check_data[0], false, check_data[2], check_data[3], check_data[4]]);
@@ -70,12 +62,11 @@ export function Singup() {
                 window.location.href = "/";
             }
         }
-    });
+    };
     // console.log(data[5])
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { className: "container", style: { display: "block", position: "relative" } },
-            React.createElement("form", {
-                className: 'loginform', onChange: (e) => {
+            React.createElement("form", { className: 'loginform', onChange: (e) => {
                     // e.preventDefault();
                     const name = e.target.name;
                     const value = e.target.value;
@@ -143,19 +134,16 @@ export function Singup() {
                         }
                         setdata(temp);
                     }
-                }
-            },
+                } },
                 React.createElement("table", null,
                     React.createElement("tr", null,
                         React.createElement("th", { style: { width: "5%" } },
                             React.createElement(FontAwesomeIcon, { icon: faSignature, style: { display: "flex", } })),
                         React.createElement("th", { style: { width: "90%" } },
-                            React.createElement("input", {
-                                style: {
+                            React.createElement("input", { style: {
                                     backgroundColor: theme.background,
                                     color: theme.font
-                                }, className: "fullname", type: "text", placeholder: "Enter Fullname", name: "fname", required: true
-                            })),
+                                }, className: "fullname", type: "text", placeholder: "Enter Fullname", name: "fname", required: true })),
                         React.createElement("th", { style: { width: "5%" } })),
                     React.createElement("tr", null,
                         React.createElement("th", null),
@@ -166,29 +154,25 @@ export function Singup() {
                         React.createElement("th", null,
                             React.createElement(FontAwesomeIcon, { icon: faUser })),
                         React.createElement("th", null,
-                            React.createElement("input", {
-                                style: {
+                            React.createElement("input", { style: {
                                     backgroundColor: theme.background,
                                     color: theme.font
-                                }, className: "username", type: "text", placeholder: "Enter Username", name: "uname", required: true
-                            }))),
+                                }, className: "username", type: "text", placeholder: "Enter Username", name: "uname", required: true }))),
                     React.createElement("tr", null,
                         React.createElement("th", null),
                         React.createElement("th", null, !check_data[1] && (React.createElement("div", null,
                             React.createElement("span", null,
                                 React.createElement("a", { style: { WebkitTextFillColor: "red" } }, (data[0] == "") ? "Username must be at least 1 character" : ((data[0].includes(" ")) ? "Username must not have space" : "This username already exists")
-                                    // (username != "") ? "This username already exists" : "Username must be at least 1 character"
+                                // (username != "") ? "This username already exists" : "Username must be at least 1 character"
                                 )))))),
                     React.createElement("tr", null,
                         React.createElement("th", null,
                             React.createElement(FontAwesomeIcon, { icon: faEnvelope })),
                         React.createElement("th", null,
-                            React.createElement("input", {
-                                style: {
+                            React.createElement("input", { style: {
                                     backgroundColor: theme.background,
                                     color: theme.font
-                                }, className: "email", type: "text", placeholder: "Enter Email", name: "mail", required: true
-                            }))),
+                                }, className: "email", type: "text", placeholder: "Enter Email", name: "mail", required: true }))),
                     React.createElement("tr", null,
                         React.createElement("th", null),
                         React.createElement("th", null, !check_data[2] && (React.createElement("div", null,
@@ -198,19 +182,15 @@ export function Singup() {
                         React.createElement("th", null,
                             React.createElement(FontAwesomeIcon, { icon: faKey })),
                         React.createElement("th", null,
-                            React.createElement("input", {
-                                style: {
+                            React.createElement("input", { style: {
                                     backgroundColor: theme.background,
                                     color: theme.font
-                                }, className: "password", type: "text", placeholder: "Enter password", name: "psw", required: true, value: UI[0]
-                            })),
+                                }, className: "password", type: "text", placeholder: "Enter password", name: "psw", required: true, value: UI[0] })),
                         React.createElement("th", null,
-                            React.createElement(FontAwesomeIcon, {
-                                icon: (seeing[0] ? faEye : faEyeSlash), onClick: (e) => {
+                            React.createElement(FontAwesomeIcon, { icon: (seeing[0] ? faEye : faEyeSlash), onClick: (e) => {
                                     e.preventDefault();
                                     setsee([!seeing[0], seeing[1]]);
-                                }
-                            }))),
+                                } }))),
                     React.createElement("tr", null,
                         React.createElement("th", null),
                         React.createElement("th", null, !check_data[3] && (React.createElement("div", null,
@@ -220,19 +200,15 @@ export function Singup() {
                         React.createElement("th", null,
                             React.createElement(FontAwesomeIcon, { icon: faCheck })),
                         React.createElement("th", null,
-                            React.createElement("input", {
-                                style: {
+                            React.createElement("input", { style: {
                                     backgroundColor: theme.background,
                                     color: theme.font
-                                }, className: "apassword", type: "text", placeholder: "Enter Password again", name: "pswa", required: true, value: UI[1]
-                            })),
+                                }, className: "apassword", type: "text", placeholder: "Enter Password again", name: "pswa", required: true, value: UI[1] })),
                         React.createElement("th", null,
-                            React.createElement(FontAwesomeIcon, {
-                                icon: (seeing[1] ? faEye : faEyeSlash), onClick: (e) => {
+                            React.createElement(FontAwesomeIcon, { icon: (seeing[1] ? faEye : faEyeSlash), onClick: (e) => {
                                     e.preventDefault();
                                     setsee([seeing[0], !seeing[1]]);
-                                }
-                            }))),
+                                } }))),
                     React.createElement("tr", null,
                         React.createElement("th", null),
                         React.createElement("th", null, !check_data[4] && (React.createElement("div", null,

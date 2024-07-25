@@ -3,11 +3,15 @@ import React, { useEffect, useRef, useState } from "react"
 import Markdown from "react-markdown";
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
-import { all_language, color, getdata, User, Languages } from "types";
+import { all_language, getdata, allowed_html_tags } from "ultility/ulti.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Cookies from "js-cookie";
-import { allowed_html_tags } from "types";
+import { Languages } from "ultility/enum.js";
+import { User } from "ultility/types.js";
+import { color } from "ultility/color.js"
+
+
 
 function sanitizeHtml(html: string) {
     const domParser = new DOMParser();
@@ -83,7 +87,7 @@ function Return_UI({ user }: { user: User }) {
         window.location.reload();
     }
 
-    const theme = Cookies.get("theme") as string
+    const theme: "dark" | "light" = Cookies.get("theme") as "dark" | "light";
     return (
         <>
             <div style={{ width: "max-content" }}>

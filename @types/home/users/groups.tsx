@@ -1,5 +1,7 @@
 import React, { ReactElement, StrictMode, useEffect, useState } from "react";
-import { color, get_rank_color, getdata, Group, User, Languages, Theme_mode, User_role } from "types";
+
+import { color } from "ultility/color.js";
+import { getdata } from "ultility/ulti.js";
 import Cookies from "js-cookie";
 
 export function Home_Groups() {
@@ -20,7 +22,7 @@ export function Home_Groups() {
             let totalPage: number = res.data.totalPage as number;
 
 
-            const themes = color[Cookies.get("theme") as string];
+            const themes = color[Cookies.get("theme") as "dark" | "light"];
             // console.log(themes)
             const element: ReactElement[] = users.map((user: { stt: number, unt: number, groupname: string }, index) => {
                 // console.log(user.stt)

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { get_rank_color, getdata, replaceAll, User_role } from "types";
+import React from "react";
+import { replaceAll } from "ultility/ulti.js";
 
 import Cookies from "js-cookie";
 

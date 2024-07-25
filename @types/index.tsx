@@ -4,22 +4,23 @@ import { createRoot } from "react-dom/client";
 import "./index.css"
 import { Navigator } from "./navigator/index.js";
 import Cookies from 'js-cookie';
-import { color, color_themes, cookie, getdata, geturl, Theme_mode, User_role } from "types";
+import { getdata, geturl, } from "ultility/ulti.js";
+import { color } from 'ultility/color.js';
 import { Home } from './home/index.js';
 import { Admin } from './admin/index.js';
 import { Title } from './title.js';
-import { getDataFromDatabase } from 'data';
 import { Test } from './test/index.js';
 import { auth_user } from './pre_run/auth.js';
 
-const root = createRoot(document.getElementById("root"));
+const root_element = document.getElementById("root");
+
+const root = createRoot(root_element);
 
 function Server() {
 
     const [url, seturl] = useState(geturl());
     const [themes, setthemes] = useState();
 
-    // const [user, setuser] = useState();
 
     useEffect(() => {
         async function pre_run() {
@@ -28,12 +29,12 @@ function Server() {
             if (res.data.username == undefined) {
                 // console.log(Cookies.get("theme") == "undefined")
 
-                Cookies.set("theme", (Cookies.get("theme") == undefined) ? "light" : Cookies.get("theme") as string, {
+                Cookies.set("theme", (Cookies.get("theme") == undefined) ? "light" : Cookies.get("theme") as "dark" | "light", {
                     expires: 365
                 })
 
                 setthemes(
-                    color[Cookies.get("theme") as string]
+                    color[Cookies.get("theme") as "dark" | "light"]
                 )
 
                 localStorage.removeItem("username")
@@ -55,7 +56,7 @@ function Server() {
                 })
                 // setuser(undefined)
                 setthemes(
-                    color[Cookies.get("theme") as string]
+                    color[Cookies.get("theme") as "dark" | "light"]
                 )
 
                 localStorage.setItem("username", res.data.username)

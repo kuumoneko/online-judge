@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { color } from "types";
+import { color } from "ultility/color.js";
 import Cookies from "js-cookie";
 import { Searching } from "./searching.js";
 
@@ -10,7 +10,7 @@ export function SearchBar() {
     const [clicked, setclick] = useState(false);
     const [search, setsearch] = useState("");
 
-    const theme = Cookies.get("theme") as string;
+    const theme: "dark" | "light" = Cookies.get("theme") as "dark" | "light";;
 
     useEffect(() => {
         const search_element = document.getElementsByClassName("search-input")[0] as HTMLInputElement;

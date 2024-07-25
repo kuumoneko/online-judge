@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import Cookies from 'js-cookie';
-import { getdata, Theme_mode } from 'types';
-
+import { getdata } from "ultility/ulti.js";
+import { Theme_mode } from 'ultility/enum.js';
 export function Nav_Themes() {
-    const [mode, setmode] = useState(Cookies.get("theme") as string);
+    const [mode, setmode] = useState(Cookies.get("theme") as "dark" | "light");
 
     useEffect(() => {
         async function lmao() {

@@ -1,13 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { color } from "types";
+import { color } from "ultility/color.js";
 import Cookies from "js-cookie";
 import { Searching } from "./searching.js";
 export function SearchBar() {
     const [clicked, setclick] = useState(false);
     const [search, setsearch] = useState("");
     const theme = Cookies.get("theme");
+    ;
     useEffect(() => {
         const search_element = document.getElementsByClassName("search-input")[0];
         if (!clicked) {
@@ -20,15 +21,12 @@ export function SearchBar() {
             search_element.style.backgroundColor = color[theme].background;
         }
     }, [clicked]);
-    return (React.createElement("div", {
-        style: { display: "flex", justifyContent: "center", alignItems: "center", paddingLeft: "10px", width: "30%" }, onMouseLeave: (e) => { setclick(false); setsearch(""); }, onKeyDown: (e) => {
+    return (React.createElement("div", { style: { display: "flex", justifyContent: "center", alignItems: "center", paddingLeft: "10px", width: "30%" }, onMouseLeave: (e) => { setclick(false); setsearch(""); }, onKeyDown: (e) => {
             if (e.key === "Enter") {
                 console.log("Search");
             }
-        }
-    },
-        React.createElement(FontAwesomeIcon, {
-            style: {
+        } },
+        React.createElement(FontAwesomeIcon, { style: {
                 color: color[theme].font,
                 fontSize: "20px",
                 cursor: "pointer"
@@ -37,10 +35,8 @@ export function SearchBar() {
                     setsearch("");
                 }
                 setclick(!clicked);
-            }
-        }),
-        React.createElement("input", {
-            type: "text", value: search, className: "search-input", style: {
+            } }),
+        React.createElement("input", { type: "text", value: search, className: "search-input", style: {
                 // backgroundColor: color[theme].background,
                 color: color[theme].font,
                 marginLeft: "5px",
@@ -50,8 +46,7 @@ export function SearchBar() {
                 transition: "all 1s ease-in-out"
             }, onChange: (e) => {
                 setsearch(e.target.value);
-            }
-        }),
+            } }),
         React.createElement(Searching, { search: search })));
 }
 //# sourceMappingURL=searchBar.js.map

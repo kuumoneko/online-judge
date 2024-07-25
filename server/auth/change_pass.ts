@@ -1,4 +1,4 @@
-import { getDataFromDatabase, writeDataToDatabase } from "data";
+import { getDataFromDatabase, writeDataToDatabase } from "ultility/data.js";
 
 export function change_password(username: string, old_password: string, new_password: string) {
 

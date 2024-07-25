@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Blog, color, color_themes, getdata, geturl, User } from "types";
+import React, { useEffect,  useState } from "react";
+import { Blog } from "ultility/types.js";
+import { getdata, geturl } from "ultility/ulti.js"
+import {  color_themes } from "ultility/color.js"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Markdown from "react-markdown";
-import { sanitize } from "dompurify";
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
-import Cookies from "js-cookie";
 import { Add_blog } from "./add.js";
 
 function sanitizeHtml(html: string) {

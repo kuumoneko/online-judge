@@ -21,8 +21,9 @@ import { send_code_verify_user, verify_user } from "./auth/verify.js";
 import { me } from "./auth/me.js";
 
 // package
-import { User, User_role, Theme_mode } from "types";
-import { getDataFromDatabase } from "data";
+import { User } from "ultility/types.js";
+import { User_role, Theme_mode } from "ultility/enum.js";
+import { getDataFromDatabase } from "ultility/data.js";
 import { login } from "./auth/login.js";
 import { signup } from "./auth/signup.js";
 import { searching } from "./search/index.js";
@@ -349,6 +350,7 @@ app.patch("/data", (req, res) => {
     const receivedData = req.body;
     const mode = receivedData.mode;
     const data = receivedData.data;
+
     const pages = {
         lineperpage: receivedData.data.lineperpage,
         page: receivedData.data.page
@@ -369,7 +371,7 @@ app.patch("/data", (req, res) => {
             temp = sort_blogs(data.mode, data.search, data.reverse);
             break;
         case "problems":
-            temp = sort_problems(data.mode, data.search, data.reverse);
+            temp = sort_problems(data.mode, data, data.reverse);
             break;
         case "problem_types":
             temp = sort_problem_types(data.mode, data.search, data.reverse);
@@ -488,6 +490,7 @@ app.patch("/data", (req, res) => {
     res.status(statusCode).json({
         data: sendData,
         totalPage: Math.ceil(temp.length / pages.lineperpage),
+        page: pages.page,
     })
 });
 app.listen(port, () => {

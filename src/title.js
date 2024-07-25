@@ -1,5 +1,5 @@
 import React from "react";
-import { replaceAll } from "types";
+import { replaceAll } from "ultility/ulti.js";
 function Userss({ mode, themes }) {
     function resss(modee) {
         return {
@@ -35,8 +35,8 @@ function Userr({ mode, themes, user }) {
         React.createElement("li", null,
             React.createElement("a", { id: "users", href: `/user/${mode[1]}/blogs`, style: resss("blogs") }, "Blogs")),
         (user == mode[1]) &&
-        (React.createElement("li", null,
-            React.createElement("a", { id: "users", href: `/user/${mode[1]}/edit_profile`, style: resss("edit_profile") }, "Edit profile")))));
+            (React.createElement("li", null,
+                React.createElement("a", { id: "users", href: `/user/${mode[1]}/edit_profile`, style: resss("edit_profile") }, "Edit profile")))));
 }
 export function Title({ url, themes }) {
     let temp = url[0];
@@ -65,8 +65,7 @@ export function Title({ url, themes }) {
     // }, [])
     return (React.createElement(React.Fragment, null,
         React.createElement("br", { style: { paddingBottom: "10px" } }),
-        React.createElement("div", {
-            className: 'tabs', style: {
+        React.createElement("div", { className: 'tabs', style: {
                 borderBottom: `1px  solid ${themes.font}`,
                 display: "flex",
                 margin: "0 0 8px",
@@ -74,14 +73,13 @@ export function Title({ url, themes }) {
                 justifyContent: "space-between",
                 flexWrap: "wrap",
                 height: "45px"
-            }
-        },
+            } },
             React.createElement("h2", { id: "title", style: { fontSize: "2em" } }, (temp == "admin")
                 ?
-                `Adminisrator ${url[2] ? `for ${url[2]}` : "Dashboard"}`
+                    `Adminisrator ${url[2] ? `for ${url[2]}` : "Dashboard"}`
                 :
-                (temp == "user") ?
-                    (React.createElement("a", { id: "titlee", className: 'font-bold' }, url[1])) : temp.toUpperCase()),
+                    (temp == "user") ?
+                        (React.createElement("a", { id: "titlee", className: 'font-bold' }, url[1])) : temp.toUpperCase()),
             (temp == "users" || temp == "groups") ? (React.createElement(Userss, { mode: temp, themes: themes })) : (temp == "user") ? (React.createElement(Userr, { mode: url, themes: themes, user: localStorage.getItem("username") })) : (React.createElement(React.Fragment, null)))));
 }
 //# sourceMappingURL=title.js.map

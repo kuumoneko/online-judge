@@ -1,14 +1,6 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import React, { useEffect, useRef, useState } from "react";
-import { color, getdata } from "types";
+import { color } from "ultility/color.js";
+import { getdata } from "ultility/ulti.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Markdown from "react-markdown";
@@ -28,28 +20,26 @@ export function Edit_blog({ user, blog }) {
     const [mode, setmode] = useState("editor");
     const contentRef = useRef(null);
     useEffect(() => {
-        function ondata() {
-            return __awaiter(this, void 0, void 0, function* () {
-                if (lmao == false) {
-                    const res = yield getdata("get", "blogs", { id: blog });
-                    setTitle(res.title);
-                    setpublish(res.publish_time);
-                    setdata(res.content);
-                    sethtml(res.html);
-                    setlmao(true);
-                }
-                // else {
-                //     setTitle(Title);
-                //     setpublish(publish);
-                //     setdata(data);
-                //     sethtml(html);
-                // }
-                const dataa = document.getElementById("editorr");
-                // console.log(dataa)
-                if (dataa != null && dataa.innerHTML == "") {
-                    dataa.innerHTML = html;
-                }
-            });
+        async function ondata() {
+            if (lmao == false) {
+                const res = await getdata("get", "blogs", { id: blog });
+                setTitle(res.title);
+                setpublish(res.publish_time);
+                setdata(res.content);
+                sethtml(res.html);
+                setlmao(true);
+            }
+            // else {
+            //     setTitle(Title);
+            //     setpublish(publish);
+            //     setdata(data);
+            //     sethtml(html);
+            // }
+            const dataa = document.getElementById("editorr");
+            // console.log(dataa)
+            if (dataa != null && dataa.innerHTML == "") {
+                dataa.innerHTML = html;
+            }
         }
         ondata();
     }, []);
@@ -57,7 +47,7 @@ export function Edit_blog({ user, blog }) {
         e.preventDefault();
         setmode(e.target.id);
     };
-    const saveClick = (e) => __awaiter(this, void 0, void 0, function* () {
+    const saveClick = async (e) => {
         e.preventDefault();
         // console.log("lmao")
         // const res = await getdata("get", "blogs", user.username);
@@ -69,7 +59,7 @@ export function Edit_blog({ user, blog }) {
         //     html: html,
         //     id: blog
         // })
-        yield getdata("post", "blogs", {
+        await getdata("post", "blogs", {
             host: user.username,
             title: Title,
             publish_time: publish,
@@ -78,7 +68,7 @@ export function Edit_blog({ user, blog }) {
             id: blog
         });
         window.location.reload();
-    });
+    };
     return (React.createElement(React.Fragment, null,
         React.createElement("div", null,
             React.createElement("form", null,
@@ -87,17 +77,13 @@ export function Edit_blog({ user, blog }) {
                         React.createElement("tr", null,
                             React.createElement("td", null, "Title:"),
                             React.createElement("td", null,
-                                React.createElement("input", {
-                                    type: "text", placeholder: "Title", style: {
+                                React.createElement("input", { type: "text", placeholder: "Title", style: {
                                         background: color[Cookies.get("theme")].background
-                                    }, value: Title, disabled: true
-                                }))),
+                                    }, value: Title, disabled: true }))),
                         React.createElement("tr", null,
-                            React.createElement("td", {
-                                style: {
+                            React.createElement("td", { style: {
                                     paddingRight: "5px"
-                                }
-                            }, "Publish time:"),
+                                } }, "Publish time:"),
                             React.createElement("td", null,
                                 React.createElement("input", { type: "datetime-local", style: { background: color[Cookies.get("theme")].background }, value: publish, disabled: true }))))),
                 React.createElement("div", null,
@@ -110,8 +96,7 @@ export function Edit_blog({ user, blog }) {
                             React.createElement(FontAwesomeIcon, { icon: faEye }),
                             React.createElement("a", { onClick: onClick, id: "preview", style: { paddingLeft: "5px" } }, "Preview"))),
                     React.createElement("div", { style: { height: "350px", width: "1500px", display: "flex", flexDirection: "row" } }, (mode == "editor") ? (React.createElement(React.Fragment, null,
-                        React.createElement("div", {
-                            id: "row", style: {
+                        React.createElement("div", { id: "row", style: {
                                 overflowY: "auto",
                                 overflow: "hidden",
                                 // top: "0",
@@ -122,10 +107,8 @@ export function Edit_blog({ user, blog }) {
                                 backgroundColor: "#e8e8e8",
                                 marginTop: "5px",
                                 color: color[Cookies.get("theme")].background
-                            }
-                        }, lines.map((item, index) => (React.createElement("div", { style: { display: "flex", justifyContent: "space-around", paddingTop: "0px", paddingBottom: `${item.more * 20}px` } }, index + 1)))),
-                        React.createElement("div", {
-                            id: "editorr", contentEditable: "true", ref: contentRef, style: {
+                            } }, lines.map((item, index) => (React.createElement("div", { style: { display: "flex", justifyContent: "space-around", paddingTop: "0px", paddingBottom: `${item.more * 20}px` } }, index + 1)))),
+                        React.createElement("div", { id: "editorr", contentEditable: "true", ref: contentRef, style: {
                                 marginTop: "5px",
                                 marginLeft: "1px",
                                 height: "350px",
@@ -150,29 +133,24 @@ export function Edit_blog({ user, blog }) {
                                 setlines((e.target.innerText != "" && e.target.innerText != "\n") ? temp : [{ line: 1, more: 0 }]);
                             }, onScroll: (e) => {
                                 document.getElementById("row").scrollTop = e.target.scrollTop;
-                            }
-                        }))) : (React.createElement("div", {
-                            style: {
-                                height: "350px",
-                                width: "100%",
-                                marginTop: "5px",
-                                padding: "15px 15px 15px 15px",
-                                borderWidth: "1px",
-                                borderStyle: "solid",
-                                borderColor: "#ccc",
-                            }
-                        },
-                            React.createElement(Markdown, { children: sanitize(data), rehypePlugins: [rehypeRaw, rehypeSanitize] }))))),
+                            } }))) : (React.createElement("div", { style: {
+                            height: "350px",
+                            width: "100%",
+                            marginTop: "5px",
+                            padding: "15px 15px 15px 15px",
+                            borderWidth: "1px",
+                            borderStyle: "solid",
+                            borderColor: "#ccc",
+                        } },
+                        React.createElement(Markdown, { children: sanitize(data), rehypePlugins: [rehypeRaw, rehypeSanitize] }))))),
                 React.createElement("div", { style: { paddingTop: "10px" } },
-                    React.createElement("button", {
-                        id: "save", className: "submit", style: {
+                    React.createElement("button", { id: "save", className: "submit", style: {
                             float: "right",
                             // backgroundColor: Theme_mode,
                             marginTop: "3px",
                             padding: "3px 3px 3px 3px",
                             borderRadius: "5px"
-                        }, onClick: saveClick
-                    },
+                        }, onClick: saveClick },
                         React.createElement("a", { id: "save", onClick: saveClick }, "Save")))))));
 }
 //# sourceMappingURL=edit.js.map

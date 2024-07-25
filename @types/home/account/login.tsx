@@ -2,8 +2,8 @@ import { faUser, faKey, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-ic
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
 import Cookies from 'js-cookie';
-import { color, getdata } from "types";
-
+import { getdata } from "ultility/ulti.js";
+import { color } from "ultility/color.js"
 export function Login() {
     // information
     const [username, Setusername] = useState('');
@@ -18,7 +18,7 @@ export function Login() {
     // [username , password]
     const [error, seterror] = useState([false, false])
 
-    const theme = color[Cookies.get("theme") as string];
+    const theme = color[Cookies.get("theme") as "dark" | "light"];
 
 
 

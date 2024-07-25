@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { color_themes, getdata } from "types";
+import { getdata } from "ultility/ulti.js";
+import { color_themes } from "ultility/color.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Markdown from "react-markdown";

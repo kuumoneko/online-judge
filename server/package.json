@@ -1,13 +1,6 @@
 {
   "name": "data_server",
   "version": "1.0.0",
-  "main": "index.ts",
-  "type": "module",
-  "scripts": {
-    "test": "nodemon --watch \"index.ts\" --ext \"ts\" --ignore \"reptile.ts\" --exec \"node --no-warnings=ExperimentalWarning --loader ts-node/esm index.ts\"",
-    "run": "node --no-warnings=ExperimentalWarning --loader ts-node/esm index.ts"
-  },
-  "author": "",
-  "license": "MIT",
-  "description": ""
+  "main": "server.ts",
+  "type": "module"
 }

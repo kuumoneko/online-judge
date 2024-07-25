@@ -12,7 +12,7 @@ export function Admin_problems() {
     if (url[2] == undefined) {
         temp = (<All_Problems />)
     }
-    else if (url[2] == "types") {
+    else if (url[2] == "ultility/types.js") {
         temp = (<Problems_Types />)
     }
     else if (url[2] == "groups") {

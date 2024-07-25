@@ -6,12 +6,6 @@
   box-sizing: border-box;
 }
 
-/* body {
-  font-family: sans-serif;
-  margin: 20px;
-  padding: 0;
-} */
-
 h1 {
   margin-top: 0;
   font-size: 22px;
@@ -60,19 +54,13 @@ body {
   margin: 0 auto;
   font-size: 15px;
   line-height: 1.231;
-  /* background: #ffffff; */
   font-family: "Lato", "Segoe UI", "Lucida Grande", Arial, sans-serif;
-  /* color: #000; */
 }
 
 #root {
-  align-items: center;
-  min-height: 100vh;
+  min-height: 120vh;
   position: relative;
-  /* border-right: 1px solid #3b3b3b;
-  border-left: 1px solid #3b3b3b; */
   border-bottom: 1px solid #3b3b3b;
-  /* max-width: 100em; */
 }
 div {
   display: block;
@@ -145,15 +133,9 @@ div ul {
 }
 
 #page-container {
-  /* display: flex; */
   min-height: 120vh;
   position: relative;
   margin: 0 auto;
-  /* border-right: 1px solid #ccc;
-  border-left: 1px solid #ccc;
-  border-top: 1px solid #ccc; */
-  /* background: rgb(255, 255, 255); */
-  /* max-width: 100em; */
 }
 
 @media (max-width: 1498px) {
@@ -166,21 +148,11 @@ div ul {
 }
 
 .content-body {
-  /* min-height: 145em; */
-  /* text-align: center; */
   padding-bottom: 4em;
 }
 
-/* .signupcontainer {
-  /* display: inline-block;
-  text-align: initial;
-  max-width: 100%;
-  width: 450px; */
-/* } */
 #content {
   margin: 0px auto auto;
-  /* margin-top: 0px;
-  margin: ; */
   width: 90%;
   height: 100%;
   min-height: 25em;
@@ -189,7 +161,6 @@ div ul {
 
 .account_form {
   display: inline-block;
-  /* background: #f8f8f8; */
   padding: 5px 10px 10px;
   border-radius: 4px;
   border: 1px solid #ccc;
@@ -201,13 +172,11 @@ div ul {
   color: white !important;
   text-decoration: none !important;
   cursor: pointer;
-  /* vertical-align: middle; */
   white-space: nowrap;
   font-weight: 400;
   line-height: 1.4;
   background: linear-gradient(to bottom, #ff9797 0, #a76262 100%) repeat-x;
   border-radius: 4px;
-  /* padding: 6px 12px; */
   padding-top: 6px;
   padding-bottom: 6px;
   padding-left: 12px;
@@ -245,7 +214,6 @@ li.dropdown {
 li a,
 .dropbtn {
   display: inline-block;
-  /* color: white; */
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
@@ -290,12 +258,10 @@ hr#more {
 }
 
 a#rmb {
-  /* position: absolute; */
   bottom: 3em;
 }
 
 a#or {
-  /* -webkit-text-fill-color: #ccc; */
   font-size: 10px;
   height: 44.43px;
   bottom: -10px;
@@ -323,6 +289,14 @@ input:checked::before {
   position: absolute;
   right: -0.2em;
   top: -0.1em;
+}
+
+table > tbody > tr > th {
+  border: 1px solid;
+}
+table {
+  text-align: center;
+  border-collapse: collapse;
 }
 
 .Form {
@@ -442,15 +416,14 @@ tbody tr {
   content: "\f084";
 }
 
-table {
+/* table {
   display: table;
-  border-collapse: separate;
   box-sizing: border-box;
   text-indent: initial;
   unicode-bidi: isolate;
   border-spacing: 2px;
   border-color: gray;
-}
+} */
 
 .navigator-container {
   position: sticky;
@@ -792,6 +765,41 @@ select {
 }
 
 .problem_search {
+  width: 10%;
   position: sticky;
   position: -webkit-sticky;
+  
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* standard */
+}
+
+.point_search {
+  display: block;
+  border: 1px solid rgb(255, 142, 142);
+  border-radius: 5px;
+  background-color: #ffffff;
+  height: 20px;
+  width: 16px;
+  position: absolute;
+}
+
+.point_search.min {
+  left: 0%;
+  /* right:0% */
+}
+
+.point_search.max {
+  left: 100%;
+  /* left: 0%; */
+}
+
+.point_search_range {
+  margin-top: 3.5px;
+  border: 1px solid white;
+  border-radius: 5px;
+  height: 12px;
+  width: 150px;
+  position: absolute;
 }

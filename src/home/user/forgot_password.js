@@ -1,4 +1,4 @@
-import { geturl } from "types";
+import { geturl } from "ultility/ulti.js";
 import React from "react";
 import { Verify_password_page } from "./forgot_password/verify.js";
 import { Reset_password } from "./forgot_password/change_password.js";
@@ -9,6 +9,9 @@ export function ForgotPassword() {
     }
     else if (url[2] == "reset_password") {
         return (React.createElement(Reset_password, null));
+    }
+    else {
+        return (React.createElement(React.Fragment, null));
     }
 }
 //# sourceMappingURL=forgot_password.js.map

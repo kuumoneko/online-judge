@@ -1,5 +1,7 @@
 import React, { ReactElement, StrictMode, useEffect, useState } from "react";
-import { color, get_rank_color, getdata, User_role } from "types";
+import { User_role } from "ultility/enum.js";
+import { color, get_rank_color } from "ultility/color.js";
+import { getdata } from "ultility/ulti.js";
 import Cookies from "js-cookie";
 
 
@@ -23,7 +25,7 @@ export function Home_Users() {
             users = res.data.data as [];
             totalPage = res.data.totalPage
 
-            const themes = color[Cookies.get("theme") as string];
+            const themes = color[Cookies.get("theme") as "dark" | "light"];
             // console.log(themes)
             const element: ReactElement[] = users.map((user: { stt: number, fullname: string, username: string, points: number, problems_count: number, rank: number, role: User_role, group: any[] }, index) => {
                 // console.log(user.stt)
@@ -259,8 +261,8 @@ export function Home_Users() {
                     <input
                         className="search"
                         style={{
-                            backgroundColor: color[Cookies.get("theme") as string].background,
-                            color: color[Cookies.get("theme") as string].font
+                            backgroundColor: color[Cookies.get("theme") as "dark" | "light"].background,
+                            color: color[Cookies.get("theme") as "dark" | "light"].font
                         }}
                         type="text"
                         placeholder="Enter search here"

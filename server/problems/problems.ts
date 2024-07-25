@@ -1,5 +1,5 @@
-import { Problems } from "types";
-import { getDataFromDatabase, writeDataToDatabase } from "data";
+import { Problems } from "ultility/types.js";
+import { getDataFromDatabase, writeDataToDatabase } from "ultility/data.js";
 
 
 export function get_problems(condition: string, items: any[] = []) {
@@ -14,15 +14,38 @@ export function get_problems(condition: string, items: any[] = []) {
         problems = items;
     }
 
+    // console.log("lmao")
+
     if (condition.includes("_")) {
         return problems.filter((problem: any) => problem.id.toLowerCase().includes(condition.toLowerCase()));
     }
-    return problems.filter((problem: any) => problem.title.toLowerCase().includes(condition.toLowerCase()));
+    return problems.filter((problem: any) => problem.name.toLowerCase().includes(condition.toLowerCase()));
 }
 
 export function sort_problems(mode: string, search: any, IsReverse: any) {
 
-    const problems = get_problems("all");
+    // search: name , groups , types , %AC (AC / total) , time , IsSample
+    // console.log(search)
+
+    let problems = get_problems(search.name);
+
+
+    // console.log(problems)
+
+    if (search.type != "all") {
+        problems = problems.filter((problem: Problems) => problem.types.includes(search.type))
+    }
+
+
+
+    if (search.group != "all") {
+        problems = problems.filter((problem: Problems) => problem.groups.includes(search.group))
+    }
+
+    problems = problems.filter((problem: Problems) => problem.points >= search.point.min && problem.points <= search.point.max)
+
+    // console.log(problems)
+
     // console.log(problems);
     try {
         // console.log(condition.toString())
@@ -53,8 +76,17 @@ export function sort_problems(mode: string, search: any, IsReverse: any) {
         })
 
 
+        if (search.name == "all" || search.name == "") {
+            return temping;
+        }
+        else {
+            return [
+                ...temping.filter((problem: Problems) => problem.name.toLowerCase() == search.name.toLowerCase()),
+                ...temping.filter((problem: Problems) => problem.name.toLowerCase().includes(search.name.toLowerCase()))
+            ]
+        }
 
-        return get_problems(search, temping);
+        // return get_problems(search, temping);
     }
     catch (e) {
         // @ts-ignore

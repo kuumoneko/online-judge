@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { getdata, color_themes, get_rank_color, User, Blog } from "types";
+import { User, Blog } from "ultility/types.js";
+import { getdata } from "ultility/ulti.js";
+import { color_themes, get_rank_color } from "ultility/color.js";
 import Markdown from "react-markdown";
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';

@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react"
 import Markdown from "react-markdown";
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
-import { get_rank_color, getdata, getGravatarURL, User_role, User, geturl } from "types";
-
+import { User, } from "ultility/types.js";
+import { get_rank_color } from "ultility/color.js";
+import { getdata, getGravatarURL, geturl } from "ultility/ulti.js";
+import { User_role } from "ultility/enum.js";
 
 
 function sanitizeHtml(html: string) {

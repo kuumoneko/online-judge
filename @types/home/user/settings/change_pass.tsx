@@ -1,4 +1,5 @@
-import { color, color_themes, getdata, geturl } from "types";
+import { getdata, geturl } from "ultility/ulti.js";
+import { color, color_themes } from "ultility/color.js"
 import React, { useState, useEffect } from "react"
 import Cookies from "js-cookie";
 
@@ -8,7 +9,7 @@ export function ChangePassword() {
     const [new_pass, setnew_pass] = useState("");
     const [confirm_pass, setconfirm_pass] = useState("");
     const [submit, setsubmit] = useState(false)
-    const theme = color[Cookies.get("theme") as string]
+    const theme = color[Cookies.get("theme") as "dark" | "light"]
 
     const [check_pass, setcheck_pass] = useState(true);
     const [similar, setsimilar] = useState(true)

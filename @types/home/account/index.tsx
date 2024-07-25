@@ -3,7 +3,7 @@
 import { faCaretRight, faCaretLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import { color_themes } from "types";
+import { color_themes } from "ultility/color.js";
 import { Login } from "./login.js";
 import { Singup } from "./signup.js";
 

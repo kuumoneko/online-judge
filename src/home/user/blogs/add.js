@@ -1,21 +1,12 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { faPenToSquare, faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { sanitize } from "dompurify";
-import { color } from "types";
+import { color } from "ultility/color.js";
 import React, { useState, useRef, useEffect } from "react";
 import Markdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
-import { getdata } from "types";
+import { getdata } from "ultility/ulti.js";
 import Cookies from "js-cookie";
 export function Add_blog() {
     const username = localStorage.getItem("username");
@@ -39,7 +30,7 @@ export function Add_blog() {
         e.preventDefault();
         setmode(e.target.id);
     };
-    const saveClick = (e) => __awaiter(this, void 0, void 0, function* () {
+    const saveClick = async (e) => {
         e.preventDefault();
         // console.log("lmao")
         if (Title.length == 0 || data.length == 0 || publish.length == 0) {
@@ -48,8 +39,8 @@ export function Add_blog() {
             checktime(publish.length == 0);
             return;
         }
-        const res = yield getdata("get", "blogs", username);
-        yield getdata("post", "blogs", {
+        const res = await getdata("get", "blogs", username);
+        await getdata("post", "blogs", {
             host: username,
             title: Title,
             publish_time: publish,
@@ -58,7 +49,7 @@ export function Add_blog() {
             id: `${username}_${res.data.length + 1}`
         });
         window.location.reload();
-    });
+    };
     return (React.createElement(React.Fragment, null,
         React.createElement("div", null,
             React.createElement("form", null,
@@ -67,28 +58,22 @@ export function Add_blog() {
                         React.createElement("tr", null,
                             React.createElement("td", null, "Title:"),
                             React.createElement("td", null,
-                                React.createElement("input", {
-                                    type: "text", placeholder: "Title", onChange: (e) => {
+                                React.createElement("input", { type: "text", placeholder: "Title", onChange: (e) => {
                                         e.preventDefault();
                                         settitle(e.target.value);
-                                    }, value: Title, style: { background: color[Cookies.get("theme")].background }
-                                }),
+                                    }, value: Title, style: { background: color[Cookies.get("theme")].background } }),
                                 Titlecheck && (React.createElement(React.Fragment, null,
                                     React.createElement("br", null),
                                     React.createElement("a", { style: { WebkitTextFillColor: "red" } }, "lmao :)))"))))),
                         React.createElement("tr", null,
-                            React.createElement("td", {
-                                style: {
+                            React.createElement("td", { style: {
                                     paddingRight: "5px"
-                                }
-                            }, "Publish time:"),
+                                } }, "Publish time:"),
                             React.createElement("td", null,
-                                React.createElement("input", {
-                                    type: "datetime-local", style: { background: color[Cookies.get("theme")].background }, onChange: (e) => {
+                                React.createElement("input", { type: "datetime-local", style: { background: color[Cookies.get("theme")].background }, onChange: (e) => {
                                         e.preventDefault();
                                         setpublish(e.target.value);
-                                    }
-                                }),
+                                    } }),
                                 timecheck && (React.createElement(React.Fragment, null,
                                     React.createElement("br", null),
                                     React.createElement("a", { style: { WebkitTextFillColor: "red" } }, "lmao :)))"))))))),
@@ -102,13 +87,10 @@ export function Add_blog() {
                             React.createElement(FontAwesomeIcon, { icon: faEye }),
                             React.createElement("a", { onClick: onClick, id: "preview", style: { paddingLeft: "5px" } }, "Preview"))),
                     React.createElement("div", { style: { height: "350px", width: "1500px", display: "flex", flexDirection: "row" } }, (mode == "editor") ? (React.createElement(React.Fragment, null,
-                        React.createElement("div", {
-                            id: "row", style: {
+                        React.createElement("div", { id: "row", style: {
                                 color: color[Cookies.get("theme")].background
-                            }
-                        }, lines.map((item, index) => (React.createElement("div", { style: { display: "flex", justifyContent: "space-around", paddingTop: "0px", paddingBottom: `${item.more * 20}px` } }, index + 1)))),
-                        React.createElement("div", {
-                            id: "editorr", contentEditable: "true", ref: contentRef, style: {
+                            } }, lines.map((item, index) => (React.createElement("div", { style: { display: "flex", justifyContent: "space-around", paddingTop: "0px", paddingBottom: `${item.more * 20}px` } }, index + 1)))),
+                        React.createElement("div", { id: "editorr", contentEditable: "true", ref: contentRef, style: {
                                 marginTop: "5px",
                                 marginLeft: "1px",
                                 height: "350px",
@@ -133,32 +115,27 @@ export function Add_blog() {
                                 setlines((e.target.innerText != "" && e.target.innerText != "\n") ? temp : [{ line: 1, more: 0 }]);
                             }, onScroll: (e) => {
                                 document.getElementById("row").scrollTop = e.target.scrollTop;
-                            }
-                        }))) : (React.createElement("div", {
-                            style: {
-                                height: "350px",
-                                width: "100%",
-                                marginTop: "5px",
-                                padding: "15px 15px 15px 15px",
-                                borderWidth: "1px",
-                                borderStyle: "solid",
-                                borderColor: "#ccc",
-                            }
-                        },
-                            React.createElement(Markdown, { children: sanitize(data), rehypePlugins: [rehypeRaw, rehypeSanitize] })))),
+                            } }))) : (React.createElement("div", { style: {
+                            height: "350px",
+                            width: "100%",
+                            marginTop: "5px",
+                            padding: "15px 15px 15px 15px",
+                            borderWidth: "1px",
+                            borderStyle: "solid",
+                            borderColor: "#ccc",
+                        } },
+                        React.createElement(Markdown, { children: sanitize(data), rehypePlugins: [rehypeRaw, rehypeSanitize] })))),
                     datacheck && (React.createElement(React.Fragment, null,
                         React.createElement("br", null),
                         React.createElement("a", { style: { WebkitTextFillColor: "red" } }, "lmao :)))")))),
                 React.createElement("div", { style: { paddingTop: "10px" } },
-                    React.createElement("button", {
-                        id: "save", className: "submit", style: {
+                    React.createElement("button", { id: "save", className: "submit", style: {
                             float: "right",
                             // backgroundColor: Theme_mode,
                             marginTop: "3px",
                             padding: "3px 3px 3px 3px",
                             borderRadius: "5px"
-                        }, onClick: saveClick
-                    },
+                        }, onClick: saveClick },
                         React.createElement("a", { id: "save", onClick: saveClick }, "Save")))))));
 }
 //# sourceMappingURL=add.js.map

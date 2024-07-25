@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { color, getdata, Blog, User } from "types";
+import { Blog, User } from "ultility/types.js";
+import { color } from "ultility/color.js"
+import { getdata } from "ultility/ulti.js"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Markdown from "react-markdown";
@@ -111,7 +113,7 @@ export function Edit_blog({ user, blog }: { user: User, blog: string }) {
                                         type="text"
                                         placeholder="Title"
                                         style={{
-                                            background: color[Cookies.get("theme") as string].background
+                                            background: color[Cookies.get("theme") as "dark" | "light"].background
                                         }}
                                         value={Title}
 
@@ -128,7 +130,7 @@ export function Edit_blog({ user, blog }: { user: User, blog: string }) {
                                 <td>
                                     <input
                                         type="datetime-local"
-                                        style={{ background: color[Cookies.get("theme") as string].background }}
+                                        style={{ background: color[Cookies.get("theme") as "dark" | "light"].background }}
                                         value={publish}
 
                                         disabled
@@ -178,7 +180,7 @@ export function Edit_blog({ user, blog }: { user: User, blog: string }) {
                                                 borderRight: "2px solid",
                                                 backgroundColor: "#e8e8e8",
                                                 marginTop: "5px",
-                                                color: color[Cookies.get("theme") as string].background
+                                                color: color[Cookies.get("theme") as "dark" | "light"].background
                                             }}>
                                             {lines.map((item, index) => (
                                                 <div style={{ display: "flex", justifyContent: "space-around", paddingTop: "0px", paddingBottom: `${item.more * 20}px` }}>

@@ -1,6 +1,6 @@
 import React from "react";
-import { color } from "types";
-
+import { color } from "ultility/color.js";
+import Cookies from "js-cookie";
 
 export function About() {
     const rank_color = [
@@ -59,7 +59,7 @@ export function About() {
     }
 
     const header = Object.keys(return_res);
-    const themes = color[JSON.parse((localStorage.getItem("user") as string)).themes.mode] || color.light;
+    const themes = color[Cookies.get("theme") as "dark" | "light"] || color.light;
     return (
         <div>
             <p>

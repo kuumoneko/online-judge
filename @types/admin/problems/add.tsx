@@ -1,6 +1,8 @@
 
 import React, { useEffect, useRef, useState } from "react";
-import { color, getdata, Group, all_language } from "types";
+import { Group } from "ultility/types.js";
+import { getdata, all_language } from "ultility/ulti.js"
+import { color } from "ultility/color.js"
 import { faEye, faPenToSquare, faPlus, faUserMinus, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Markdown from "react-markdown";
@@ -207,8 +209,8 @@ export function Add_Problems() {
                         res.data.map((group: Group) => {
                             return (
                                 <option value={group.groupname as string} style={{
-                                    background: color[Cookies.get("theme") as string].background,
-                                    color: color[Cookies.get("theme") as string].font
+                                    background: color[Cookies.get("theme") as "dark" | "light"].background,
+                                    color: color[Cookies.get("theme") as "dark" | "light"].font
                                 }}>
                                     {group.groupname}
                                 </option>
@@ -245,8 +247,8 @@ export function Add_Problems() {
                     </th>
                     <th>
                         <input style={{
-                            background: color[Cookies.get("theme") as string].background,
-                            color: color[Cookies.get("theme") as string].font
+                            background: color[Cookies.get("theme") as "dark" | "light"].background,
+                            color: color[Cookies.get("theme") as "dark" | "light"].font
                         }}
                             type="text"
                             placeholder="Problem name"
@@ -263,8 +265,8 @@ export function Add_Problems() {
                     <th>
                         <input
                             style={{
-                                background: color[Cookies.get("theme") as string].background,
-                                color: color[Cookies.get("theme") as string].font
+                                background: color[Cookies.get("theme") as "dark" | "light"].background,
+                                color: color[Cookies.get("theme") as "dark" | "light"].font
                             }}
 
                             type="text"
@@ -281,8 +283,8 @@ export function Add_Problems() {
                     <th style={{ display: "flex" }}>
                         <input
                             style={{
-                                background: color[Cookies.get("theme") as string].background,
-                                color: color[Cookies.get("theme") as string].font
+                                background: color[Cookies.get("theme") as "dark" | "light"].background,
+                                color: color[Cookies.get("theme") as "dark" | "light"].font
                             }}
                             type="text"
                             placeholder="Add host"
@@ -369,8 +371,8 @@ export function Add_Problems() {
                     <th>
                         <input
                             style={{
-                                background: color[Cookies.get("theme") as string].background,
-                                color: color[Cookies.get("theme") as string].font
+                                background: color[Cookies.get("theme") as "dark" | "light"].background,
+                                color: color[Cookies.get("theme") as "dark" | "light"].font
                             }}
 
                             type="datetime-local"
@@ -439,8 +441,8 @@ export function Add_Problems() {
                     </th>
                     <th style={{ display: "flex" }}>
                         <input list="list" style={{
-                            background: color[Cookies.get("theme") as string].background,
-                            color: color[Cookies.get("theme") as string].font
+                            background: color[Cookies.get("theme") as "dark" | "light"].background,
+                            color: color[Cookies.get("theme") as "dark" | "light"].font
                         }}
                             disabled={isPrivate == false}
                             placeholder="Add/Delete Groups"
@@ -495,8 +497,8 @@ export function Add_Problems() {
                             type="text"
                             placeholder="Problem Type"
                             style={{
-                                background: color[Cookies.get("theme") as string].background,
-                                color: color[Cookies.get("theme") as string].font
+                                background: color[Cookies.get("theme") as "dark" | "light"].background,
+                                color: color[Cookies.get("theme") as "dark" | "light"].font
                             }}
                         />
                     </th>
@@ -518,8 +520,8 @@ export function Add_Problems() {
                         <input type="text"
                             placeholder="Points"
                             style={{
-                                background: color[Cookies.get("theme") as string].background,
-                                color: color[Cookies.get("theme") as string].font
+                                background: color[Cookies.get("theme") as "dark" | "light"].background,
+                                color: color[Cookies.get("theme") as "dark" | "light"].font
                             }}
                             onChange={(e) => {
                                 e.preventDefault();
@@ -541,8 +543,8 @@ export function Add_Problems() {
                         <input type="text"
                             placeholder="Time limit"
                             style={{
-                                background: color[Cookies.get("theme") as string].background,
-                                color: color[Cookies.get("theme") as string].font
+                                background: color[Cookies.get("theme") as "dark" | "light"].background,
+                                color: color[Cookies.get("theme") as "dark" | "light"].font
                             }}
                             onChange={(e) => {
                                 e.preventDefault();
@@ -562,8 +564,8 @@ export function Add_Problems() {
                         <input type="text"
                             placeholder="Memory Limit"
                             style={{
-                                background: color[Cookies.get("theme") as string].background,
-                                color: color[Cookies.get("theme") as string].font
+                                background: color[Cookies.get("theme") as "dark" | "light"].background,
+                                color: color[Cookies.get("theme") as "dark" | "light"].font
                             }}
                             onChange={(e) => {
                                 e.preventDefault();
@@ -588,8 +590,8 @@ export function Add_Problems() {
                     </th>
                     <th>
                         <input list="language_list" style={{
-                            background: color[Cookies.get("theme") as string].background,
-                            color: color[Cookies.get("theme") as string].font
+                            background: color[Cookies.get("theme") as "dark" | "light"].background,
+                            color: color[Cookies.get("theme") as "dark" | "light"].font
                         }}
                             placeholder="Add/Delete Allowed Language"
                             onChange={(e) => {
@@ -703,8 +705,8 @@ export function Add_Problems() {
                                                     <input
                                                         type="text"
                                                         style={{
-                                                            background: color[Cookies.get("theme") as string].background,
-                                                            color: color[Cookies.get("theme") as string].font
+                                                            background: color[Cookies.get("theme") as "dark" | "light"].background,
+                                                            color: color[Cookies.get("theme") as "dark" | "light"].font
                                                         }}
                                                         value={item.time.data == 0 ? "" : item.time.data}
 
@@ -739,8 +741,8 @@ export function Add_Problems() {
                                                     <input
                                                         type="text"
                                                         style={{
-                                                            background: color[Cookies.get("theme") as string].background,
-                                                            color: color[Cookies.get("theme") as string].font
+                                                            background: color[Cookies.get("theme") as "dark" | "light"].background,
+                                                            color: color[Cookies.get("theme") as "dark" | "light"].font
                                                         }}
                                                         value={item.memory.data == 0 ? "" : item.memory.data}
                                                         onChange={(e) => {
@@ -785,8 +787,8 @@ export function Add_Problems() {
                     <th>
                         <input
                             style={{
-                                background: color[Cookies.get("theme") as string].background,
-                                color: color[Cookies.get("theme") as string].font
+                                background: color[Cookies.get("theme") as "dark" | "light"].background,
+                                color: color[Cookies.get("theme") as "dark" | "light"].font
                             }}
 
                             type="text"
@@ -833,7 +835,7 @@ export function Add_Problems() {
                             <>
                                 <div id="row" style={
                                     {
-                                        color: color[Cookies.get("theme") as string].background
+                                        color: color[Cookies.get("theme") as "dark" | "light"].background
                                     }}>
                                     {lines.map((item, index) => (
                                         <div style={{ display: "flex", justifyContent: "space-around", paddingTop: "0px", paddingBottom: `${item.more * 20}px` }}>

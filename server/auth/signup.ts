@@ -1,5 +1,6 @@
-import { getDataFromDatabase } from "data";
-import { all_language, generateRandomString, Languages } from "types";
+import { getDataFromDatabase } from "ultility/data.js";
+import { all_language, generateRandomString } from "ultility/ulti.js";
+import { Languages } from "ultility/enum.js";
 import { add_users } from "../users/users.js";
 import { add_sessions } from "./auth.js";
 

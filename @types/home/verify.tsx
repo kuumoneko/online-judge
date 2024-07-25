@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getdata, geturl, User } from "types";
+import { getdata, geturl } from "ultility/ulti.js";
 
 
 async function lmao() {

@@ -1,4 +1,6 @@
-import { color, color_themes, get_rank_color, getdata, User, User_role } from 'types';
+import { color, color_themes, get_rank_color } from "ultility/color.js";
+import { User_role } from "ultility/enum.js";
+import { getdata } from "ultility/ulti.js";
 import React, { useEffect, useState } from 'react'
 import Cookies from 'js-cookie';
 

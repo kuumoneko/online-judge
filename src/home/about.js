@@ -1,5 +1,6 @@
 import React from "react";
-import { color } from "types";
+import { color } from "ultility/color.js";
+import Cookies from "js-cookie";
 export function About() {
     const rank_color = [
         { name: "Newbie", rank: "< 1200", color: "#808080" },
@@ -54,7 +55,7 @@ export function About() {
         }
     };
     const header = Object.keys(return_res);
-    const themes = color[JSON.parse(localStorage.getItem("user")).themes.mode] || color.light;
+    const themes = color[Cookies.get("theme")] || color.light;
     return (React.createElement("div", null,
         React.createElement("p", null,
             "OJ.KUUMOOJ.NET l\u00E0 h\u1EC7 th\u1ED1ng ch\u1EA5m \u0111i\u1EC3m tr\u1EF1c tuy\u1EBFn m\u00F4n Tin h\u1ECDc. H\u1EC7 th\u1ED1ng n\u00E0y \u0111\u01B0\u1EE3c x\u00E2y d\u1EF1ng d\u1EF1a tr\u00EAn open-source",

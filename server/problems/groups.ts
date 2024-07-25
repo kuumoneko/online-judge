@@ -1,6 +1,6 @@
 
-import { ProblemsGroup } from "types";
-import { getDataFromDatabase, writeDataToDatabase } from "data";
+import { ProblemsGroup } from "ultility/types.js";
+import { getDataFromDatabase, writeDataToDatabase } from "ultility/data.js";
 
 
 export function get_problem_groups(condition: string, items: any[] = []) {

@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
-import { User } from "types";
+import { User } from "ultility/types.js";
 import { add_users } from "../users/users.js";
-import { getDataFromDatabase, writeDataToDatabase } from "data";
+import { getDataFromDatabase, writeDataToDatabase } from "ultility/data.js";
 
 
 function generateVerificationCode(length: number) {

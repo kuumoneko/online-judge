@@ -9,13 +9,13 @@ const commands: lmao = {
         "users", "groups"
     ],
     "problems": [
-        "problems", "groups", "types"
+        "problems", "groups", "ultility/types.js"
     ],
     "comments": [
         "comments"
     ],
     "contests": [
-        "contests", "groups", "types"
+        "contests", "groups", "ultility/types.js"
     ],
     "submissions": [
         "submissions"
