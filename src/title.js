@@ -1,5 +1,6 @@
-import React from "react";
-import { replaceAll } from "ultility/ulti.js";
+import React, { useState, useEffect } from "react";
+import { replaceAll, geturl, getdata } from "ultility/ulti.js";
+import { Coding_status } from "ultility/enum.js";
 function Userss({ mode, themes }) {
     function resss(modee) {
         return {
@@ -37,6 +38,36 @@ function Userr({ mode, themes, user }) {
         (user == mode[1]) &&
             (React.createElement("li", null,
                 React.createElement("a", { id: "users", href: `/user/${mode[1]}/edit_profile`, style: resss("edit_profile") }, "Edit profile")))));
+}
+function Problem() {
+    const url = geturl();
+    const [title, settitle] = useState("");
+    const [colorr, setcolor] = useState("");
+    useEffect(() => {
+        async function getproblem() {
+            let res = await getdata("get", "problems", url[1]);
+            // console.log(res.data.data[0])
+            const problem = res.data.data[0];
+            res = await getdata("get", "users", localStorage.getItem("username"));
+            const user = res.data.data[0];
+            let coloring;
+            if (user.problems.length == 0) {
+                coloring = "white";
+            }
+            else {
+                coloring = user.problems.filter((prblm) => {
+                    return prblm.id == problem.id;
+                }).filter((sub) => sub.status == Coding_status.AC).length > 0 ? "green" : "yellow";
+            }
+            setcolor(coloring);
+            settitle(problem.name);
+        }
+        getproblem();
+    }, []);
+    return (React.createElement("div", null,
+        React.createElement("a", { style: {
+                color: colorr
+            } }, title.toUpperCase())));
 }
 export function Title({ url, themes }) {
     let temp = url[0];
@@ -78,8 +109,8 @@ export function Title({ url, themes }) {
                 ?
                     `Adminisrator ${url[2] ? `for ${url[2]}` : "Dashboard"}`
                 :
-                    (temp == "user" || temp == "problem") ?
-                        (React.createElement("a", { id: "titlee", className: 'font-bold' }, url[1])) : temp.toUpperCase()),
+                    (temp == "user") ?
+                        (React.createElement("a", { id: "titlee", className: 'font-bold' }, url[1])) : (temp == "problem") ? (React.createElement(Problem, null)) : temp.toUpperCase()),
             (temp == "users" || temp == "groups") ? (React.createElement(Userss, { mode: temp, themes: themes })) : (temp == "user") ? (React.createElement(Userr, { mode: url, themes: themes, user: localStorage.getItem("username") })) : (React.createElement(React.Fragment, null)))));
 }
 //# sourceMappingURL=title.js.map

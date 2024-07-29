@@ -199,6 +199,7 @@ export function Problems() {
                                     coloring = "white"
                                 }
                                 else {
+                                    console.log(temp.filter((sub) => sub.status == Coding_status.AC))
                                     coloring = temp.filter((sub) => sub.status == Coding_status.AC).length > 0 ? "green" : "yellow"
                                 }
 

@@ -79,7 +79,7 @@ export function Login() {
                     Setremember(e.target.checked);
                 }
             } },
-            React.createElement("table", { style: { display: "table" } },
+            React.createElement("table", { className: "account", style: { display: "table" } },
                 React.createElement("tbody", null,
                     React.createElement("tr", null,
                         React.createElement("th", { style: { paddingRight: "5px" } },

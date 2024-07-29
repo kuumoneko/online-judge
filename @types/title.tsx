@@ -1,7 +1,9 @@
-import React from "react";
-import { replaceAll } from "ultility/ulti.js";
+import React, { useState, useEffect } from "react";
+import { replaceAll, geturl, getdata } from "ultility/ulti.js";
 
 import Cookies from "js-cookie";
+import { User } from "ultility/types.js";
+import { Coding_status } from "ultility/enum.js";
 
 function Userss({ mode, themes }: { mode: string, themes: { content: string, background: string, font: string } }) {
 
@@ -81,6 +83,57 @@ function Userr({ mode, themes, user }: { mode: string[], themes: { content: stri
     )
 }
 
+function Problem() {
+    const url = geturl();
+
+    const [title, settitle] = useState("");
+    const [colorr, setcolor] = useState("")
+
+    useEffect(() => {
+        async function getproblem() {
+            let res = await getdata("get", "problems", url[1]);
+            // console.log(res.data.data[0])
+
+            const problem = res.data.data[0];
+
+            res = await getdata("get", "users", localStorage.getItem("username") as string);
+
+            const user = res.data.data[0] as User;
+
+            let coloring: string;
+
+            if (user.problems.length == 0) {
+                coloring = "white"
+            }
+            else {
+                coloring = user.problems.filter((prblm) => {
+                    return prblm.id == problem.id
+                }).filter((sub) => sub.status == Coding_status.AC).length > 0 ? "green" : "yellow"
+            }
+            setcolor(coloring)
+
+            settitle(problem.name)
+
+        }
+
+        getproblem();
+    }, [])
+
+    return (
+        <div>
+            <a
+                style={{
+                    color: colorr
+                }}
+            >
+                {
+                    title.toUpperCase()
+                }
+            </a>
+        </div>
+    )
+}
+
 
 export function Title({ url, themes }: { url: string[], themes: { content: string, background: string, font: string } }) {
     let temp = url[0]
@@ -134,14 +187,14 @@ export function Title({ url, themes }: { url: string[], themes: { content: strin
                             ?
                             `Adminisrator ${url[2] ? `for ${url[2]}` : "Dashboard"}`
                             :
-                            (temp == "user" || temp == "problem") ?
+                            (temp == "user") ?
                                 (
                                     <a id="titlee" className='font-bold'>
                                         {
                                             url[1]
                                         }
                                     </a>
-                                ) : temp.toUpperCase()
+                                ) : (temp == "problem") ? (<Problem />) : temp.toUpperCase()
                     }
                 </h2>
                 {

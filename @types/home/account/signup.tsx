@@ -167,7 +167,7 @@ export function Singup() {
                     {/* <a style={{ display: "flex", justifyContent: "space-around" }}>
                         Signup
                     </a> */}
-                    <table>
+                    <table className="account">
                         {/* Input field for the full name */}
                         <tr>
                             <th style={{ width: "5%" }}>

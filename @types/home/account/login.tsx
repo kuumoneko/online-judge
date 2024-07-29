@@ -101,7 +101,7 @@ export function Login() {
                     Setremember((e.target as HTMLInputElement).checked)
                 }
             }}>
-                <table style={{ display: "table" }}>
+                <table className="account" style={{ display: "table" }}>
                     <tbody>
                         <tr>
                             <th style={{ paddingRight: "5px" }}>

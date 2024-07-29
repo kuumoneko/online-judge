@@ -1,6 +1,9 @@
 import { geturl, getdata } from "ultility/ulti.js"
-import { Problems } from "ultility/types.js"
+import { Problems, User } from "ultility/types.js"
+import { Luythua } from "../../math/luythua.js"
 import React, { useState, useEffect } from "react"
+import { ProblemsSample, ProblemsTask } from "ultility/type/subtypes.js"
+import { Coding_status } from "ultility/enum.js"
 export function Problem() {
     const url = geturl()
 
@@ -10,106 +13,163 @@ export function Problem() {
     const [body, setbody] = useState(<></>)
     useEffect(() => {
         async function lmao() {
-            const res = await getdata("get", "problems", url[1])
+            let res = await getdata("get", "problems", url[1])
+
+
             const problem: Problems = res.data.data[0]
 
-            const title = document.getElementById("titlee");
-            if (title) {
-                title.innerHTML = problem.name
-            }
+            res = await getdata("get", "users", localStorage.getItem("username") as string);
+            const user: User = res.data.data[0];
+
+            // console.log(user.problems.filter((prblm) => {
+            //     return prblm.id == problem.id
+            // }).filter((prblm) => {
+            //     return prblm.status == Coding_status.AC
+            // }).length > 0)
 
             setbody(
-                <div>
+                <div
+                    className="problem-body"
+                >
                     <div>
                         {problem.body.topic}
                     </div>
+                    <br />
+                    <h2>
+                        Input Limit:
+                    </h2>
                     <div>
-                        Input limit:
-
-                        <div>
-
+                        <ul>
                             {
                                 problem.body.inputLimit.map((item) => {
                                     return (
-                                        <div>
-                                            <a>
+                                        <li
+                                            style={{
+                                                position: "relative"
+                                            }}
+                                        >
+                                            <a
+                                                style={{
+                                                    padding: "0 0 0 0"
+                                                }}
+                                            >
                                                 {
-                                                    `${item.key} <= ${item.value}`
+                                                    `- ${item.key} <=`
                                                 }
                                             </a>
-                                        </div>
+                                            <Luythua a={item.value} />
+                                        </li>
                                     )
                                 })
                             }
-                        </div>
+
+                        </ul>
+
 
                     </div>
-                    <div>
+
+                    <br />
+                    <h2>
                         Sample:
-                        <div>
-                            {
-                                problem.body.sample.map((item) => {
-                                    return (
-                                        <div>
-                                            <div>
-                                                Sample 1:
-                                            </div>
-                                            <div>
-                                                Input:
-                                            </div>
-                                            <div>
+                    </h2>
+                    <div>
+                        {
+                            problem.body.sample.map((item: ProblemsSample, index: number) => {
+                                return (
+                                    <div>
+                                        <h3>
+                                            {
+                                                `Sample ${index + 1}:`
+                                            }
+                                        </h3>
+                                        <h4>
+                                            Input:
+                                        </h4>
+                                        <br />
+                                        <pre>
+                                            <code>
                                                 {
                                                     item.input
                                                 }
-                                            </div>
-                                            <div>
-                                                Output:
-                                            </div>
-                                            <div>
+                                            </code>
+                                        </pre>
+                                        <h4>
+                                            Output:
+                                        </h4>
+                                        <br />
+                                        <pre>
+                                            <code>
                                                 {
                                                     item.output
                                                 }
-                                            </div>
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
+                                            </code>
+                                        </pre>
+                                    </div>
+                                )
+                            })
+                        }
                     </div>
-                    <div>
-                        Sub tasks:
-                        <div>
-                            {
-                                problem.body.subTasks.map((item) => {
-                                    return (
-                                        <div>
-                                            Subtask 1:
-                                            <div>
-                                                {item.points}
-                                            </div>
-                                            <div>
-                                                and
-                                            </div>
-                                            <div>
-                                                {
-                                                    item.limit.map((itemm) => {
-                                                        return (
-                                                            <a>
-                                                                {`${itemm.key} <= ${itemm.value}`}
-                                                            </a>
-                                                        )
-                                                    })
-                                                }
-                                            </div>
+                    <br />
 
-                                        </div>
+                    <h2>
+                        Sub tasks:
+
+                    </h2>
+                    <div>
+                        <ul>
+                            {
+                                problem.body.subTasks.map((item: ProblemsTask, index: number) => {
+                                    return (
+                                        <li>
+                                            <a
+                                                style={{
+                                                    padding: "0 5px 0 0"
+                                                }}
+                                            >
+                                                {
+                                                    `- Subtask ${index + 1}: ${item.points}%, and `
+                                                }
+                                            </a>
+
+                                            {
+                                                item.limit.map((item) => {
+                                                    return (
+                                                        <>
+                                                            <a
+                                                                style={{
+                                                                    padding: "0 0 0 0"
+                                                                }}
+                                                            >
+                                                                {
+                                                                    ` ${item.key} <=`
+                                                                }
+                                                            </a>
+                                                            <Luythua a={item.value} />
+                                                            <a
+                                                                style={{
+                                                                    padding: "0 0 0 0"
+                                                                }}
+                                                            >
+                                                                {"; "}
+                                                            </a>
+
+                                                        </>
+                                                    )
+                                                })
+                                            }
+
+                                        </li>
                                     )
                                 })
                             }
-                        </div>
+                        </ul>
+
+
                     </div>
+
                 </div>
             )
+            // console.log("lmao")
 
             setinfo(
                 <div>
@@ -117,11 +177,37 @@ export function Problem() {
                         {/* 
                             Submit and support
                         */}
-                        <div>
+                        <div
+                            className="problem-submit"
+                        >
                             Submit
                         </div>
+
+                        <br />
+
+                        {
+                            (user.problems.filter((prblm) => {
+                                return prblm.id == problem.id
+                            }).filter((prblm) => {
+                                return prblm.status == Coding_status.AC
+                            }).length > 0) && (
+                                <div>
+                                    <a href={`/problem/${url[1]}/submissions/${user.username}`}>
+                                        My submissions
+                                    </a>
+
+                                </div>
+                            )
+                        }
                         <div>
-                            Read support
+                            <a href={`/problem/${url[1]}/submissions`}>
+                                All submissions
+                            </a>
+                        </div>
+                        <div>
+                            <a href={`/problem/${url[1]}/support`}>
+                                Read support
+                            </a>
                         </div>
                     </div >
                     <br />

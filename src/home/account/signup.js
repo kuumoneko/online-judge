@@ -135,7 +135,7 @@ export function Singup() {
                         setdata(temp);
                     }
                 } },
-                React.createElement("table", null,
+                React.createElement("table", { className: "account" },
                     React.createElement("tr", null,
                         React.createElement("th", { style: { width: "5%" } },
                             React.createElement(FontAwesomeIcon, { icon: faSignature, style: { display: "flex", } })),

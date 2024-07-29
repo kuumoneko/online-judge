@@ -294,6 +294,10 @@ input:checked::before {
 table > tbody > tr > th {
   border: 1px solid;
 }
+
+table.account > tbody > tr > th {
+  border: 0px;
+}
 table {
   text-align: center;
   border-collapse: collapse;
@@ -764,6 +768,13 @@ select {
   border-radius: 5px;
 }
 
+pre > code {
+  width: 100%;
+  border: 1px solid #ff9797;
+  display: block;
+  padding: 5px 5px 5px 5px;
+}
+
 .problem_search {
   width: 10%;
 
@@ -775,7 +786,7 @@ select {
 
 .point_search {
   display: block;
-  border: 1px solid rgb(255, 142, 142);
+  border: 1px solid #ff9797;
   border-radius: 5px;
   background-color: #ffffff;
   height: 20px;
@@ -800,4 +811,38 @@ select {
   height: 12px;
   width: 150px;
   position: absolute;
+}
+
+.problem-body {
+  width: 100%;
+}
+
+div.problem-body > h2 {
+  width: max-content;
+  border-bottom: 1px solid;
+  padding-bottom: 1px;
+  margin-bottom: 1px;
+}
+
+div.problem-body > div > div > h3 {
+  padding-top: 5px;
+}
+
+div.problem-body > div > div > h4 {
+  padding-top: 5px;
+}
+
+div.problem-submit {
+  display: flex;
+  width: 85%;
+  height: 30px;
+  align-items: center;
+  color: #ffffff;
+  justify-content: space-around;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 151, 151, 1) 0%,
+    rgba(172, 103, 103, 1) 100%
+  );
+  border-radius: 5px;
 }
