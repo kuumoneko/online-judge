@@ -1,7 +1,6 @@
 import nodemailer from "nodemailer";
-import { User } from "ultility/types.js";
-import { add_users } from "../users/users.js";
-import { getDataFromDatabase, writeDataToDatabase } from "ultility/data.js";
+import { add_users } from "../users/users.ts";
+import { getDataFromDatabase, writeDataToDatabase } from "data";
 
 
 function generateVerificationCode(length: number) {
@@ -109,8 +108,8 @@ export function verify_user_password(username: string, code: string | number) {
     }
     else {
         verifying[username] = undefined;
-        const users: User[] = getDataFromDatabase("users", "users")
-        const user: User = users.find((item: User) => item.username == username) as User;
+        const users: any[] = getDataFromDatabase("users", "users")
+        const user: any = users.find((item: any) => item.username == username) as any;
 
         user.verified = true;
         add_users(user)

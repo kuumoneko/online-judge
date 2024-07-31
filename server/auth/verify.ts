@@ -1,8 +1,8 @@
 import nodemailer from "nodemailer";
-import { User } from "ultility/types.js";
-import { add_users } from "../users/users.js";
-import { getDataFromDatabase, writeDataToDatabase } from "ultility/data.js";
-import SMTPConnection from "nodemailer/lib/smtp-connection/index.js";
+import { User } from "type";
+import { add_users } from "../users/users.ts";
+import { getDataFromDatabase, writeDataToDatabase } from "data";
+import SMTPConnection from "nodemailer/lib/smtp-connection/index.ts";
 
 
 function generateVerificationCode(length: number) {

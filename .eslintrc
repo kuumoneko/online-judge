@@ -1,12 +1,11 @@
 {
-  "parser": "@babel/eslint-parser",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "requireConfigFile": false,
     "babelOptions": {
-      "presets": ["@babel/preset-react"],
+      "presets": ["@babel/preset-react"]
     },
     "ecmaFeatures": {
-      "jsx": true,
-    },
-  },
+      "jsx": true
+    }
+  }
 }

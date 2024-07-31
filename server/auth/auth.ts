@@ -1,4 +1,4 @@
-import { getDataFromDatabase, writeDataToDatabase } from "ultility/data.js";
+import { getDataFromDatabase, writeDataToDatabase } from "data";
 
 export function get_sessions(condition: string) {
     const sessions: any[] = getDataFromDatabase("auth", "login")

@@ -1,7 +1,7 @@
-import { Problems, User } from "ultility/types.js";
-import { sort_problems } from "../problems/problems.js";
-import { sort_users } from "../users/users.js";
-import { sort_comments } from "../general/get.js";
+import { Problems, User } from "type";
+import { sort_problems } from "../problems/problems.ts";
+import { sort_users } from "../users/users.ts";
+import { sort_comments } from "../general/get.ts";
 
 interface lmao {
     [keys: string]: string[]
@@ -46,13 +46,13 @@ export function searching(search: any) {
     //         "users", "groups"
     //     ],
     //     "problems": [
-    //         "problems", "groups", "ultility/types.js"
+    //         "problems", "groups", "ultility/types
     //     ],
     //     "comments": [
     //         "comments"
     //     ],
     //     "contests": [
-    //         "contests", "groups", "ultility/types.js"
+    //         "contests", "groups", "ultility/types
     //     ],
     //     "submissions": [
     //         "submissions"

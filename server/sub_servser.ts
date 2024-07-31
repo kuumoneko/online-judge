@@ -1,5 +1,5 @@
-import { getDataFromDatabase } from "ultility/data.js";
-import { User } from "ultility/types.js";
+import { getDataFromDatabase } from "data";
+import { User } from "type";
 
 
 export function get_number_users_of_group(group: string) {

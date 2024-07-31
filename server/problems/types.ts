@@ -1,6 +1,6 @@
 
-import { ProblemsType } from "ultility/types.js";
-import { getDataFromDatabase, writeDataToDatabase } from "ultility/data.js";
+import { ProblemsType } from "type";
+import { getDataFromDatabase, writeDataToDatabase } from "data";
 
 
 export function get_problem_types(condition: string, items: any[] = []) {
@@ -80,7 +80,7 @@ export function add_problem_types(problem_type: ProblemsType) {
         }
 
 
-        const problem_types = getDataFromDatabase("problems", "ultility/types.js")
+        const problem_types = getDataFromDatabase("problems", "types")
         const index = problem_types.findIndex((e: ProblemsType) => e.name === problem_type.name);
         if (index === -1) {
             problem_types.push(problem_type);
@@ -98,7 +98,7 @@ export function add_problem_types(problem_type: ProblemsType) {
     }
 }
 export function delete_problem_types(name: string) {
-    const problem_types = getDataFromDatabase("problems", "ultility/types.js")
+    const problem_types = getDataFromDatabase("problems", "types")
     // @ts-ignore
     const index = problem_types.findIndex((e: problem_types) => e.name == name);
     try {

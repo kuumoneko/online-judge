@@ -1,4 +1,4 @@
-import { getDataFromDatabase } from "ultility/data.js";
+import { getDataFromDatabase } from "data";
 
 
 

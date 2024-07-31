@@ -1,8 +1,8 @@
-import { getDataFromDatabase } from "ultility/data.js";
-import { all_language, generateRandomString } from "ultility/ulti.js";
-import { Languages } from "ultility/enum.js";
-import { add_users } from "../users/users.js";
-import { add_sessions } from "./auth.js";
+import { getDataFromDatabase } from "data";
+import { all_language, generateRandomString } from "ulti";
+import { Languages } from "enum";
+import { add_users } from "../users/users.ts";
+import { add_sessions } from "./auth.ts";
 
 export function signup(username: string, fullname: string, email: string, password: string) {
     const temp: any[] = getDataFromDatabase("users", "users");

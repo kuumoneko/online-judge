@@ -1,6 +1,6 @@
-import { Group } from "ultility/types.js";
-import { getDataFromDatabase, writeDataToDatabase } from "ultility/data.js";
-import { get_number_users_of_group } from "../sub_servser.js";
+import { Group } from "type";
+import { getDataFromDatabase, writeDataToDatabase } from "data";
+import { get_number_users_of_group } from "../sub_servser.ts";
 
 export function get_groups(condition: string, items: any[] = []) {
     let groups: any[];

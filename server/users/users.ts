@@ -1,5 +1,5 @@
-import { User } from "ultility/types.js";
-import { getDataFromDatabase, writeDataToDatabase } from "ultility/data.js";
+import { User } from "type";
+import { getDataFromDatabase, writeDataToDatabase } from "data";
 
 export function get_users(condition: string, items: any[] = []) {
     let users: any[];

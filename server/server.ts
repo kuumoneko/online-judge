@@ -4,31 +4,31 @@ import cookieparse from "cookie-parser";
 import cors from "cors";
 
 // users
-import { add_users, delete_users, get_users, sort_users } from "./users/users.js";
-import { add_groups, delete_groups, get_groups, sort_groups } from "./users/groups.js";
+import { add_users, delete_users, get_users, sort_users } from "./users/users.ts";
+import { add_groups, delete_groups, get_groups, sort_groups } from "./users/groups.ts";
 
 // blogs
-import { add_blogs, delete_blogs, get_blogs, sort_blogs } from "./blogs/blogs.js";
+import { add_blogs, delete_blogs, get_blogs, sort_blogs } from "./blogs/blogs.ts";
 
 // problems
-import { add_problems, delete_problems, get_problems, sort_problems } from "./problems/problems.js";
-import { add_problem_types, delete_problem_types, get_problem_types, sort_problem_types } from "./problems/types.js";
-import { add_problem_groups, delete_problem_groups, get_problem_groups, sort_problem_groups } from "./problems/groups.js";
+import { add_problems, delete_problems, get_problems, sort_problems } from "./problems/problems.ts";
+import { add_problem_types, delete_problem_types, get_problem_types, sort_problem_types } from "./problems/types.ts";
+import { add_problem_groups, delete_problem_groups, get_problem_groups, sort_problem_groups } from "./problems/groups.ts";
 
 // auth
-import { add_sessions, delete_sessions } from "./auth/auth.js";
-import { send_code_verify_user, verify_user } from "./auth/verify.js";
-import { me } from "./auth/me.js";
+import { add_sessions, delete_sessions } from "./auth/auth.ts";
+import { send_code_verify_user, verify_user } from "./auth/verify.ts";
+import { me } from "./auth/me.ts";
 
 // package
-import { User } from "ultility/types.js";
-import { User_role, Theme_mode } from "ultility/enum.js";
-import { getDataFromDatabase } from "ultility/data.js";
-import { login } from "./auth/login.js";
-import { signup } from "./auth/signup.js";
-import { searching } from "./search/index.js";
-import { change_password } from "./auth/change_pass.js";
-import { send_code_forgot_password, verify_user_password } from "./auth/forgot_password.js";
+import { User } from "type";
+import { User_role, Theme_mode } from "enum";
+import { getDataFromDatabase } from "data";
+import { login } from "./auth/login.ts";
+import { signup } from "./auth/signup.ts";
+import { searching } from "./search/index.ts";
+import { change_password } from "./auth/change_pass.ts";
+import { send_code_forgot_password, verify_user_password } from "./auth/forgot_password.ts";
 
 
 

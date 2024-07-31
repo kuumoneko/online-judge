@@ -1,5 +1,5 @@
-import { Problems } from "ultility/types.js";
-import { getDataFromDatabase, writeDataToDatabase } from "ultility/data.js";
+import { Problems } from "type";
+import { getDataFromDatabase, writeDataToDatabase } from "data";
 
 
 export function get_problems(condition: string, items: any[] = []) {

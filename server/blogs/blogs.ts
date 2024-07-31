@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from "fs";
-import { Blog } from "ultility/types.js";
-import { getDataFromDatabase, writeDataToDatabase } from "ultility/data.js";
+import { Blog } from "type";
+import { getDataFromDatabase, writeDataToDatabase } from "data";
 
 
 

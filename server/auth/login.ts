@@ -1,6 +1,6 @@
-import { getDataFromDatabase } from "ultility/data.js";
-import { generateRandomString } from "ultility/ulti.js";
-import { add_sessions } from "./auth.js";
+import { getDataFromDatabase } from "data";
+import { generateRandomString } from "ulti";
+import { add_sessions } from "./auth.ts";
 
 
 export function login(username: string, password: string): { message: string, session: any } {
