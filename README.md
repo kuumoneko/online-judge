@@ -50,3 +50,7 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 ## Contributor
 
 - [kuumoneko](https://github.com/kuumoneko)
+
+```js
+console.log("hello");
+```

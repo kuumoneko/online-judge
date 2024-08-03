@@ -846,3 +846,14 @@ div.problem-submit {
   );
   border-radius: 5px;
 }
+
+div#editorr {
+  outline: none;
+  margin-top: 10px;
+  margin-left: 10px;
+  height: 90%;
+  width: 99%;
+  overflow: hidden scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc #f0f0f0;
+}

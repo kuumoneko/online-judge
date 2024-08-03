@@ -49,10 +49,10 @@
     "@types/js-cookie": "^3.0.6",
     "@types/nodemailer": "^6.4.15",
     "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
     "@types/react-mathjax": "^1.0.4",
     "@webpack-cli/generators": "^3.0.7",
     "concurrently": "^8.2.2",
+    "react-mathjax": "^1.0.1",
     "cross-env": "^7.0.3",
     "gts": "^5.3.1",
     "ncp": "^2.0.0",
@@ -68,7 +68,7 @@
     "webpack-cli": "^5.1.4"
   },
   "scripts": {
-    "start": "cross-env GENERATE_SOURCEMAP=false react-scripts start",
+    "start": "cross-env GENERATE_SOURCEMAP=false SKIP_PREFLIGHT_CHECK=true react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

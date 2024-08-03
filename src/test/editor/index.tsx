@@ -5,6 +5,7 @@ import { Heading } from "./heading.tsx";
 import { Lists } from "./lists.tsx";
 import { Code_block } from "./code_block.tsx";
 import { Username } from "./username.tsx";
+import { Math } from "./math.tsx";
 
 function sanitizeHtml(html: string) {
     const domParser = new DOMParser();
@@ -80,6 +81,11 @@ export function Preview({ str }: { str: string | string[] }): JSX.Element {
                     else if (line.includes("`")) {
                         return (
                             <Single_code line={line} />
+                        )
+                    }
+                    else if (line.includes("~") && line.includes("~", line.indexOf("~") + 1)) {
+                        return (
+                            <Math line={line} />
                         )
                     }
                     // metion user

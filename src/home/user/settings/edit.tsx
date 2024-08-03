@@ -264,7 +264,7 @@ function Return_UI({ user }: { user: User }) {
                                                 outline: "none",
                                                 marginTop: "10px",
                                                 marginLeft: "10px",
-                                                height: "100%",
+                                                height: "90%",
                                                 width: "100%",
                                                 overflowY: "hidden",
                                                 overflowX: "hidden"
@@ -275,9 +275,9 @@ function Return_UI({ user }: { user: User }) {
                                                 setprofile((e.target as HTMLInputElement).innerText.replace(/\n\n/g, '\n'))
 
                                             }}
-                                            onScroll={(e) => {
-                                                (document.getElementById("row") as HTMLElement).scrollTop = (e.target as HTMLElement).scrollTop
-                                            }}
+                                            // onScroll={(e) => {
+                                            //     (document.getElementById("row") as HTMLElement).scrollTop = (e.target as HTMLElement).scrollTop
+                                            // }}
                                         >
                                         </div>
                                     </div>

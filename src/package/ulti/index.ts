@@ -171,12 +171,3 @@ export const allowed_html_tags = [
     "br",
     "div"
 ]
-
-export function editor_preview(data: string) {
-    const str = data.split("\n");
-
-    let result = str.map((item) => {
-
-    })
-
-}
