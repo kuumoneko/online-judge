@@ -138,14 +138,13 @@ function Server() {
 
 enum ServerMode {
     production = "production",
-    development = "development",
     test = "test",
 }
 
-const mode = ServerMode.development;
+const mode = ServerMode.production;
 
 try {
-    if (mode == ServerMode.production || mode == ServerMode.development) {
+    if (mode == ServerMode.production) {
         root.render(
             <Server />
         )
