@@ -140,6 +140,6 @@ nodemon-servers.json
 nodemon.json
 tsconfig.json
 .gitignore
-# data/**/*.json
+data/**/*.json
 .hintrc
 /bot
