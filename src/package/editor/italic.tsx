@@ -1,4 +1,4 @@
-import { Preview } from "./index.tsx"
+import { Preview } from "./preview.tsx"
 
 export function Italic({ line }: { line: string }) {
     const temp = {

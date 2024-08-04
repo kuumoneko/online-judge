@@ -1,4 +1,4 @@
-import { Preview } from "./index.tsx";
+import { Preview } from "./preview.tsx";
 
 export function Single_code({ line }: { line: string }) {
     const fi = line.indexOf("`");

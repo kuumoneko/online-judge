@@ -1,5 +1,5 @@
 import React from "react"
-import { Preview } from "./index.tsx"
+import { Preview } from "./preview.tsx"
 
 export function Bold({ line }: { line: string }) {
     const temp = {

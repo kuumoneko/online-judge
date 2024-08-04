@@ -1,4 +1,4 @@
-import { Preview } from "./index.tsx";
+import { Preview } from "./preview.tsx";
 
 export function Code_block({ lines }: { lines: string[] }) {
     const fi = lines.findIndex((line: string) => {

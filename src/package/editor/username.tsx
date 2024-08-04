@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Preview } from "./index.tsx"
+import { Preview } from "./preview.tsx"
 import { getdata } from "ulti";
 import { color, get_rank_color } from "color";
 import Cookies from "js-cookie";

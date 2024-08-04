@@ -10,75 +10,68 @@ import Cookies from "js-cookie";
 import { Languages } from "enum";
 import { User } from "type";
 import { color } from "color";
+import { Editor } from "editor"
 
 
 
-function sanitizeHtml(html: string) {
-    const domParser = new DOMParser();
-    const doc = domParser.parseFromString(html, 'text/html');
-
-    const scripts = doc.querySelectorAll('script');
-    scripts.forEach(script => (script.parentNode as HTMLElement).removeChild(script));
-
-    return doc.body.innerHTML;
-}
 
 
 function Return_UI({ user }: { user: User }) {
 
     const [fullname, setfullname] = useState((user as User).fullname)
-    const [mode, setmode] = useState("editor");
+    // const [mode, setmode] = useState("editor");
 
-    const [profile, setprofile] = useState(((user as User).profile == undefined || (user as User).profile == "") ? `Hello, I'm ${(user as User).fullname}` : (user as User).profile);
+    // const [profile, setprofile] = useState(((user as User).profile == undefined || (user as User).profile == "") ? `Hello, I'm ${(user as User).fullname}` : (user as User).profile);
 
 
 
     const [default_language, setdefault_language] = useState((user as User).language.default_language)
 
     const [all_language_code, set_all] = useState((user as User).language.languages);
+    // const contentRef = useRef(null);
 
-    const contentRef = useRef(null);
+    // useEffect(() => {
+    //     const lmao = document.getElementById("editorr");
 
-    useEffect(() => {
-        const lmao = document.getElementById("editorr");
-
-        if (lmao != null && lmao.innerHTML == "") {
+    //     if (lmao != null && lmao.innerHTML == "") {
 
 
-            const temp = profile.split("\n").map((item) => {
-                let dataa = ""
-                allowed_html_tags.forEach((tag) => {
-                    if (item.includes(`<${tag}`)) {
-                        let finding_first_tag = item.indexOf(">", item.indexOf(`<${tag}`));
-                        let finding_second_tag = item.indexOf(">", item.indexOf(`</${tag}`));
+    //         const temp = profile.split("\n").map((item) => {
+    //             let dataa = ""
+    //             allowed_html_tags.forEach((tag) => {
+    //                 if (item.includes(`<${tag}`)) {
+    //                     let finding_first_tag = item.indexOf(">", item.indexOf(`<${tag}`));
+    //                     let finding_second_tag = item.indexOf(">", item.indexOf(`</${tag}`));
 
-                        let tempp_first_tag = item.substring(item.indexOf(`<${tag}`), finding_first_tag + 1);
-                        let tempp_second_tag = item.substring(item.indexOf(`</${tag}`), finding_second_tag + 1);
+    //                     let tempp_first_tag = item.substring(item.indexOf(`<${tag}`), finding_first_tag + 1);
+    //                     let tempp_second_tag = item.substring(item.indexOf(`</${tag}`), finding_second_tag + 1);
 
-                        dataa = item.replace(tempp_first_tag, tempp_first_tag.replace("<", "&lt;").replace(">", "&gt;")).replace(tempp_second_tag, tempp_second_tag.replace("<", "&lt;").replace(">", "&gt;"))
-                    }
-                })
+    //                     dataa = item.replace(tempp_first_tag, tempp_first_tag.replace("<", "&lt;").replace(">", "&gt;")).replace(tempp_second_tag, tempp_second_tag.replace("<", "&lt;").replace(">", "&gt;"))
+    //                 }
+    //             })
 
-                return dataa == "" ? ((item == "") ? "<br>" : item) : dataa;
-            }).map((item) => {
-                return `<div> <span> ${item}</span> </div>`;
-            }).join("\n")
+    //             return dataa == "" ? ((item == "") ? "<br>" : item) : dataa;
+    //         }).map((item) => {
+    //             return `<div> <span> ${item}</span> </div>`;
+    //         }).join("\n")
 
-            lmao.innerHTML = temp
-        }
-    })
+    //         lmao.innerHTML = temp
+    //     }
+    // })
 
-    const onClick = (e: any) => {
-        e.preventDefault();
-        setmode(e.target.id)
-    }
+    // const onClick = (e: any) => {
+    //     e.preventDefault();
+    //     setmode(e.target.id)
+    // }
 
     const saveClick = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
-        const res = await getdata("get", "users", (user as User).username)
-
-        res.profile = profile;
+        let res = await getdata("get", "users", (user as User).username);
+        res = res.data.data[0];
+        // console.log(res)
+        // console.log(document.getElementById("editorr")?.title)
+        res.profile = document.getElementById("editorr")?.title;
 
         res.language.languages = all_language_code;
         res.language.default_language = default_language;
@@ -99,7 +92,12 @@ function Return_UI({ user }: { user: User }) {
                                 <td>
                                     Full name:
                                 </td>
-                                <td>
+                                <td
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "row"
+                                    }}
+                                >
                                     <input
                                         type="text"
                                         placeholder="Full name"
@@ -152,7 +150,12 @@ function Return_UI({ user }: { user: User }) {
                                 <td>
                                     Default language:
                                 </td>
-                                <td>
+                                <td
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "row"
+                                    }}
+                                >
                                     <span>
                                         <select
                                             style={{
@@ -195,121 +198,10 @@ function Return_UI({ user }: { user: User }) {
                             Self-description:
                         </span>
 
-                        <div>
+                        <Editor str={user.profile} />
 
-                            <div style={{
-                                float: "left"
-                            }}>
-                                <button onClick={onClick} id="editor" style={{ padding: "3px 3px 3px 3px" }}>
-
-                                    <FontAwesomeIcon icon={faPenToSquare} />
-
-                                    <a onClick={onClick} id="editor" style={{ paddingLeft: "5px" }}>
-                                        Editor
-                                    </a>
-                                </button>
-
-                                <button onClick={onClick} id="preview" style={{ padding: "3px 3px 3px 10px" }}>
-                                    <FontAwesomeIcon icon={faEye} />
-                                    <a onClick={onClick} id="preview" style={{ paddingLeft: "5px" }}>
-                                        Preview
-                                    </a>
-                                </button>
-                            </div>
-                            <div
-                                style={{
-                                    float: "right"
-                                }}
-                            >
-
-                            </div>
-                        </div>
-
-                        <div style={{
-                            height: "350px",
-                            width: "1500px",
-                            display: "flex",
-                            // flexDirection: "row",
-                            borderTop: "1px solid",
-                            borderBottom: "1px solid",
-                            borderRight: "1px solid",
-                            borderLeft: "1px solid",
-                            borderRadius: "25px",
-                        }}>
-
-                            <div
-                                style={{
-                                    height: "100%",
-                                    width: "100%"
-                                }} className="editprofile-flipcard">
-                                <div
-                                    style={{
-                                        height: "100%",
-                                        width: "100%",
-                                        // display: mode == "editor" ? "block" : "flex"
-                                    }} className={`editprofile-flip${mode == "editor" ? "" : " flipped"}`}>
-                                    <div
-                                        style={{
-                                            height: "100%",
-                                            width: "100%"
-                                        }}
-                                        className="profile-editor"
-                                    >
-                                        <div
-                                            id="editorr"
-
-                                            contentEditable="true"
-                                            ref={contentRef}
-                                            style={{
-                                                outline: "none",
-                                                marginTop: "10px",
-                                                marginLeft: "10px",
-                                                height: "90%",
-                                                width: "100%",
-                                                overflowY: "hidden",
-                                                overflowX: "hidden"
-                                            }}
-                                            onInput={(e) => {
-                                                e.preventDefault()
-
-                                                setprofile((e.target as HTMLInputElement).innerText.replace(/\n\n/g, '\n'))
-
-                                            }}
-                                            // onScroll={(e) => {
-                                            //     (document.getElementById("row") as HTMLElement).scrollTop = (e.target as HTMLElement).scrollTop
-                                            // }}
-                                        >
-                                        </div>
-                                    </div>
-
-                                    <div
-                                        style={{
-                                            height: "100%",
-                                            width: "100%"
-                                        }} className="profile-preview">
-                                        <div
-                                            style={{
-                                                height: "100%",
-                                                width: "100%",
-                                                padding: "15px 15px 15px 15px",
-                                            }}>
-                                            <Markdown
-                                                children={sanitizeHtml(profile)}
-                                                rehypePlugins={[rehypeRaw, rehypeSanitize]}
-                                            />
-                                        </div>
-                                    </div>
-
-
-                                </div>
-                            </div>
-
-                        </div>
                     </div>
 
-                    <div>
-                        lmao
-                    </div>
 
                     <div style={{ paddingTop: "10px" }}>
                         <a style={{

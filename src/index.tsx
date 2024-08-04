@@ -10,7 +10,7 @@ import { color } from "color";
 import { Home } from "./home/index.tsx";
 import { Admin } from './admin/index.tsx';
 import { Title } from './title.tsx';
-import { Test, Testt } from './test/index.tsx';
+import { Editor, Test } from './test/index.tsx';
 import { auth_user } from './pre_run/auth.tsx';
 
 const root_element = document.getElementById("root");
@@ -142,7 +142,7 @@ enum ServerMode {
     test = "test",
 }
 
-const mode = ServerMode.test;
+const mode = ServerMode.development;
 
 try {
     if (mode == ServerMode.production || mode == ServerMode.development) {
@@ -152,7 +152,7 @@ try {
     }
     else if (mode == ServerMode.test) {
         root.render(
-            <Testt />
+            <Test />
         )
     }
 }

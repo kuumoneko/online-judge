@@ -1,4 +1,4 @@
-import { Preview } from "./index.tsx";
+import { Preview } from "./preview.tsx";
 export function Heading({ line }: { line: string }) {
     const length = line.slice(0, line.indexOf(" ")).length;
     return (

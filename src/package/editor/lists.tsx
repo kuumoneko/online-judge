@@ -1,4 +1,4 @@
-import { Preview } from "./index.tsx";
+import { Preview } from "./preview.tsx";
 export function Lists({ lines }: { lines: string[] }) {
     const selected_list_first_line = lines.findIndex((line) => {
         return line.startsWith("1. ") || line.startsWith("- ") || line.startsWith("> ")

@@ -1,4 +1,4 @@
-import { Preview } from "./index.tsx"
+import { Preview } from "./preview.tsx"
 import MathJax from "react-mathjax"
 import { useEffect } from "react"
 

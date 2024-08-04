@@ -7,6 +7,7 @@ import { Code_block } from "./code_block.tsx";
 import { Username } from "./username.tsx";
 import { Math } from "./math.tsx";
 import { Link } from "./link.tsx";
+import Cookies from "js-cookie"
 
 function sanitizeHtml(html: string) {
     const domParser = new DOMParser();
@@ -99,7 +100,8 @@ export function Preview({ str }: { str: string | string[] }): JSX.Element {
                         return (
                             <div
                                 style={{
-                                    borderBottom: "1px solid black",
+                                    borderBottom: "1px solid",
+                                    borderColor: Cookies.get("theme") == "dark" ? "white" : "black",
                                     width: "100%"
                                 }}
                             >
