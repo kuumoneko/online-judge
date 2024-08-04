@@ -89,7 +89,11 @@ function Return_UI({ user }: { user: User }) {
                         <table>
 
                             <tr>
-                                <td>
+                                <td
+                                    style={{
+                                        textAlign:"left"
+                                    }}
+                                >
                                     Full name:
                                 </td>
                                 <td
@@ -113,7 +117,11 @@ function Return_UI({ user }: { user: User }) {
                                 </td>
                             </tr>
                             <tr>
-                                <td>
+                                <td
+                                    style={{
+                                        textAlign:"left"
+                                    }}
+                                >
                                     My languages:
                                 </td>
                                 <td style={{ width: "1000px" }}>
@@ -147,7 +155,11 @@ function Return_UI({ user }: { user: User }) {
                                 </td>
                             </tr>
                             <tr>
-                                <td>
+                                <td
+                                    style={{
+                                        textAlign:"left"
+                                    }}
+                                >
                                     Default language:
                                 </td>
                                 <td
