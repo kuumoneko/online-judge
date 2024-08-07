@@ -17,7 +17,8 @@ import { Editor } from "editor"
 
 
 function Return_UI({ user }: { user: User }) {
-
+    // const Editor = new Editorr(true, true);
+    // console.log(Editor.hasSupport)
     const [fullname, setfullname] = useState((user as User).fullname)
     // const [mode, setmode] = useState("editor");
 
@@ -91,7 +92,7 @@ function Return_UI({ user }: { user: User }) {
                             <tr>
                                 <td
                                     style={{
-                                        textAlign:"left"
+                                        textAlign: "left"
                                     }}
                                 >
                                     Full name:
@@ -119,7 +120,7 @@ function Return_UI({ user }: { user: User }) {
                             <tr>
                                 <td
                                     style={{
-                                        textAlign:"left"
+                                        textAlign: "left"
                                     }}
                                 >
                                     My languages:
@@ -157,7 +158,7 @@ function Return_UI({ user }: { user: User }) {
                             <tr>
                                 <td
                                     style={{
-                                        textAlign:"left"
+                                        textAlign: "left"
                                     }}
                                 >
                                     Default language:
@@ -210,7 +211,7 @@ function Return_UI({ user }: { user: User }) {
                             Self-description:
                         </span>
 
-                        <Editor str={user.profile} />
+                        <Editor str={user.profile} anything={"editor"} />
 
                     </div>
 

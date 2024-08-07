@@ -16,14 +16,14 @@ import { add_problem_types, delete_problem_types, get_problem_types, sort_proble
 import { add_problem_groups, delete_problem_groups, get_problem_groups, sort_problem_groups } from "./problems/groups.ts";
 
 // auth
-import { add_sessions, delete_sessions } from "./auth/auth.ts";
+import { add_sessions, delete_sessions, getime } from "./auth/auth.ts";
 import { send_code_verify_user, verify_user } from "./auth/verify.ts";
 import { me } from "./auth/me.ts";
 
 // package
 import { User } from "type";
 import { User_role, Theme_mode } from "enum";
-import { getDataFromDatabase } from "data";
+import { getDataFromDatabase, writeDataToDatabase } from "data";
 import { login } from "./auth/login.ts";
 import { signup } from "./auth/signup.ts";
 import { searching } from "./search/index.ts";
@@ -31,9 +31,9 @@ import { change_password } from "./auth/change_pass.ts";
 import { send_code_forgot_password, verify_user_password } from "./auth/forgot_password.ts";
 
 
-
-const origin = getDataFromDatabase("system", "system")["server_link"]
-
+let system = getDataFromDatabase("system", "system")
+const origin = system["server_link"]
+// console.log(origin)
 const app = express();
 const port = 3001;
 const corsOptions = {
@@ -72,7 +72,7 @@ app.post("/auth/login", (req, res) => {
     }
 
     res.status(200)
-        .setHeader('Set-Cookie', `sessionId=${result.session.id}; httpOnly; Max-Age=${3600 * 24 * 30}`)
+        .setHeader('Set-Cookie', `sessionId=${result.session.id}; httpOnly; Max-Age=${getime().duration / 1000}; SameSite=None; Secure`)
         .json({
             data: "OK"
         })
@@ -126,7 +126,7 @@ app.post("/auth/signup", (req, res) => {
         const data = signup(username, fullname, email, password);
 
         res.status(200)
-            .setHeader('Set-Cookie', `sessionId=${data.session?.id}; httpOnly; Max-Age=${3600 * 24 * 30}`)
+            .setHeader('Set-Cookie', `sessionId=${data.session?.id}; httpOnly; Max-Age=${getime().duration / 1000}; SameSite=None; Secure`)
             .json({
                 data: "OK"
             })
@@ -143,7 +143,7 @@ app.post("/auth/logout", (req, res) => {
     const sessionId = req.cookies.sessionId;
     // console.log(req.cookies)
     delete_sessions(sessionId);
-    res.clearCookie("sessionId", { httpOnly: true, maxAge: 0, path: "/auth" }).status(200).json({ data: "OK" })
+    res.clearCookie("sessionId", { httpOnly: true, maxAge: 0, path: "/auth", sameSite: "none", secure: true }).status(200).json({ data: "OK" })
 })
 
 app.post("/auth/me", (req, res) => {
@@ -152,7 +152,8 @@ app.post("/auth/me", (req, res) => {
 
     const result = me(sessionId);
     if (result.data.username == undefined) {
-        return res.clearCookie("sessionId", { httpOnly: true, maxAge: 0, path: "/auth" }).status(401).json(result);
+        res.clearCookie("sessionId", { httpOnly: true, maxAge: 0, path: "/auth", sameSite: "none", secure: true });
+        return res.status(401).json(result);
     }
     res.status(200).json(result);
 
@@ -505,7 +506,68 @@ app.patch("/data", (req, res) => {
         page: pages.page,
     })
 });
+
+
+app.post("/submit", (req, res) => {
+    const user = req.body.data.user;
+    const problem = req.body.data.problem;
+    const code = req.body.data.code;
+    const language = req.body.data.language;
+    // cpp - 03, 11, 14, 17, 20
+    // Node.js || javascript - 20.16.0 || esm - cjs
+    // typescript - 5.5.3 || esm - cjs
+    // python - 3.12.2
+    // java - 21.0.3
+    const version = req.body.data.version;
+
+    const data = {
+        user: user,
+        problem: problem,
+        code: code,
+        language: language,
+        version: version
+    }
+    system = getDataFromDatabase("system", "system")
+    const number_submissions = system["submissions"];
+    const queue = getDataFromDatabase("problems", "queue");
+    queue.push(data);
+    writeDataToDatabase("problems", "queue", queue);
+    system["submissions"] += 1;
+    writeDataToDatabase("system", "system", system);
+
+    res.status(200).json({
+        id: number_submissions + 1
+    })
+})
+
+
 app.listen(port, () => {
     console.log(`Server listening on port http://localhost:${port}`);
 });
 //# sourceMappingURL=server.js.map
+
+setInterval(() => {
+    interface login_data {
+        id: string,
+        username: string,
+        end_login: number
+    }
+
+
+    const res: login_data[] = getDataFromDatabase('auth', "login")
+
+    const temp: login_data[] = []
+
+    res.forEach((data: login_data) => {
+        const now = new Date().getTime();
+
+        if (data.end_login - now <= 0) {
+
+        }
+        else {
+            temp.push(data)
+        }
+    })
+
+    writeDataToDatabase("auth", "login", temp)
+}, 1000)

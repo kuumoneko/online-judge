@@ -14,7 +14,12 @@ export function add_sessions(session: any) {
     // if (test_device.length > 0) {
     //     sessions.splice(sessions.findIndex((item: any) => item.username == session.username), 1);
     // }
-    sessions.push(session)
+    const temp = getime()
+    sessions.push({
+        id: session.id,
+        username: session.username,
+        end_login: temp.time,
+    })
     writeDataToDatabase("auth", "login", sessions)
     return "oke"
 }
@@ -29,4 +34,26 @@ export function delete_sessions(session: string) {
 
     writeDataToDatabase("auth", "login", sessions)
     return "oke"
+}
+
+export function getime() {
+    const now = new Date();
+    console.log(now.getTime())
+    console.log(new Date(now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds()).getTime())
+
+    const time_now = now.getTime();
+    const time_next_month = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        now.getDate(),
+        now.getHours(),
+        now.getMinutes(),
+        now.getSeconds(),
+        now.getMilliseconds()
+    ).getTime()
+
+    return {
+        time: time_next_month,
+        duration: time_next_month - time_now
+    }
 }

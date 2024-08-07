@@ -33,6 +33,7 @@ function Server() {
                 Cookies.set("theme", (Cookies.get("theme") == undefined) ? "light" : Cookies.get("theme") as "dark" | "light", {
                     expires: 365
                 })
+                Cookies.remove("remember")
 
                 setthemes(
                     color[Cookies.get("theme") as "dark" | "light"]

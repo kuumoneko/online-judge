@@ -9,13 +9,19 @@ import {
     faListUl,
     faQuoteLeft,
     faCircleQuestion,
+    faPenToSquare,
+    faEye
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
-// import MathJax from "react-mathjax";
 import { Preview } from "./preview.tsx";
 import { allowed_html_tags } from "ulti";
-import { faPenToSquare, faEye } from '@fortawesome/free-solid-svg-icons';
+// import { Bold } from "./bold.tsx";
+// import Cookies from "js-cookie"
+// import { getdata } from "ulti"
+// import { color, get_rank_color } from "color"
+// import { User_role } from "enum"
+// import MathJax from "react-mathjax"
 
 // function Luythua({ a, b, c }: { a: any, b: any, c: any }) {
 //     return (
@@ -72,7 +78,6 @@ import { faPenToSquare, faEye } from '@fortawesome/free-solid-svg-icons';
 //             <MathJax.Node formula={`|${a}|`} />
 //         </MathJax.Provider>
 //     )
-
 // }
 
 function LineSelection(str: string, selectedString: string) {
@@ -115,9 +120,9 @@ function LineSelection(str: string, selectedString: string) {
         endLine,
     };
 }
-function after_effect(str: string[]): void;
-function after_effect(str: string): void;
-function after_effect(str: string | string[]): void {
+export function after_effect(str: string[]): void;
+export function after_effect(str: string): void;
+export function after_effect(str: string | string[]): void {
     let temp: string[];
     if (typeof str == "string") {
         temp = str.split("\n");
@@ -132,34 +137,39 @@ function after_effect(str: string | string[]): void {
         editor.innerHTML = temp
             .map((item) => {
                 let dataa = "";
-                allowed_html_tags.forEach((tag) => {
-                    if (item.includes(`<${tag}`) || item.includes(`</${tag}`)) {
-                        let finding_first_tag = item.indexOf(">", item.indexOf(`<${tag}`));
-                        let finding_second_tag = item.indexOf(
-                            ">",
-                            item.indexOf(`</${tag}`)
-                        );
+                // allowed_html_tags.forEach((tag) => {
+                //     // console.log(item, ' ', item.includes("<") || item.includes(">"))
+                //     if (item.includes(`<${tag}`) || item.includes(`</${tag}`)) {
+                //         let finding_first_tag = item.indexOf(">", item.indexOf(`<${tag}`));
+                //         let finding_second_tag = item.indexOf(
+                //             ">",
+                //             item.indexOf(`</${tag}`)
+                //         );
 
-                        let tempp_first_tag = item.substring(
-                            item.indexOf(`<${tag}`),
-                            finding_first_tag + 1
-                        );
-                        let tempp_second_tag = item.substring(
-                            item.indexOf(`</${tag}`),
-                            finding_second_tag + 1
-                        );
+                //         let tempp_first_tag = item.substring(
+                //             item.indexOf(`<${tag}`),
+                //             finding_first_tag + 1
+                //         );
+                //         let tempp_second_tag = item.substring(
+                //             item.indexOf(`</${tag}`),
+                //             finding_second_tag + 1
+                //         );
 
-                        dataa = item
-                            .replaceAll(
-                                tempp_first_tag,
-                                tempp_first_tag.replaceAll("<", "&lt;").replaceAll(">", "&gt;")
-                            )
-                            .replaceAll(
-                                tempp_second_tag,
-                                tempp_second_tag.replaceAll("<", "&lt;").replaceAll(">", "&gt;")
-                            );
-                    }
-                });
+                //         dataa = item
+                //             .replaceAll(
+                //                 tempp_first_tag,
+                //                 tempp_first_tag.replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+                //             )
+                //             .replaceAll(
+                //                 tempp_second_tag,
+                //                 tempp_second_tag.replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+                //             );
+                //     }
+                // });
+                // console.log(item, ' ', item.includes("<"), ' ', item.includes(">"))
+                if (item.includes("<") || item.includes(">")) {
+                    dataa = item.replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+                }
 
                 return dataa == "" ? ((/^\s*$/.test(item) || item == "") ? "<br>" : item) : dataa;
             })
@@ -174,21 +184,17 @@ function after_effect(str: string | string[]): void {
     }
 }
 
-export function Editor({ str }: { str?: string }): JSX.Element {
+export function Editor({ str = "", anything = "editor" }: { str?: string, anything?: string }): JSX.Element {
     const [cursor, setcursor] = useState("");
     const [cursor_col, setcol] = useState(0);
     const [select, setselect] = useState("");
-    const [type, settype] = useState(str || "");
+    const [type, settype] = useState(str);
     const [temp_line, settemp_line] = useState(0);
     const [mode, setmode] = useState("editor");
     const [paste_string, set_paste_string] = useState("")
 
     useEffect(() => {
-        // const editorr = document.getElementById("editorr");
-        after_effect(type);
-        // if (editorr) {
-        //     editorr.innerHTML= type
-        // }
+        after_effect(str);
     }, [])
 
     const OnClick = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
@@ -349,12 +355,9 @@ export function Editor({ str }: { str?: string }): JSX.Element {
         // get the parent
         cursor_position = cursor_position?.parentNode as Node;
 
-        // console.log(cursor_position.childNodes)
-
         // find number of #text to get line, cnt will be line number
         let cnt = 0;
         cursor_position.childNodes.forEach((e, index) => {
-            // console.log((e as HTMLElement).innerText != undefined)
             if (
                 ((e as HTMLElement).innerText != undefined) &&
                 index <
@@ -366,7 +369,6 @@ export function Editor({ str }: { str?: string }): JSX.Element {
                 cnt++;
             }
         });
-        // console.log(cnt)
         // set the cursor line
         settemp_line(cnt);
         setcol(window.getSelection()?.getRangeAt(0).startOffset as number);
@@ -379,210 +381,212 @@ export function Editor({ str }: { str?: string }): JSX.Element {
 
     return (
         <div>
-            <a>Test</a>
+            {
+                anything == "editor" && (
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-around",
+                            height: "15px",
+                            width: "500px",
+                            marginBottom: "10px",
+                        }}
+                    >
+                        {/* 
+                            Editor
+                        */}
+                        <a
+                            style={{
+                                cursor: "pointer",
+                            }}
+                            onClick={() => {
+                                setmode("editor");
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faPenToSquare} />
+                            <a
+                                style={{
+                                    padding: "0 0 0 0",
+                                    marginLeft: "2px"
+                                }}>
+                                Editor
+                            </a>
+                        </a>
+                        {/* 
+                            Preview
+                        */}
+                        <a
+                            style={{
+                                cursor: "pointer",
+                            }}
+                            onClick={() => {
+                                setmode("preview");
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faEye} />
+                            <a
+                                style={{
+                                    padding: "0 0 0 0",
+                                    marginLeft: "2px"
+                                }}>
+                                Preview
+                            </a>
+                        </a>
+                        {/*
+                            **
+                        */}
+                        <FontAwesomeIcon
+                            style={{
+                                opacity: (mode == "editor") ? "1" : "0",
+                                transition: "all 1s ease-in-out"
+                            }}
+
+                            icon={faBold}
+                            id="bold"
+                            onClick={(e) => {
+                                OnClick(e);
+                            }}
+                        />
+                        {/*
+                            *
+                        */}
+                        <FontAwesomeIcon
+                            style={{
+                                opacity: (mode == "editor") ? "1" : "0",
+                                transition: "all 1s ease-in-out"
+                            }}
+
+                            icon={faItalic}
+                            id="italic"
+                            onClick={(e) => {
+                                OnClick(e);
+                            }}
+                        />
+                        {/* 
+                            -
+                        */}
+                        <FontAwesomeIcon
+                            style={{
+                                opacity: (mode == "editor") ? "1" : "0",
+                                transition: "all 1s ease-in-out"
+                            }}
+
+                            icon={faListUl}
+                            id="-list"
+                            onClick={(e) => {
+                                OnClick(e);
+                            }}
+                        />
+                        {/* 
+                            1.
+                        */}
+                        <FontAwesomeIcon
+                            style={{
+                                opacity: (mode == "editor") ? "1" : "0",
+                                transition: "all 1s ease-in-out"
+                            }}
+
+                            icon={faListOl}
+                            id="1list"
+                            onClick={(e) => {
+                                OnClick(e);
+                            }}
+                        />
+                        {/* 
+                            ```
+
+                            ```         
+                        */}
+                        <FontAwesomeIcon
+                            style={{
+                                opacity: (mode == "editor") ? "1" : "0",
+                                transition: "all 1s ease-in-out"
+                            }}
+
+                            icon={faCode}
+                            id="code"
+                            onClick={(e) => {
+                                OnClick(e);
+                            }}
+                        />
+                        {/* 
+                            > quote
+                        */}
+                        <FontAwesomeIcon
+                            style={{
+                                opacity: (mode == "editor") ? "1" : "0",
+                                transition: "all 1s ease-in-out"
+                            }}
+
+                            icon={faQuoteLeft}
+                            id="quote"
+                            onClick={(e) => {
+                                OnClick(e);
+                            }}
+                        />
+                        {/* 
+                            [link](description)
+                        */}
+                        <FontAwesomeIcon
+                            style={{
+                                opacity: (mode == "editor") ? "1" : "0",
+                                transition: "all 1s ease-in-out"
+                            }}
+
+                            icon={faLink}
+                            id="link"
+                            onClick={(e) => {
+                                OnClick(e);
+                            }}
+                        />
+                        {/* 
+                            @{username}
+                        */}
+                        <FontAwesomeIcon
+                            style={{
+                                opacity: (mode == "editor") ? "1" : "0",
+                                transition: "all 1s ease-in-out"
+                            }}
+
+                            icon={faAt}
+                            id="user"
+                            onClick={(e) => {
+                                OnClick(e);
+                            }}
+                        />
+                        {/* 
+                            ~math~
+                        */}
+                        <FontAwesomeIcon
+                            style={{
+                                opacity: (mode == "editor") ? "1" : "0",
+                                transition: "all 1s ease-in-out"
+                            }}
+
+                            icon={faCalculator}
+                            id="math"
+                            onClick={(e) => {
+                                OnClick(e);
+                            }}
+                        />
+                        {/* 
+                            help
+                        */}
+                        <FontAwesomeIcon
+                            style={{
+                                opacity: (mode == "editor") ? "1" : "0",
+                                transition: "all 1s ease-in-out"
+                            }}
+                            icon={faCircleQuestion} />
+
+                    </div>
+                )
+            }
+
+
             <div
                 style={{
-                    display: "flex",
-                    justifyContent: "space-around",
-                    height: "15px",
-                    width: "500px",
-                    marginBottom: "10px",
-                }}
-            >
-                {/* 
-                    Editor
-                */}
-
-                <a
-                    style={{
-                        cursor: "pointer",
-                    }}
-                    onClick={() => {
-                        setmode("editor");
-                    }}
-                >
-                    <FontAwesomeIcon icon={faPenToSquare} />
-                    <a
-                        style={{
-                            padding: "0 0 0 0",
-                            marginLeft: "2px"
-                        }}>
-                        Editor
-                    </a>
-                </a>
-                {/* 
-                    Preview
-                */}
-                <a
-                    style={{
-                        cursor: "pointer",
-                    }}
-                    onClick={() => {
-                        setmode("preview");
-                    }}
-                >
-                    <FontAwesomeIcon icon={faEye} />
-                    <a
-                        style={{
-                            padding: "0 0 0 0",
-                            marginLeft: "2px"
-                        }}>
-                        Preview
-                    </a>
-                </a>
-
-                {/*
-                    **
-                */}
-                <FontAwesomeIcon
-                    style={{
-                        opacity: (mode == "editor") ? "1" : "0",
-                        transition: "all 1s ease-in-out"
-                    }}
-
-                    icon={faBold}
-                    id="bold"
-                    onClick={(e) => {
-                        OnClick(e);
-                    }}
-                />
-                {/*
-                    *
-                */}
-                <FontAwesomeIcon
-                    style={{
-                        opacity: (mode == "editor") ? "1" : "0",
-                        transition: "all 1s ease-in-out"
-                    }}
-
-                    icon={faItalic}
-                    id="italic"
-                    onClick={(e) => {
-                        OnClick(e);
-                    }}
-                />
-                {/* 
-                    -
-                */}
-                <FontAwesomeIcon
-                    style={{
-                        opacity: (mode == "editor") ? "1" : "0",
-                        transition: "all 1s ease-in-out"
-                    }}
-
-                    icon={faListUl}
-                    id="-list"
-                    onClick={(e) => {
-                        OnClick(e);
-                    }}
-                />
-                {/* 
-                    1.
-                */}
-                <FontAwesomeIcon
-                    style={{
-                        opacity: (mode == "editor") ? "1" : "0",
-                        transition: "all 1s ease-in-out"
-                    }}
-
-                    icon={faListOl}
-                    id="1list"
-                    onClick={(e) => {
-                        OnClick(e);
-                    }}
-                />
-                {/* 
-                    ```
-
-            ```
-                */}
-                <FontAwesomeIcon
-                    style={{
-                        opacity: (mode == "editor") ? "1" : "0",
-                        transition: "all 1s ease-in-out"
-                    }}
-
-                    icon={faCode}
-                    id="code"
-                    onClick={(e) => {
-                        OnClick(e);
-                    }}
-                />
-                {/* 
-                    > quote
-                */}
-                <FontAwesomeIcon
-                    style={{
-                        opacity: (mode == "editor") ? "1" : "0",
-                        transition: "all 1s ease-in-out"
-                    }}
-
-                    icon={faQuoteLeft}
-                    id="quote"
-                    onClick={(e) => {
-                        OnClick(e);
-                    }}
-                />
-                {/* 
-                    [link](description)
-                */}
-                <FontAwesomeIcon
-                    style={{
-                        opacity: (mode == "editor") ? "1" : "0",
-                        transition: "all 1s ease-in-out"
-                    }}
-
-                    icon={faLink}
-                    id="link"
-                    onClick={(e) => {
-                        OnClick(e);
-                    }}
-                />
-                {/* 
-                    @{username}
-                */}
-                <FontAwesomeIcon
-                    style={{
-                        opacity: (mode == "editor") ? "1" : "0",
-                        transition: "all 1s ease-in-out"
-                    }}
-
-                    icon={faAt}
-                    id="user"
-                    onClick={(e) => {
-                        OnClick(e);
-                    }}
-                />
-                {/* 
-                    ~math~
-                */}
-                <FontAwesomeIcon
-                    style={{
-                        opacity: (mode == "editor") ? "1" : "0",
-                        transition: "all 1s ease-in-out"
-                    }}
-
-                    icon={faCalculator}
-                    id="math"
-                    onClick={(e) => {
-                        OnClick(e);
-                    }}
-                />
-                {/* 
-                    help
-                */}
-                <FontAwesomeIcon
-                    style={{
-                        opacity: (mode == "editor") ? "1" : "0",
-                        transition: "all 1s ease-in-out"
-                    }}
-                    icon={faCircleQuestion} />
-
-            </div>
-
-            <div
-                style={{
-                    height: "350px",
+                    height: anything == "editor" ? "350px" : "800px",
                     width: "1500px",
                     display: "flex",
                     // flexDirection: "row",
@@ -593,113 +597,189 @@ export function Editor({ str }: { str?: string }): JSX.Element {
                     borderRadius: "25px",
                 }}
             >
-                <div
-                    style={{
-                        height: "100%",
-                        width: "100%",
-                    }}
-                    className="editprofile-flipcard"
-                >
-                    <div
-                        style={{
-                            height: "100%",
-                            width: "100%",
-                        }}
-                        className={`editprofile-flip${mode == "editor" ? "" : " flipped"}`}
-                    >
-                        <div
-                            style={{
-                                height: "100%",
-                                width: "100%",
-                            }}
-                            className="profile-editor"
-                        >
+                {
+                    anything == "editor" ?
+                        (
                             <div
-                                id="editorr"
-                                spellCheck="false"
-                                contentEditable="true"
-                                title={type}
-                                onInput={(e) => {
-                                    settype(e.currentTarget.innerText.replaceAll(/\n\n/g, "\n"));
-                                    setcursor(
-                                        window.getSelection()?.getRangeAt(0).commonAncestorContainer
-                                            .nodeValue as string
-                                    );
-                                    getcursorposition(e as any);
-
-                                    if (paste_string != "") {
-                                        after_effect(
-                                            e.currentTarget.innerText.replaceAll(/\n\n/g, "\n")
-                                        );
-                                        try {
-                                            let temp = Array.from(e.currentTarget.childNodes)
-                                            let last_string = paste_string.split("\n")[paste_string.split("\n").length - 1]
-
-                                            const temping = (
-                                                temp
-                                                    .filter((e) => e.nodeName != "#text")
-                                                    .map((e, index) => { return { index: index, node: e } })
-                                                    .filter((e) => (e.node as HTMLElement).innerText.includes(last_string))[0]
-                                                    .node as HTMLElement
-                                            ).innerText
-                                                .indexOf(last_string) + last_string.length + 1
-                                            const thisNode = temp
-                                                .filter((e) => e.nodeName != "#text")
-                                                .map((e, index) => { return { index: index, node: e } })
-                                                .filter((e) => (e.node as HTMLElement).innerText.includes(last_string))[0]
-                                                .node
-                                                .childNodes[1]
-                                                .childNodes[0]
-
-
-                                            const range = document.createRange();
-                                            const sel = window.getSelection();
-                                            range.setStart(thisNode, temping)
-                                            sel?.removeAllRanges();
-                                            sel?.addRange(range);
-                                        }
-                                        catch (e: any) {
-                                            console.error(e.message)
-                                        }
-
-                                        set_paste_string("")
-                                    }
-                                }}
-                                onPaste={(e) => {
-                                    // setpaste(true)
-                                    set_paste_string(e.clipboardData.getData("text"))
-                                }}
-                                onMouseUp={(e) => {
-                                    getcursorposition(e);
-                                }}
-                                onKeyDown={(e) => {
-                                    if (e.key == "Enter") {
-                                        getcursorposition(e);
-                                    }
-                                }}
-                            ></div>
-                        </div>
-
-                        <div
-                            style={{
-                                height: "100%",
-                                width: "100%",
-                            }}
-                            className="profile-preview"
-                        >
-                            <div
-                                style={{
-                                    height: "90%",
-                                    width: "100%",
-                                    padding: "15px 15px 15px 15px",
-                                    overflow: "hidden scroll",
-                                }}
+                                className="editprofile-flipcard"
                             >
-                                <Preview str={type} />
+                                <div
+                                    className={`editprofile-flip${mode == "editor" ? "" : " flipped"}`}
+                                >
+                                    <div
+                                        style={{
+                                            height: "100%",
+                                            width: "100%",
+                                        }}
+                                        className="profile-editor"
+                                    >
+                                        <div
+                                            id="editorr"
+                                            spellCheck="false"
+                                            contentEditable="true"
+                                            title={type}
+                                            onInput={(e) => {
+                                                settype(e.currentTarget.innerText.replaceAll(/\n\n/g, "\n"));
+                                                setcursor(
+                                                    window.getSelection()?.getRangeAt(0).commonAncestorContainer
+                                                        .nodeValue as string
+                                                );
+                                                getcursorposition(e as any);
+
+                                                if (paste_string != "") {
+                                                    after_effect(
+                                                        e.currentTarget.innerText.replaceAll(/\n\n/g, "\n")
+                                                    );
+                                                    try {
+                                                        let temp = Array.from(e.currentTarget.childNodes)
+                                                        let last_string = paste_string.split("\n")[paste_string.split("\n").length - 1]
+
+                                                        const temping = (
+                                                            temp
+                                                                .filter((e) => e.nodeName != "#text")
+                                                                .map((e, index) => { return { index: index, node: e } })
+                                                                .filter((e) => (e.node as HTMLElement).innerText.includes(last_string))[0]
+                                                                .node as HTMLElement
+                                                        ).innerText
+                                                            .indexOf(last_string) + last_string.length + 1
+                                                        const ode = temp
+                                                            .filter((e) => e.nodeName != "#text")
+                                                            .map((e, index) => { return { index: index, node: e } })
+                                                            .filter((e) => (e.node as HTMLElement).innerText.includes(last_string))[0]
+                                                            .node
+                                                            .childNodes[1]
+                                                            .childNodes[0]
+
+
+                                                        const range = document.createRange();
+                                                        const sel = window.getSelection();
+                                                        range.setStart(ode, temping)
+                                                        sel?.removeAllRanges();
+                                                        sel?.addRange(range);
+                                                    }
+                                                    catch (e: any) {
+                                                        console.error(e.message)
+                                                    }
+
+                                                    set_paste_string("")
+                                                }
+                                            }}
+                                            onPaste={(e) => {
+                                                // setpaste(true)
+                                                set_paste_string(e.clipboardData.getData("text"))
+                                            }}
+                                            onMouseUp={(e) => {
+                                                getcursorposition(e);
+                                            }}
+                                            onKeyDown={(e) => {
+                                                if (e.key == "Enter") {
+                                                    getcursorposition(e);
+                                                }
+                                            }}
+                                        ></div>
+                                    </div>
+
+                                    <div
+                                        style={{
+                                            height: "100%",
+                                            width: "100%",
+                                        }}
+                                        className="profile-preview"
+                                    >
+                                        <div
+                                            style={{
+                                                height: "90%",
+                                                width: "100%",
+                                                padding: "15px 15px 15px 15px",
+                                                overflow: "hidden scroll",
+                                            }}
+                                        >
+                                            <Preview str={type} />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                        ) :
+                        (
+                            <>
+                                <div
+                                    style={{
+                                        height: "750px",
+                                        width: "1500px",
+                                    }}
+                                    className="profile-editor"
+                                >
+                                    <div
+                                        style={{
+                                            height: "100%"
+                                        }}
+                                        id="editorr"
+                                        spellCheck="false"
+                                        contentEditable="true"
+                                        title={type}
+                                        onInput={(e) => {
+                                            settype(e.currentTarget.innerText.replaceAll(/\n\n/g, "\n"));
+                                            setcursor(
+                                                window.getSelection()?.getRangeAt(0).commonAncestorContainer
+                                                    .nodeValue as string
+                                            );
+                                            getcursorposition(e as any);
+
+                                            if (paste_string != "") {
+                                                after_effect(
+                                                    e.currentTarget.innerText.replaceAll(/\n\n/g, "\n")
+                                                );
+                                                try {
+                                                    let temp = Array.from(e.currentTarget.childNodes)
+                                                    let last_string = paste_string.split("\n")[paste_string.split("\n").length - 1]
+
+                                                    const temping = (
+                                                        temp
+                                                            .filter((e) => e.nodeName != "#text")
+                                                            .map((e, index) => { return { index: index, node: e } })
+                                                            .filter((e) => (e.node as HTMLElement).innerText.includes(last_string))[0]
+                                                            .node as HTMLElement
+                                                    ).innerText
+                                                        .indexOf(last_string) + last_string.length + 1
+                                                    const ode = temp
+                                                        .filter((e) => e.nodeName != "#text")
+                                                        .map((e, index) => { return { index: index, node: e } })
+                                                        .filter((e) => (e.node as HTMLElement).innerText.includes(last_string))[0]
+                                                        .node
+                                                        .childNodes[1]
+                                                        .childNodes[0]
+
+
+                                                    const range = document.createRange();
+                                                    const sel = window.getSelection();
+                                                    range.setStart(ode, temping)
+                                                    sel?.removeAllRanges();
+                                                    sel?.addRange(range);
+                                                }
+                                                catch (e: any) {
+                                                    console.error(e.message)
+                                                }
+
+                                                set_paste_string("")
+                                            }
+                                        }}
+                                        onPaste={(e) => {
+                                            // setpaste(true)
+                                            set_paste_string(e.clipboardData.getData("text"))
+                                        }}
+                                        onMouseUp={(e) => {
+                                            getcursorposition(e);
+                                        }}
+                                        onKeyDown={(e) => {
+                                            if (e.key == "Enter") {
+                                                getcursorposition(e);
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            </>
+                        )
+                }
             </div>
         </div>
     );

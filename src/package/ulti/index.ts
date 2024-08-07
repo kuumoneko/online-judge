@@ -139,6 +139,9 @@ export async function getdata(method: string, mode: string, data: any): Promise<
         else if (method == "forgot_password") {
             res = await axios.post("http://localhost:3001/auth/forgot_password", { data }, {})
         }
+        else if (method == "submit") {
+            res = await axios.post("http://localhost:3001/submit", { data }, {})
+        }
     }
 
     catch (e: any) {
@@ -156,7 +159,7 @@ export async function getdata(method: string, mode: string, data: any): Promise<
 }
 
 
-export const all_language = ["C++03", "C++11", "C++14 (C++ Themis)", "C++17", "C++20", "Python 3", "java", "javascript"];
+export const all_language = ["C++03", "C++11", "C++14 (C++ Themis)", "C++17", "C++20", "Python 3", "Java", "Javascript", "Typescript"];
 
 export const allowed_html_tags = [
     "h1",

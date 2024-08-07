@@ -102,7 +102,9 @@ function Problem() {
 
             let coloring: string;
 
-            if (user.problems.length == 0) {
+            if (user.problems.filter((user_problem: any) => {
+                return user_problem.id == problem.id
+            }).length == 0) {
                 coloring = "white"
             }
             else {
@@ -127,7 +129,7 @@ function Problem() {
                 }}
             >
                 {
-                    title.toUpperCase()
+                    title?.toUpperCase()
                 }
             </a>
         </div>

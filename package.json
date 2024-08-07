@@ -68,7 +68,7 @@
     "webpack-cli": "^5.1.4"
   },
   "scripts": {
-    "start": "cross-env GENERATE_SOURCEMAP=false SKIP_PREFLIGHT_CHECK=true react-scripts --openssl-legacy-provider start",
+    "start": "cross-env GENERATE_SOURCEMAP=false SKIP_PREFLIGHT_CHECK=true  react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

@@ -86,6 +86,7 @@ export interface Problems {
         memory: number
     },
     specificLanguage: {},
+    languages: Languages[]
     body: {
         topic: string,
         sample: ProblemsSample[],

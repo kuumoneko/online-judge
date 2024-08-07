@@ -14,12 +14,10 @@ export function get_problems(condition: string, items: any[] = []) {
         problems = items;
     }
 
-    // console.log("lmao")
-
-    if (condition.includes("_")) {
-        return problems.filter((problem: any) => problem.id.toLowerCase() == condition.toLowerCase());
-    }
-    return problems.filter((problem: any) => problem.name.toLowerCase() == condition.toLowerCase());
+    return [
+        ...problems.filter((problem: any) => problem.id.toLowerCase() == condition.toLowerCase()),
+        ...problems.filter((problem: any) => problem.name.toLowerCase().includes(condition.toLowerCase()))
+    ]
 }
 
 export function sort_problems(mode: string, search: {

@@ -174,7 +174,7 @@ export function Problem_info() {
             setinfo(
                 <div
                     style={{
-                        width: "10%"
+                        width: "15%"
                     }}
                 >
                     <div>
@@ -183,6 +183,9 @@ export function Problem_info() {
                         */}
                         <div
                             className="problem-submit"
+                            onClick={() => {
+                                window.location.href = `/problem/${url[1]}/submit`
+                            }}
                         >
                             Submit
                         </div>
@@ -194,7 +197,7 @@ export function Problem_info() {
                                 return prblm.id == problem.id
                             }).length > 0) && (
                                 <div>
-                                    <a href={`/problem/${url[1]}/submissions/${user.username}`}>
+                                    <a href={`/submissions/${url[1]}/${user.username}`}>
                                         My submissions
                                     </a>
 
@@ -202,7 +205,7 @@ export function Problem_info() {
                             )
                         }
                         <div>
-                            <a href={`/problem/${url[1]}/submissions`}>
+                            <a href={`/submissions/${url[1]}`}>
                                 All submissions
                             </a>
                         </div>
@@ -214,7 +217,12 @@ export function Problem_info() {
                     </div >
                     <br />
 
-                    <div>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column"
+                        }}
+                    >
                         <a>
                             {
                                 `Points: ${(problem as Problems).points || 0}`
