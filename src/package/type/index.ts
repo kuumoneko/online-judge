@@ -71,8 +71,6 @@ export interface Problems {
         TLE: number,
         IE: number
     },
-    totalSubmission: number,
-    submissions: string[],
     isPublished: {
         nani: boolean,
         error: string

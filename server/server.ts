@@ -22,13 +22,14 @@ import { me } from "./auth/me.ts";
 
 // package
 import { User } from "type";
-import { User_role, Theme_mode } from "enum";
+import { User_role, Theme_mode, Coding_status } from "enum";
 import { getDataFromDatabase, writeDataToDatabase } from "data";
 import { login } from "./auth/login.ts";
 import { signup } from "./auth/signup.ts";
 import { searching } from "./search/index.ts";
 import { change_password } from "./auth/change_pass.ts";
 import { send_code_forgot_password, verify_user_password } from "./auth/forgot_password.ts";
+import { get_submission } from "./problems/submission.ts";
 
 
 let system = getDataFromDatabase("system", "system")
@@ -259,6 +260,11 @@ app.get("/data/:mode/:data", (req, res) => {
     }
     else if (mode == "search") {
         const temp = searching(data);
+    }
+    else if (mode == "submissions") {
+        const temp = get_submission(data);
+        sendData = temp || [];
+        statusCode = (temp.length > 0) ? 200 : 404;
     }
 
     res.status(statusCode).json({
@@ -531,15 +537,32 @@ app.post("/submit", (req, res) => {
     const number_submissions = system["submissions"];
     const queue = getDataFromDatabase("problems", "queue");
     queue.push(data);
+
+    let submissions: any[] = getDataFromDatabase("problems", "submissions");
+
+    submissions.push({
+        user: user,
+        problem: problem,
+        code: code,
+        language: language,
+        version: version,
+        id: number_submissions + 1,
+        status: Coding_status.PD,
+        time: new Date().getTime()
+    })
+    writeDataToDatabase("problems", "submissions", submissions);
+
+
     writeDataToDatabase("problems", "queue", queue);
     system["submissions"] += 1;
     writeDataToDatabase("system", "system", system);
+
+
 
     res.status(200).json({
         id: number_submissions + 1
     })
 })
-
 
 app.listen(port, () => {
     console.log(`Server listening on port http://localhost:${port}`);

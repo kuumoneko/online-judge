@@ -33,5 +33,6 @@ export const InputTypes = [
 
 export interface InputLimit {
     key: string,
-    value: number
+    maxvalue: number,
+    minvalue: number
 }

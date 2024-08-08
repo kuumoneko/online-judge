@@ -57,7 +57,7 @@ export function Problem_info() {
                                                     `- ${item.key} <=`
                                                 }
                                             </a>
-                                            <Luythua a={item.value} />
+                                            <Luythua a={item.maxvalue} />
                                         </li>
                                     )
                                 })
@@ -144,7 +144,7 @@ export function Problem_info() {
                                                                     ` ${item.key} <=`
                                                                 }
                                                             </a>
-                                                            <Luythua a={item.value} />
+                                                            <Luythua a={item.maxvalue} />
                                                             <a
                                                                 style={{
                                                                     padding: "0 5px 0 0"

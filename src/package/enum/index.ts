@@ -66,5 +66,7 @@ export enum Coding_status {
     CE = "Compile error",
     OLE = "Output Limit Error",
     MLE = "Memory Limit Error",
-    SE = "System Error"
+    SE = "System Error",
+    PD = "Pending...",
+    GD = "Grading..."
 }

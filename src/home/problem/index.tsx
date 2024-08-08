@@ -1,5 +1,4 @@
 import { geturl } from "ulti";
-import React from "react"
 import { Problem_info } from "./info.tsx";
 import { Problem_Submit } from "./submit.tsx";
 

@@ -3,20 +3,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { Group } from "type";
 import { getdata, all_language } from "ulti";
 import { color } from "color";
-import { faEye, faPenToSquare, faPlus, faUserMinus, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faUserMinus, faUserPlus, faCaretUp, faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Markdown from "react-markdown";
-import rehypeSanitize from "rehype-sanitize";
-import rehypeRaw from "rehype-raw";
-import { sanitize } from "dompurify";
 import Cookies from "js-cookie";
+import { Editor } from "editor";
+import { input } from '../../../test/index';
 export function Add_Problems() {
 
-    // for editor
-    const [mode, setmode] = useState("editor");
-    const [lines, setlines] = useState([{ line: 1, more: 0 }]);
-
-
+    const theme = Cookies.get("theme") as "dark" | "light";
     // general
     const [name, setname] = useState("");
     const [Title, settitle] = useState("");
@@ -28,6 +22,11 @@ export function Add_Problems() {
     const [search, setsearch] = useState("")
     const [users, setusers] = useState([])
     const [host, sethost] = useState([""])
+
+    // data
+    const [inputlimt, setinputlimt] = useState(0)
+    const [sample, setsample] = useState(0);
+    const [subtask, setsubtask] = useState(0);
 
     useEffect(() => {
         async function lmao() {
@@ -114,14 +113,6 @@ export function Add_Problems() {
     const [publish, setpublish] = useState("")
 
 
-    const contentRef = useRef(null);
-
-    const onClick = (e: any) => {
-        e.preventDefault();
-        console.log(data)
-        setmode(e.target.id)
-    }
-
     useEffect(() => {
         const lmao = document.getElementById("editorr");
 
@@ -181,7 +172,7 @@ export function Add_Problems() {
                 limit: temp,
                 source: soucre ? soucre : "None",
                 avaiable: false,
-                body: data,
+                body: document.getElementById("editorr")?.innerText,
                 hint: {
                     nani: false,
                     data: ""
@@ -206,11 +197,11 @@ export function Add_Problems() {
             const temping = (
                 <>
                     {
-                        res.data.map((group: Group) => {
+                        res.data.data.map((group: Group) => {
                             return (
                                 <option value={group.groupname as string} style={{
-                                    background: color[Cookies.get("theme") as "dark" | "light"].background,
-                                    color: color[Cookies.get("theme") as "dark" | "light"].font
+                                    background: color[theme].background,
+                                    color: color[theme].font
                                 }}>
                                     {group.groupname}
                                 </option>
@@ -247,8 +238,8 @@ export function Add_Problems() {
                     </th>
                     <th>
                         <input style={{
-                            background: color[Cookies.get("theme") as "dark" | "light"].background,
-                            color: color[Cookies.get("theme") as "dark" | "light"].font
+                            background: color[theme].background,
+                            color: color[theme].font
                         }}
                             type="text"
                             placeholder="Problem name"
@@ -265,8 +256,8 @@ export function Add_Problems() {
                     <th>
                         <input
                             style={{
-                                background: color[Cookies.get("theme") as "dark" | "light"].background,
-                                color: color[Cookies.get("theme") as "dark" | "light"].font
+                                background: color[theme].background,
+                                color: color[theme].font
                             }}
 
                             type="text"
@@ -283,8 +274,8 @@ export function Add_Problems() {
                     <th style={{ display: "flex" }}>
                         <input
                             style={{
-                                background: color[Cookies.get("theme") as "dark" | "light"].background,
-                                color: color[Cookies.get("theme") as "dark" | "light"].font
+                                background: color[theme].background,
+                                color: color[theme].font
                             }}
                             type="text"
                             placeholder="Add host"
@@ -371,8 +362,8 @@ export function Add_Problems() {
                     <th>
                         <input
                             style={{
-                                background: color[Cookies.get("theme") as "dark" | "light"].background,
-                                color: color[Cookies.get("theme") as "dark" | "light"].font
+                                background: color[theme].background,
+                                color: color[theme].font
                             }}
 
                             type="datetime-local"
@@ -441,8 +432,8 @@ export function Add_Problems() {
                     </th>
                     <th style={{ display: "flex" }}>
                         <input list="list" style={{
-                            background: color[Cookies.get("theme") as "dark" | "light"].background,
-                            color: color[Cookies.get("theme") as "dark" | "light"].font
+                            background: color[theme].background,
+                            color: color[theme].font
                         }}
                             disabled={isPrivate == false}
                             placeholder="Add/Delete Groups"
@@ -497,8 +488,8 @@ export function Add_Problems() {
                             type="text"
                             placeholder="Problem Type"
                             style={{
-                                background: color[Cookies.get("theme") as "dark" | "light"].background,
-                                color: color[Cookies.get("theme") as "dark" | "light"].font
+                                background: color[theme].background,
+                                color: color[theme].font
                             }}
                         />
                     </th>
@@ -520,8 +511,8 @@ export function Add_Problems() {
                         <input type="text"
                             placeholder="Points"
                             style={{
-                                background: color[Cookies.get("theme") as "dark" | "light"].background,
-                                color: color[Cookies.get("theme") as "dark" | "light"].font
+                                background: color[theme].background,
+                                color: color[theme].font
                             }}
                             onChange={(e) => {
                                 e.preventDefault();
@@ -543,8 +534,8 @@ export function Add_Problems() {
                         <input type="text"
                             placeholder="Time limit"
                             style={{
-                                background: color[Cookies.get("theme") as "dark" | "light"].background,
-                                color: color[Cookies.get("theme") as "dark" | "light"].font
+                                background: color[theme].background,
+                                color: color[theme].font
                             }}
                             onChange={(e) => {
                                 e.preventDefault();
@@ -564,8 +555,8 @@ export function Add_Problems() {
                         <input type="text"
                             placeholder="Memory Limit"
                             style={{
-                                background: color[Cookies.get("theme") as "dark" | "light"].background,
-                                color: color[Cookies.get("theme") as "dark" | "light"].font
+                                background: color[theme].background,
+                                color: color[theme].font
                             }}
                             onChange={(e) => {
                                 e.preventDefault();
@@ -590,8 +581,8 @@ export function Add_Problems() {
                     </th>
                     <th>
                         <input list="language_list" style={{
-                            background: color[Cookies.get("theme") as "dark" | "light"].background,
-                            color: color[Cookies.get("theme") as "dark" | "light"].font
+                            background: color[theme].background,
+                            color: color[theme].font
                         }}
                             placeholder="Add/Delete Allowed Language"
                             onChange={(e) => {
@@ -705,8 +696,8 @@ export function Add_Problems() {
                                                     <input
                                                         type="text"
                                                         style={{
-                                                            background: color[Cookies.get("theme") as "dark" | "light"].background,
-                                                            color: color[Cookies.get("theme") as "dark" | "light"].font
+                                                            background: color[theme].background,
+                                                            color: color[theme].font
                                                         }}
                                                         value={item.time.data == 0 ? "" : item.time.data}
 
@@ -741,8 +732,8 @@ export function Add_Problems() {
                                                     <input
                                                         type="text"
                                                         style={{
-                                                            background: color[Cookies.get("theme") as "dark" | "light"].background,
-                                                            color: color[Cookies.get("theme") as "dark" | "light"].font
+                                                            background: color[theme].background,
+                                                            color: color[theme].font
                                                         }}
                                                         value={item.memory.data == 0 ? "" : item.memory.data}
                                                         onChange={(e) => {
@@ -787,8 +778,8 @@ export function Add_Problems() {
                     <th>
                         <input
                             style={{
-                                background: color[Cookies.get("theme") as "dark" | "light"].background,
-                                color: color[Cookies.get("theme") as "dark" | "light"].font
+                                background: color[theme].background,
+                                color: color[theme].font
                             }}
 
                             type="text"
@@ -809,114 +800,326 @@ export function Add_Problems() {
                     Body:
                 </span>
 
-                <div>
+                <Editor str={data} anything="editor" />
 
-                    <button onClick={onClick} id="editor" style={{ padding: "3px 3px 3px 3px" }}>
+            </div>
 
-                        <FontAwesomeIcon icon={faPenToSquare} />
-
-                        <a onClick={onClick} id="editor" style={{ paddingLeft: "5px" }}>
-                            Editor
-                        </a>
-                    </button>
-
-                    <button onClick={onClick} id="preview" style={{ padding: "3px 3px 3px 10px" }}>
-                        <FontAwesomeIcon icon={faEye} />
-                        <a onClick={onClick} id="preview" style={{ paddingLeft: "5px" }}>
-                            Preview
-                        </a>
-                    </button>
-                </div>
-
-                <div className="editor">
-
-                    {
-                        (mode == "editor") ? (
-                            <>
-                                <div id="row" style={
-                                    {
-                                        color: color[Cookies.get("theme") as "dark" | "light"].background
-                                    }}>
-                                    {lines.map((item, index) => (
-                                        <div style={{ display: "flex", justifyContent: "space-around", paddingTop: "0px", paddingBottom: `${item.more * 20}px` }}>
-                                            {index + 1}
-                                        </div>
-                                    ))}
-                                </div>
-                                <div
-                                    className="editorr"
-                                    id="editorr"
-                                    contentEditable="true"
-                                    ref={contentRef}
-                                    // style={{
-                                    //     marginTop: "5px",
-                                    //     marginLeft: "1px",
-                                    //     height: "350px",
-                                    //     width: "1400px",
-                                    //     overflowY: "auto",
-                                    //     overflowX: "auto",
-                                    //     flex: "1"
-                                    // }}
-                                    onInput={(e) => {
-                                        e.preventDefault()
-
-                                        setdata((e.target as HTMLInputElement).innerText.replace(/\n\n/g, '\n'))
-                                        sethtml((e.target as HTMLInputElement).innerHTML)
-
-                                        type temping = {
-                                            line: number,
-                                            more: number
-                                        }
-                                        const temp: temping[] = [];
-
-                                        (e.target as HTMLInputElement).innerText.replace(/\n\n/g, '\n').split("\n").forEach((item: string | any[], index: number) => {
-                                            // console.log(item.split("\n"))
-                                            if (item.length <= 303) {
-                                                temp.push({ line: index + 1, more: Math.floor(item.length / 215) })
-                                                return;
-                                            }
-                                            const length = item.length - 95;
-                                            temp.push({ line: index + 1, more: Math.floor(length / 208) + 1 })
-                                        })
-
-
-
-                                        setlines(((e.target as HTMLInputElement).innerText != "" && (e.target as HTMLInputElement).innerText != "\n") ? temp : [{ line: 1, more: 0 }])
-                                    }}
-                                    onScroll={(e) => {
-                                        (document.getElementById("row") as HTMLElement).scrollTop = (e.target as HTMLElement).scrollTop
-                                    }}
-                                >
-                                </div>
-                            </>
-                        ) : (
-                            <div
-                                className="preview"
-                                id="preview"
+            <div
+                style={{
+                    marginTop: "25px"
+                }}
+            >
+                <table>
+                    <tr>
+                        <th
+                            style={{
+                                userSelect: "none",
+                                cursor: "context-menu"
+                            }}>
+                            Input limit:
+                        </th>
+                        <th
+                            style={{
+                                display: "flex",
+                                flexDirection: "row"
+                            }}
+                        >
+                            <a
                                 style={{
-                                    borderColor: "#ccc",
+                                    padding: "0 0 0 0",
+                                    marginLeft: "5px",
+                                    userSelect: "none"
+                                }}
 
-                                }}>
-                                <Markdown
-                                    children={sanitize(data)}
-                                    rehypePlugins={[rehypeRaw, rehypeSanitize]}
-                                />
-
-                            </div>
-                        )
-                    }
-                </div>
-                {
-                    datacheck && (
-                        <>
-                            <br />
-                            <a style={{ WebkitTextFillColor: "red" }}>
-                                lmao :)))
+                            >
+                                {inputlimt}
                             </a>
+                            <FontAwesomeIcon icon={faCaretUp} style={{ marginLeft: "10px", verticalAlign: "center" }}
+                                onClick={(e) => {
+                                    setinputlimt(inputlimt + 1)
+                                }}
+                            />
+                            <FontAwesomeIcon icon={faCaretDown} style={{ marginLeft: "10px", verticalAlign: "center" }}
+                                onClick={(e) => {
+                                    if (inputlimt <= 0) {
+                                        setinputlimt(0)
+                                    }
+                                    else {
+                                        setinputlimt(inputlimt - 1)
+                                    }
+                                }}
+                            />
+                        </th>
+                    </tr>
+                    <tr>
+                        <th
+                            style={{
+                                userSelect: "none",
+                                cursor: "context-menu"
+                            }}>
 
-                        </>
-                    )
-                }
+                        </th>
+                        <th>
+                            {
+                                Array(inputlimt).fill(0).map((e: any, index: number) => {
+                                    return (
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                justifyContent: "space-around",
+                                                width: "500px",
+                                                marginBottom: "15px"
+                                            }}
+                                        >
+                                            <textarea
+                                                id={`min value ${index + 1}`}
+                                                onInput={(e) => {
+                                                    console.log(e.currentTarget.value)
+                                                    e.currentTarget.title = e.currentTarget.value
+                                                }}
+                                                style={{
+                                                    backgroundColor: color[theme].background,
+                                                    color: color[theme].font,
+                                                    width: "150px"
+                                                }}
+                                            />
+                                            <a
+                                                style={{
+                                                    display: "flex",
+                                                    alignItems: "center"
+                                                }}
+                                            >
+                                                {"<="}
+                                            </a>
+                                            <textarea
+                                                id={`key ${index + 1}`}
+                                                onInput={(e) => {
+                                                    console.log(e.currentTarget.value)
+                                                    e.currentTarget.title = e.currentTarget.value
+                                                }}
+                                                style={{
+                                                    backgroundColor: color[theme].background,
+                                                    color: color[theme].font,
+                                                    width: "150px"
+                                                }}
+                                            />
+                                            <a style={{
+                                                display: "flex",
+                                                alignItems: "center"
+                                            }}>
+                                                {"<="}
+                                            </a>
+                                            <textarea
+                                                id={`max value ${index + 1}`}
+                                                onInput={(e) => {
+                                                    console.log(e.currentTarget.value)
+                                                    e.currentTarget.title = e.currentTarget.value
+                                                }}
+                                                style={{
+                                                    backgroundColor: color[theme].background,
+                                                    color: color[theme].font,
+                                                    width: "150px"
+                                                }}
+                                            />
+                                        </div>
+                                    )
+                                })
+                            }
+                        </th>
+
+                    </tr>
+                    <tr>
+                        <th
+                            style={{
+                                userSelect: "none",
+                                cursor: "context-menu"
+                            }}>
+                            Sample:
+                        </th>
+                        <th
+                            style={{
+                                display: "flex",
+                                flexDirection: "row"
+                            }}
+                        >
+                            <a
+                                style={{
+                                    padding: "0 0 0 0",
+                                    marginLeft: "5px",
+                                    userSelect: "none"
+                                }}
+
+                            >
+                                {sample}
+                            </a>
+                            <FontAwesomeIcon icon={faCaretUp} style={{ marginLeft: "10px", verticalAlign: "center" }}
+                                onClick={(e) => {
+                                    if (sample >= 3) {
+                                        setsample(3)
+                                    }
+                                    else {
+                                        setsample(sample + 1)
+                                    }
+                                }}
+                            />
+                            <FontAwesomeIcon icon={faCaretDown} style={{ marginLeft: "10px", verticalAlign: "center" }}
+                                onClick={(e) => {
+                                    if (sample <= 0) {
+                                        setsample(0)
+                                    }
+                                    else {
+                                        setsample(sample - 1)
+                                    }
+                                }}
+                            />
+                        </th>
+                    </tr>
+                    <tr>
+                        <th
+                            style={{
+                                userSelect: "none",
+                                cursor: "context-menu"
+                            }}>
+
+                        </th>
+                        <th>
+                            {
+                                Array(sample).fill(0).map((e: any, index: number) => {
+                                    return (
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                justifyContent: "space-around",
+                                                width: "500px",
+                                                marginBottom: "15px"
+                                            }}
+                                        >
+                                            <textarea
+                                                id={`sample input ${index + 1}`}
+                                                onInput={(e) => {
+                                                    console.log(e.currentTarget.value)
+                                                    e.currentTarget.title = e.currentTarget.value
+                                                }}
+                                                style={{
+                                                    backgroundColor: color[theme].background,
+                                                    color: color[theme].font
+                                                }}
+                                            />
+                                            <textarea
+                                                id={`sample output ${index + 1}`}
+                                                onInput={(e) => {
+                                                    console.log(e.currentTarget.value)
+                                                    e.currentTarget.title = e.currentTarget.value
+                                                }}
+                                                style={{
+                                                    backgroundColor: color[theme].background,
+                                                    color: color[theme].font
+                                                }}
+                                            />
+                                        </div>
+                                    )
+                                })
+                            }
+                        </th>
+
+                    </tr>
+                    <tr>
+                        <th
+                            style={{
+                                userSelect: "none",
+                                cursor: "context-menu"
+                            }}>
+                            Subtask:
+                        </th>
+                        <th
+                            style={{
+                                display: "flex",
+                                flexDirection: "row"
+                            }}
+                        >
+                            <a
+                                style={{
+                                    padding: "0 0 0 0",
+                                    marginLeft: "5px",
+                                    userSelect: "none"
+                                }}
+
+                            >
+                                {subtask}
+                            </a>
+                            <FontAwesomeIcon icon={faCaretUp} style={{ marginLeft: "10px", verticalAlign: "center" }}
+                                onClick={(e) => {
+                                    if (subtask >= 4) {
+                                        setsubtask(4)
+                                    }
+                                    else {
+                                        setsubtask(subtask + 1)
+                                    }
+                                }}
+                            />
+                            <FontAwesomeIcon icon={faCaretDown} style={{ marginLeft: "10px", verticalAlign: "center" }}
+                                onClick={(e) => {
+                                    if (subtask <= 0) {
+                                        setsubtask(0)
+                                    }
+                                    else {
+                                        setsubtask(subtask - 1)
+                                    }
+                                }}
+                            />
+                        </th>
+                    </tr>
+
+                    <tr>
+                        <th>
+
+                        </th>
+                        <th>
+                            {
+                                Array(subtask).fill(0).map((e: any, index: number) => {
+                                    return (
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                justifyContent: "space-around",
+                                                width: "500px",
+                                                marginBottom: "15px"
+                                            }}
+                                        >
+                                            <textarea
+                                                id={`subtask ${index + 1}`}
+                                                onInput={(e) => {
+                                                    console.log(e.currentTarget.value)
+                                                    e.currentTarget.title = e.currentTarget.value
+                                                }}
+                                                style={{
+                                                    backgroundColor: color[theme].background,
+                                                    color: color[theme].font
+                                                }}
+                                            />
+                                            <textarea
+                                                id={`subtask ${index + 1}`}
+                                                onInput={(e) => {
+                                                    console.log(e.currentTarget.value)
+                                                    e.currentTarget.title = e.currentTarget.value
+                                                }}
+                                                style={{
+                                                    backgroundColor: color[theme].background,
+                                                    color: color[theme].font
+                                                }}
+                                            />
+                                        </div>
+                                    )
+                                })
+                            }
+                        </th>
+
+                    </tr>
+                </table>
+
             </div>
 
             <div style={{ paddingTop: "10px" }}>

@@ -11,7 +11,8 @@ import { About } from "./about.tsx";
 import { Verify_user } from "./verify.tsx";
 import { ForgotPassword } from "./user/forgot_password.tsx";
 import { Problems_info as Problems } from "./problems/problems.tsx";
-import { Problem } from "./problem/problem.tsx";
+import { Problem } from "./problem/index.tsx";
+import { Submissions } from "./submissions/index.tsx";
 
 export function Home() {
     const url = geturl();
@@ -77,6 +78,11 @@ export function Home() {
     else if (url[0] == "problem") {
         return (
             <Problem />
+        )
+    }
+    else if (url[0] == "submissions") {
+        return (
+            <Submissions />
         )
     }
     else {
