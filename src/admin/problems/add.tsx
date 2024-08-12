@@ -63,7 +63,6 @@ export function Add_Problems() {
 
     //body
     const [data, setdata] = useState("");
-    const [html, sethtml] = useState("");
 
     // points
     const [points, setpoints] = useState(0);
@@ -108,19 +107,7 @@ export function Add_Problems() {
     const [datacheck, checkdata] = useState(false);
     const [timecheck, checktime] = useState(false);
 
-
-
-
     const [publish, setpublish] = useState("")
-
-
-    useEffect(() => {
-        const lmao = document.getElementById("editorr");
-
-        if (lmao != null && lmao.innerHTML == "") {
-            lmao.innerHTML = html
-        }
-    })
 
     const [save, setsave] = useState(false)
     useEffect(() => {
