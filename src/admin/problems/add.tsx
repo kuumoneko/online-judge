@@ -100,18 +100,107 @@ export function Add_Problems() {
         setallowed_language(temping)
     }, [timeLimit, memoryLimit])
 
-
-
-    // problem data
-    const [Titlecheck, checktit] = useState(false);
-    const [datacheck, checkdata] = useState(false);
-    const [timecheck, checktime] = useState(false);
-
     const [publish, setpublish] = useState("")
 
     const [save, setsave] = useState(false)
     useEffect(() => {
         async function lmao() {
+            const input_limits = Array.from((document.getElementById("input limit") as HTMLElement).childNodes)
+            const sample_limits = Array.from((document.getElementById("sample input") as HTMLElement).childNodes)
+            const subtasks_limits = Array.from((document.getElementById("subtask") as HTMLElement).childNodes)
+
+            console.log(input_limits)
+            console.log(sample_limits)
+            console.log(subtasks_limits)
+
+            if (input_limits.length > 0) {
+                console.log(
+                    input_limits
+                        .map((input_limit_div) => {
+                            return Array.from(input_limit_div.childNodes)
+                        })
+                        .map((input_limit_div) => {
+                            return {
+                                min: (input_limit_div.filter((e) => {
+                                    return (e as HTMLElement).id.includes("min value")
+                                })[0] as HTMLInputElement).title || "",
+                                key: (input_limit_div.filter((e) => {
+                                    return (e as HTMLElement).id.includes("key")
+                                })[0] as HTMLInputElement).title,
+                                max: (input_limit_div.filter((e) => {
+                                    return (e as HTMLElement).id.includes("max value")
+                                })[0] as HTMLInputElement).title,
+                            }
+                        })
+                )
+            }
+            if (sample_limits.length > 0) {
+
+                console.log(
+                    sample_limits
+                        .map((sample_limit_div) => {
+                            return Array.from(sample_limit_div.childNodes)
+                        })
+                        .map((sample_limit_div) => {
+                            return {
+                                input: (sample_limit_div.filter((e) => {
+                                    return (e as HTMLElement).id.includes("sample input ")
+                                })[0] as HTMLInputElement).title,
+                                output: (sample_limit_div.filter((e) => {
+                                    return (e as HTMLElement).id.includes("sample output ")
+                                })[0] as HTMLInputElement).title,
+                            }
+                        })
+                )
+            }
+            if (subtasks_limits.length > 0) {
+
+                console.log(
+                    subtasks_limits
+                        .map((subtask_div) => {
+                            return Array.from(subtask_div.childNodes)
+                        })
+                        .map((subtask_div) => {
+                            return {
+                                percent: (subtask_div.filter((e) => {
+                                    return (e as HTMLElement).id.includes("input") == false
+                                })[0] as HTMLInputElement).title,
+                                // get all div that has input limit per subtask
+                                limit: Array
+                                    .from(
+                                        subtask_div
+                                            .filter((e) => {
+                                                return (e as HTMLElement).id.includes("input")
+                                            })
+                                        [0]
+                                            .childNodes
+                                    )
+                                    .map((input_limit_div) => {
+                                        return Array.from(input_limit_div.childNodes)
+                                    })
+                                    .map((input_limit_div) => {
+                                        return {
+                                            min: (input_limit_div.filter((e) => {
+                                                return (e as HTMLElement).id.includes("min value")
+                                            })[0] as HTMLInputElement).title || "",
+                                            key: (input_limit_div.filter((e) => {
+                                                return (e as HTMLElement).id.includes("key")
+                                            })[0] as HTMLInputElement).value,
+                                            max: (input_limit_div.filter((e) => {
+                                                return (e as HTMLElement).id.includes("max value")
+                                            })[0] as HTMLInputElement).title,
+                                        }
+                                    })
+                                ,
+                            }
+                        })
+                )
+
+            }
+
+            setsave(false)
+
+            return;
 
             // console.log("lmao")
             // console.log(`Name: ${name}`);
@@ -1139,7 +1228,9 @@ export function Add_Problems() {
                             }}>
 
                         </th>
-                        <th>
+                        <th
+                            id="sample input"
+                        >
                             {
                                 Array(sample).fill(0).map((e: any, index: number) => {
                                     return (
@@ -1232,7 +1323,9 @@ export function Add_Problems() {
                         <th>
 
                         </th>
-                        <th>
+                        <th
+                            id="subtask"
+                        >
                             {
                                 subtask_UI
                             }
