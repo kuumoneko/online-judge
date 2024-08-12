@@ -1,5 +1,6 @@
 
 import React, { useEffect, useRef, useState } from "react";
+import { renderToString } from "react-dom/server"
 import { Group } from "type";
 import { getdata, all_language } from "ulti";
 import { color } from "color";
@@ -34,17 +35,17 @@ export function Add_Problems() {
                 return setusers([])
             }
 
-            const searchmode: any = {
-                mode: "username",
-            }
-            if (search.includes("\"")) {
-                searchmode.search = search.split("\"")[1]
-            }
-            else {
-                searchmode.find = search
+            // const searchmode: any = {
+            //     mode: "username",
+            // }
+            // if (search.includes("\"")) {
+            //     searchmode.search = search.split("\"")[1]
+            // }
+            // else {
+            //     searchmode.find = search
 
-            }
-            const res = await getdata("sort", "users", { mode: "username", search: searchmode, reverse: true, page: 1, lineperpage: 5 })
+            // }
+            const res = await getdata("sort", "users", { mode: "username", search: search, reverse: true, page: 1, lineperpage: 5 })
 
             if (res == undefined) {
                 return setusers([])
@@ -187,6 +188,163 @@ export function Add_Problems() {
         if (save == true)
             lmao();
     }, [save])
+
+    const [subtask_UI, setsubtask_UI] = useState(<></>)
+    function checking() {
+        setsubtask_UI(
+            <>
+                {
+                    Array(subtask).fill(0).map((e: any, index: number) => {
+                        return (
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    // justifyContent: "space-around",
+                                    width: "500px",
+                                    marginBottom: "15px"
+                                }}
+                            >
+                                <input
+                                    id={`subtask ${index + 1}`}
+                                    onInput={(e) => {
+                                        console.log(e.currentTarget.value)
+                                        e.currentTarget.title = e.currentTarget.value
+                                    }}
+                                    style={{
+                                        backgroundColor: color[theme].background,
+                                        color: color[theme].font,
+                                        maxHeight: "20px",
+                                        maxWidth: "35px",
+                                        paddingLeft: "5px"
+                                    }}
+                                />
+                                <a>
+                                    %:
+                                </a>
+                                <div
+                                    id={`subtask input ${index + 1}`}
+                                >
+
+                                    {
+                                        Array.from((document.getElementById("input limit") as HTMLElement).childNodes).map((input_limit) => {
+                                            return (
+                                                <div
+                                                    style={{
+                                                        marginLeft: "5px",
+                                                        marginBottom: "10px",
+                                                        display: "flex"
+                                                    }}
+                                                >
+                                                    {
+                                                        Array.from(input_limit.childNodes).filter((child) => (child as HTMLHtmlElement).localName == "input").map((childd) => {
+                                                            const id = (childd as HTMLElement).id;
+                                                            if (id.includes("min value") && (childd as HTMLInputElement).title != "") {
+                                                                return (
+                                                                    <>
+                                                                        <input
+                                                                            type="text"
+                                                                            id={`subtask ${index + 1} min value ${id.split("min value ")[1]}`}
+                                                                            style={{
+                                                                                backgroundColor: color[theme].background,
+                                                                                color: color[theme].font,
+                                                                                maxHeight: "20px",
+                                                                            }}
+                                                                            onChange={(e) => {
+                                                                                e.currentTarget.title = e.currentTarget.value;
+                                                                                if (Number(e.currentTarget.value) < Number((childd as HTMLInputElement).title)) {
+                                                                                    // alert(`The max value of subtask ${index + 1}`)
+                                                                                    e.currentTarget.value = (childd as HTMLInputElement).title
+                                                                                }
+                                                                            }}
+                                                                        />
+
+                                                                        <a
+                                                                            style={{
+                                                                                display: "flex",
+                                                                                alignItems: "center"
+                                                                            }}
+                                                                        >
+                                                                            {"<="}
+                                                                        </a>
+
+                                                                    </>
+                                                                )
+                                                            }
+
+                                                            if (id.includes("max value")) {
+                                                                return (
+                                                                    <>
+
+                                                                        <a
+                                                                            style={{
+                                                                                display: "flex",
+                                                                                alignItems: "center"
+                                                                            }}
+                                                                        >
+                                                                            {"<="}
+                                                                        </a>
+
+                                                                        <input
+                                                                            type="text"
+                                                                            id={`subtask ${index + 1} max value ${id.split("max value ")[1]}`}
+                                                                            style={{
+                                                                                backgroundColor: color[theme].background,
+                                                                                color: color[theme].font,
+                                                                                maxHeight: "20px",
+                                                                            }}
+                                                                            onInput={(e) => {
+                                                                                e.currentTarget.title = e.currentTarget.value;
+                                                                                if (Number(e.currentTarget.value) > Number((childd as HTMLInputElement).title)) {
+                                                                                    // alert(`The max value of subtask ${index + 1}`)
+                                                                                    e.currentTarget.value = (childd as HTMLInputElement).title
+                                                                                }
+                                                                            }}
+                                                                        />
+                                                                    </>
+                                                                )
+                                                            }
+
+                                                            if (id.includes("key")) {
+                                                                return (
+                                                                    <input
+                                                                        type="text"
+                                                                        id={`subtask ${index + 1} key ${id.split("key ")[1]}`}
+                                                                        disabled={true}
+                                                                        value={(childd as HTMLInputElement).title}
+                                                                        style={{
+                                                                            backgroundColor: color[theme].background,
+                                                                            color: color[theme].font,
+                                                                            maxHeight: "20px",
+                                                                            maxWidth: `${(childd as HTMLInputElement).title.length * 5 + 35}px`
+                                                                        }}
+                                                                        onChange={(e) => {
+                                                                            e.currentTarget.title = e.currentTarget.value;
+                                                                        }}
+                                                                    />
+                                                                )
+                                                            }
+
+                                                        })
+                                                    }
+                                                </div>
+                                            )
+                                        })
+
+                                    }
+
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+            </>
+        )
+    }
+
+    useEffect(() => {
+        checking();
+    })
 
     const [allGroups, setAllGroups] = useState([])
     const [GroupOptions, setGroupsOptions] = useState(<></>)
@@ -859,7 +1017,9 @@ export function Add_Problems() {
                             }}>
 
                         </th>
-                        <th>
+                        <th
+                            id="input limit"
+                        >
                             {
                                 Array(inputlimt).fill(0).map((e: any, index: number) => {
                                     return (
@@ -872,16 +1032,19 @@ export function Add_Problems() {
                                                 marginBottom: "15px"
                                             }}
                                         >
-                                            <textarea
+                                            <input
                                                 id={`min value ${index + 1}`}
-                                                onInput={(e) => {
+                                                onChange={(e) => {
+                                                    e.preventDefault();
                                                     console.log(e.currentTarget.value)
                                                     e.currentTarget.title = e.currentTarget.value
+                                                    checking();
                                                 }}
                                                 style={{
                                                     backgroundColor: color[theme].background,
                                                     color: color[theme].font,
-                                                    width: "150px"
+                                                    width: "150px",
+                                                    paddingLeft: "5px"
                                                 }}
                                             />
                                             <a
@@ -892,16 +1055,19 @@ export function Add_Problems() {
                                             >
                                                 {"<="}
                                             </a>
-                                            <textarea
+                                            <input
                                                 id={`key ${index + 1}`}
-                                                onInput={(e) => {
+                                                onChange={(e) => {
+                                                    e.preventDefault();
                                                     console.log(e.currentTarget.value)
                                                     e.currentTarget.title = e.currentTarget.value
+                                                    checking();
                                                 }}
                                                 style={{
                                                     backgroundColor: color[theme].background,
                                                     color: color[theme].font,
-                                                    width: "150px"
+                                                    width: "150px",
+                                                    paddingLeft: "5px"
                                                 }}
                                             />
                                             <a style={{
@@ -910,16 +1076,19 @@ export function Add_Problems() {
                                             }}>
                                                 {"<="}
                                             </a>
-                                            <textarea
+                                            <input
                                                 id={`max value ${index + 1}`}
-                                                onInput={(e) => {
+                                                onChange={(e) => {
+                                                    e.preventDefault();
                                                     console.log(e.currentTarget.value)
                                                     e.currentTarget.title = e.currentTarget.value
+                                                    checking();
                                                 }}
                                                 style={{
                                                     backgroundColor: color[theme].background,
                                                     color: color[theme].font,
-                                                    width: "150px"
+                                                    width: "150px",
+                                                    paddingLeft: "5px"
                                                 }}
                                             />
                                         </div>
@@ -1078,42 +1247,7 @@ export function Add_Problems() {
                         </th>
                         <th>
                             {
-                                Array(subtask).fill(0).map((e: any, index: number) => {
-                                    return (
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                flexDirection: "row",
-                                                justifyContent: "space-around",
-                                                width: "500px",
-                                                marginBottom: "15px"
-                                            }}
-                                        >
-                                            <textarea
-                                                id={`subtask ${index + 1}`}
-                                                onInput={(e) => {
-                                                    console.log(e.currentTarget.value)
-                                                    e.currentTarget.title = e.currentTarget.value
-                                                }}
-                                                style={{
-                                                    backgroundColor: color[theme].background,
-                                                    color: color[theme].font
-                                                }}
-                                            />
-                                            <textarea
-                                                id={`subtask ${index + 1}`}
-                                                onInput={(e) => {
-                                                    console.log(e.currentTarget.value)
-                                                    e.currentTarget.title = e.currentTarget.value
-                                                }}
-                                                style={{
-                                                    backgroundColor: color[theme].background,
-                                                    color: color[theme].font
-                                                }}
-                                            />
-                                        </div>
-                                    )
-                                })
+                                subtask_UI
                             }
                         </th>
 

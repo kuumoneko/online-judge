@@ -56,7 +56,7 @@ export function sort_users(mode: string, search: string, IsReverse: any) {
         const a = temping.filter((user: User) => user.username == search || user.fullname == search);
         const b = temping.filter((user: User) => (user.username as string).includes(search) || (user.fullname as string).includes(search));
 
-        if (b == a) {
+        if (b.length == a.length && a[0].username == b[0].username) {
             return temping.filter((user: User) => user.username == search || user.fullname == search)
         }
         return [
