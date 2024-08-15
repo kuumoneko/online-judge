@@ -76,6 +76,10 @@ export interface Problems {
         error: string
     },
     isPrivate: boolean,
+    private: {
+        nani: boolean,
+        groups: string[]
+    },
     groups: string[],
     types: string[],
     points: number,

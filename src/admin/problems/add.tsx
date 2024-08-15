@@ -1,14 +1,12 @@
 
-import React, { useEffect, useRef, useState } from "react";
-import { renderToString } from "react-dom/server"
-import { Group } from "type";
+import React, { useEffect, useState } from "react";
+import { Group, ProblemsGroup, ProblemsType } from "type";
 import { getdata, all_language } from "ulti";
 import { color } from "color";
 import { faPlus, faUserMinus, faUserPlus, faCaretUp, faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
 import { Editor } from "editor";
-import { input } from '../../../test/index';
 export function Add_Problems() {
 
     const theme = Cookies.get("theme") as "dark" | "light";
@@ -18,6 +16,8 @@ export function Add_Problems() {
     const [isPrivate, setPrivate] = useState(false);
     const [isPublished, setPublished] = useState(false)
     const [groups, setgroups] = useState([""]);
+    const [problem_types, setproblem_types] = useState([""]);
+    const [problem_groups, setproblem_groups] = useState([""]);
 
     // host
     const [search, setsearch] = useState("")
@@ -34,17 +34,6 @@ export function Add_Problems() {
             if (search == "") {
                 return setusers([])
             }
-
-            // const searchmode: any = {
-            //     mode: "username",
-            // }
-            // if (search.includes("\"")) {
-            //     searchmode.search = search.split("\"")[1]
-            // }
-            // else {
-            //     searchmode.find = search
-
-            // }
             const res = await getdata("sort", "users", { mode: "username", search: search, reverse: true, page: 1, lineperpage: 5 })
 
             if (res == undefined) {
@@ -53,7 +42,7 @@ export function Add_Problems() {
 
             setusers((res.data == undefined) ? [res] : res.data.data.map((item: any) => { return item }))
 
-
+            // setsearch("")
         }
         lmao();
     }, [search])
@@ -70,6 +59,7 @@ export function Add_Problems() {
     // limit
     const [timeLimit, setTimeLimit] = useState(1);
     const [memoryLimit, setMemoryLimit] = useState(512);
+
     const [allowed_language, setallowed_language] = useState(all_language.map((item: string) => {
         return {
             id: item,
@@ -109,21 +99,19 @@ export function Add_Problems() {
             const sample_limits = Array.from((document.getElementById("sample input") as HTMLElement).childNodes)
             const subtasks_limits = Array.from((document.getElementById("subtask") as HTMLElement).childNodes)
 
-            console.log(input_limits)
-            console.log(sample_limits)
-            console.log(subtasks_limits)
-
-            if (input_limits.length > 0) {
-                console.log(
+            const input_limit =
+                (input_limits.length > 0)
+                    ?
                     input_limits
                         .map((input_limit_div) => {
                             return Array.from(input_limit_div.childNodes)
                         })
+                        // return a list of {minvalue, key, max value}
                         .map((input_limit_div) => {
                             return {
                                 min: (input_limit_div.filter((e) => {
                                     return (e as HTMLElement).id.includes("min value")
-                                })[0] as HTMLInputElement).title || "",
+                                })[0] as HTMLInputElement)?.title || "",
                                 key: (input_limit_div.filter((e) => {
                                     return (e as HTMLElement).id.includes("key")
                                 })[0] as HTMLInputElement).title,
@@ -132,15 +120,16 @@ export function Add_Problems() {
                                 })[0] as HTMLInputElement).title,
                             }
                         })
-                )
-            }
-            if (sample_limits.length > 0) {
+                    : undefined;
 
-                console.log(
+            const sample_limit =
+                (input_limits.length > 0)
+                    ?
                     sample_limits
                         .map((sample_limit_div) => {
                             return Array.from(sample_limit_div.childNodes)
                         })
+                        // return a list of {input, output}
                         .map((sample_limit_div) => {
                             return {
                                 input: (sample_limit_div.filter((e) => {
@@ -151,11 +140,11 @@ export function Add_Problems() {
                                 })[0] as HTMLInputElement).title,
                             }
                         })
-                )
-            }
-            if (subtasks_limits.length > 0) {
+                    : undefined;
 
-                console.log(
+            const subtask =
+                (subtasks_limits.length > 0)
+                    ?
                     subtasks_limits
                         .map((subtask_div) => {
                             return Array.from(subtask_div.childNodes)
@@ -178,11 +167,12 @@ export function Add_Problems() {
                                     .map((input_limit_div) => {
                                         return Array.from(input_limit_div.childNodes)
                                     })
+                                    // return a list of {min value , key , max value}
                                     .map((input_limit_div) => {
                                         return {
                                             min: (input_limit_div.filter((e) => {
                                                 return (e as HTMLElement).id.includes("min value")
-                                            })[0] as HTMLInputElement).title || "",
+                                            })[0] as HTMLInputElement)?.title || "",
                                             key: (input_limit_div.filter((e) => {
                                                 return (e as HTMLElement).id.includes("key")
                                             })[0] as HTMLInputElement).value,
@@ -194,13 +184,11 @@ export function Add_Problems() {
                                 ,
                             }
                         })
-                )
+                    : undefined
 
-            }
 
-            setsave(false)
 
-            return;
+
 
             // console.log("lmao")
             // console.log(`Name: ${name}`);
@@ -213,15 +201,70 @@ export function Add_Problems() {
             // console.log(`Time limit: ${timeLimit}`)
             // console.log(`Memory limit: ${memoryLimit}`)
 
-            // Object.keys(allowed_language).forEach((item, index) => {
-            //     console.log(`${index + 1}. ${item}: ${allowed_language[item].time.data} , ${allowed_language[item].memory.data}`)
+            // allowed_language.forEach((item, index) => {
+            //     console.log(`${index + 1}. ${item.id}: ${item.time.data} , ${item.memory.data}`)
             // })
 
             // console.log(`Source: ${soucre}`)
 
-            // console.log(`Body: ${data}`)
-            // console.log(host.slice(1, host.length))
+            // console.log(`Body: ${document.getElementById("editorr")?.title}`)
+            // console.log(`Host: ${host.slice(1).join(", ")}`)
 
+
+            // console.log(input_limit)
+            // console.log(sample_limit)
+            // console.log(subtask)
+
+            setsave(false)
+
+            const temping = {
+                id: name,
+                name: Title,
+                host: host.slice(1),
+                publishTime: new Date(publish).getTime(),
+
+                SubmissionStatus: {
+                    AC: 0,
+                    WA: 0,
+                    RTE: 0,
+                    IR: 0,
+                    OLE: 0,
+                    MLE: 0,
+                    TLE: 0,
+                    IE: 0
+                },
+                isPublished: {
+                    nani: isPublished,
+                    error: ""
+                },
+                private: {
+                    nani: isPrivate,
+                    groups: groups
+                },
+                groups: problem_groups,
+                types: problem_types,
+                points: 1,
+                def_limit: {
+                    time: 1,
+                    memory: 1
+                },
+                specificLanguage: {},
+                languages: [],
+                body: {
+                    topic: "string",
+                    sample: [],
+                    inputLimit: [],
+                    subTasks: [],
+                    explanation: [],
+                    support: {
+                        nani: true,
+                        body: "string"
+                    }
+                }
+            }
+            // console.log(host.slice(1, host.length))
+            console.log(temping)
+            return;
             const temp: any = {}
 
             Object.keys(allowed_language).forEach((item: any) => {
@@ -233,33 +276,11 @@ export function Add_Problems() {
 
 
 
-            const res = await getdata("post", "problems", {
-                name: name,
-                title: Title,
-                host: host.slice(1, host.length),
-                publish_time: (isPublished == false) ? publish : "",
-                isPublished: isPublished,
-                def_limit: {
-                    time: timeLimit,
-                    memory: memoryLimit
-                },
-                isPrivate: isPrivate,
-                groups: (isPrivate == true) ? groups : undefined,
-                points: points,
-                limit: temp,
-                source: soucre ? soucre : "None",
-                avaiable: false,
-                body: document.getElementById("editorr")?.innerText,
-                hint: {
-                    nani: false,
-                    data: ""
-                }
-
-            })
+            const res = await getdata("post", "problems", temping)
             console.log(res)
-            if (res.status == 200) {
-                window.location.href = "/admin/problems"
-            }
+            // if (res.status == 200) {
+            //     window.location.href = "/admin/problems"
+            // }
         }
         if (save == true)
             lmao();
@@ -284,7 +305,7 @@ export function Add_Problems() {
                                 <input
                                     id={`subtask ${index + 1}`}
                                     onInput={(e) => {
-                                        console.log(e.currentTarget.value)
+                                        // console.log(e.currentTarget.value)
                                         e.currentTarget.title = e.currentTarget.value
                                     }}
                                     style={{
@@ -424,10 +445,19 @@ export function Add_Problems() {
 
     const [allGroups, setAllGroups] = useState([])
     const [GroupOptions, setGroupsOptions] = useState(<></>)
+
+    const [allProblem_Types, setallProblem_Types] = useState([])
+    const [Problem_TypeOptions, setProblem_TypesOptions] = useState(<></>)
+
+    const [allProblem_Groups, setallProblem_Groups] = useState([])
+    const [Problem_GroupOptions, setProblem_GroupsOptions] = useState(<></>)
+
     useEffect(() => {
-        async function lmao() {
+
+        async function getgroup() {
             const res = await getdata("get", "groups", "all");
-            setAllGroups(res.data)
+            // console.log(res.data)
+            setAllGroups(res.data.data)
             const temping = (
                 <>
                     {
@@ -446,6 +476,60 @@ export function Add_Problems() {
             )
 
             setGroupsOptions(temping)
+        }
+
+        async function gettype() {
+            const res = await getdata("get", "problem_types", "all");
+            // console.log(res.data)
+            setallProblem_Types(res.data.data)
+            const temping = (
+                <>
+                    {
+                        res.data.data.map((group: ProblemsType) => {
+                            return (
+                                <option value={group.name as string} style={{
+                                    background: color[theme].background,
+                                    color: color[theme].font
+                                }}>
+                                    {group.name}
+                                </option>
+                            )
+                        })
+                    }
+                </>
+            )
+
+            setProblem_TypesOptions(temping)
+        }
+
+        async function get_problem_group() {
+            const res = await getdata("get", "problem_groups", "all");
+            // console.log(res.data)
+            setallProblem_Groups(res.data.data)
+            const temping = (
+                <>
+                    {
+                        res.data.data.map((group: ProblemsGroup) => {
+                            return (
+                                <option value={group.name as string} style={{
+                                    background: color[theme].background,
+                                    color: color[theme].font
+                                }}>
+                                    {group.name}
+                                </option>
+                            )
+                        })
+                    }
+                </>
+            )
+
+            setProblem_GroupsOptions(temping)
+        }
+
+        async function lmao() {
+            await getgroup();
+            await get_problem_group();
+            await gettype();
         }
         lmao()
 
@@ -468,7 +552,7 @@ export function Add_Problems() {
                 </tr>
                 <tr>
                     <th>
-                        Name :
+                        ID:
                     </th>
                     <th>
                         <input style={{
@@ -513,6 +597,7 @@ export function Add_Problems() {
                             }}
                             type="text"
                             placeholder="Add host"
+                            value={search}
                             onChange={(e) => {
                                 e.preventDefault();
                                 setsearch(e.target.value)
@@ -528,6 +613,7 @@ export function Add_Problems() {
                                                 e.preventDefault();
                                                 if (host.findIndex((itemm) => itemm == item.username) == -1) {
                                                     sethost([...host, item.username])
+                                                    setsearch("")
                                                 }
                                             }}
                                             style={{
@@ -640,7 +726,12 @@ export function Add_Problems() {
                     <th>
                         <li style={{ display: "flex", flexDirection: "row" }}
                             onClick={(e) => {
-                                setPrivate(((e.target as HTMLElement).id == "yes") ? true : false)
+                                const temp = ((e.target as HTMLElement).id == "yes") ? true : false
+                                setPrivate(temp);
+                                if (temp == false) {
+                                    setgroups([])
+                                }
+
                             }}>
                             <ul>
                                 <input name="isPrivate" type="radio" id="yes" checked={isPrivate == true} />
@@ -697,6 +788,9 @@ export function Add_Problems() {
                         </datalist>
                         <FontAwesomeIcon icon={faPlus} style={{ paddingLeft: "5px" }} onClick={(e) => {
                             e.preventDefault();
+                            if (!isPrivate) {
+                                return;
+                            }
                             window.open("/admin/groups/add", "test", 'width=1337, height=614, left=24, top=24, scrollbars, resizable')
                         }} />
                     </th>
@@ -715,7 +809,111 @@ export function Add_Problems() {
 
                 <tr>
                     <th>
-                        Types:
+                        Problem types:
+                    </th>
+                    <th style={{ display: "flex" }}>
+                        <input list="problem types list" style={{
+                            background: color[theme].background,
+                            color: color[theme].font
+                        }}
+                            placeholder="Add/Delete Problem types"
+                            onChange={(e) => {
+                                e.preventDefault();
+                                const value = (e.target as HTMLInputElement).value
+                                // console.log()
+
+                                const temp: string[] = [...groups];
+
+                                if (temp.find((item) => item == value) == undefined && allProblem_Types.find((item: ProblemsType) => item.name == value)) {
+                                    temp.push(value)
+                                }
+                                else if (temp.find((item) => item == value)) {
+                                    temp.splice(temp.findIndex((item) => item == value), 1)
+                                }
+
+                                setproblem_types(temp)
+                            }
+                            }
+                            value={""}
+                        />
+                        <datalist
+                            id="problem types list"
+                        >
+                            {Problem_TypeOptions}
+                        </datalist>
+                        <FontAwesomeIcon icon={faPlus} style={{ paddingLeft: "5px" }} onClick={(e) => {
+                            e.preventDefault();
+                            window.open("/admin/problems/types/add", "test", 'width=1337, height=614, left=24, top=24, scrollbars, resizable')
+                        }} />
+                    </th>
+                    <th>
+                        {
+                            problem_types.map((item: string) => {
+                                return (
+                                    <a>
+                                        {` ${item} `}
+                                    </a>
+                                )
+                            })
+                        }
+                    </th>
+                </tr>
+
+                <tr>
+                    <th>
+                        Problem groups:
+                    </th>
+                    <th style={{ display: "flex" }}>
+                        <input list="problem group list" style={{
+                            background: color[theme].background,
+                            color: color[theme].font
+                        }}
+                            placeholder="Add/Delete Problem groups"
+                            onChange={(e) => {
+                                e.preventDefault();
+                                const value = (e.target as HTMLInputElement).value
+                                // console.log()
+
+                                const temp: string[] = [...groups];
+
+                                if (temp.find((item) => item == value) == undefined && allProblem_Groups.find((item: ProblemsGroup) => item.name == value)) {
+                                    temp.push(value)
+                                }
+                                else if (temp.find((item) => item == value)) {
+                                    temp.splice(temp.findIndex((item) => item == value), 1)
+                                }
+
+                                setproblem_groups(temp)
+                            }
+                            }
+                            value={""}
+                        />
+                        <datalist
+                            id="problem group list"
+                        >
+                            {Problem_GroupOptions}
+                        </datalist>
+                        <FontAwesomeIcon icon={faPlus} style={{ paddingLeft: "5px" }} onClick={(e) => {
+                            e.preventDefault();
+                            window.open("/admin/problems/groups/add", "test", 'width=1337, height=614, left=24, top=24, scrollbars, resizable')
+                        }} />
+                    </th>
+                    <th>
+                        {
+                            problem_groups.map((item: string) => {
+                                return (
+                                    <a>
+                                        {` ${item} `}
+                                    </a>
+                                )
+                            })
+                        }
+                    </th>
+                </tr>
+
+                {/* <tr>
+                    <th>
+                        Problem Types:
                     </th>
                     <th>
                         <input
@@ -728,6 +926,23 @@ export function Add_Problems() {
                         />
                     </th>
                 </tr>
+
+                <tr>
+                    <th>
+                        Problem Groups:
+                    </th>
+                    <th>
+                        <input
+                            type="text"
+                            placeholder="Problem Group"
+                            style={{
+                                background: color[theme].background,
+                                color: color[theme].font
+                            }}
+                        />
+                    </th>
+                </tr> */}
+
                 {/* Create Input to enter point, default time and memory limit */}
                 <tr>
                     <th>
@@ -1030,10 +1245,9 @@ export function Add_Problems() {
             </table>
 
             <div>
-                <span>
+                <a className="add-page-title">
                     Body:
-                </span>
-
+                </a>
                 <Editor str={data} anything="editor" />
 
             </div>
@@ -1112,7 +1326,7 @@ export function Add_Problems() {
                                                 id={`min value ${index + 1}`}
                                                 onChange={(e) => {
                                                     e.preventDefault();
-                                                    console.log(e.currentTarget.value)
+                                                    // console.log(e.currentTarget.value)
                                                     e.currentTarget.title = e.currentTarget.value
                                                     checking();
                                                 }}
@@ -1135,7 +1349,7 @@ export function Add_Problems() {
                                                 id={`key ${index + 1}`}
                                                 onChange={(e) => {
                                                     e.preventDefault();
-                                                    console.log(e.currentTarget.value)
+                                                    // console.log(e.currentTarget.value)
                                                     e.currentTarget.title = e.currentTarget.value
                                                     checking();
                                                 }}
@@ -1156,7 +1370,7 @@ export function Add_Problems() {
                                                 id={`max value ${index + 1}`}
                                                 onChange={(e) => {
                                                     e.preventDefault();
-                                                    console.log(e.currentTarget.value)
+                                                    // console.log(e.currentTarget.value)
                                                     e.currentTarget.title = e.currentTarget.value
                                                     checking();
                                                 }}
@@ -1246,7 +1460,7 @@ export function Add_Problems() {
                                             <textarea
                                                 id={`sample input ${index + 1}`}
                                                 onInput={(e) => {
-                                                    console.log(e.currentTarget.value)
+                                                    // console.log(e.currentTarget.value)
                                                     e.currentTarget.title = e.currentTarget.value
                                                 }}
                                                 style={{
@@ -1257,7 +1471,7 @@ export function Add_Problems() {
                                             <textarea
                                                 id={`sample output ${index + 1}`}
                                                 onInput={(e) => {
-                                                    console.log(e.currentTarget.value)
+                                                    // console.log(e.currentTarget.value)
                                                     e.currentTarget.title = e.currentTarget.value
                                                 }}
                                                 style={{

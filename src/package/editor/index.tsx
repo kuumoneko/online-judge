@@ -380,7 +380,11 @@ export function Editor({ str = "", anything = "editor" }: { str?: string, anythi
     };
 
     return (
-        <div>
+        <div
+            style={{
+                marginTop: "10px"
+            }}
+        >
             {
                 anything == "editor" && (
                     <div

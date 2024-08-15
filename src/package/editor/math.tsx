@@ -12,9 +12,19 @@ export function Math({ line }: { line: string }) {
 
     useEffect(() => {
         const temp = document.getElementsByClassName("MJXc-display")
-        if (temp[0]) {
-            (temp[0] as HTMLElement).style.margin = "0 0";
-            (temp[0] as HTMLElement).style.padding = "0 5px";
+        if (temp.length > 0) {
+            Array.from(temp).forEach((e) => {
+                (e as HTMLElement).style.margin = "0 0";
+                (e as HTMLElement).style.padding = "0 5px";
+                (e as HTMLElement).style.display = "flex";
+                (e.parentNode as HTMLElement).style.display = "flex";
+
+                (e.parentNode as HTMLElement).style.alignItems = "flex-end"
+                // console.log()
+                // (e as HTMLElement).style.paddingTop = "5px";
+                // (e as HTMLElement).style.verticalAlign = "bottom"
+
+            })
         }
     })
 
