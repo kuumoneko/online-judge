@@ -64,7 +64,7 @@ export function Problem_Submit() {
 
     useEffect(() => {
         // It will auto format the string and add to div
-        after_effect(type)
+        after_effect(type, "editorr")
     }, [type])
 
     return (

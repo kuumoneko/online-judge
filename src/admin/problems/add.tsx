@@ -7,6 +7,7 @@ import { faPlus, faUserMinus, faUserPlus, faCaretUp, faCaretDown } from "@fortaw
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
 import { Editor } from "editor";
+import { Languages } from '../../package/enum/index';
 export function Add_Problems() {
 
     const theme = Cookies.get("theme") as "dark" | "light";
@@ -18,6 +19,7 @@ export function Add_Problems() {
     const [groups, setgroups] = useState([""]);
     const [problem_types, setproblem_types] = useState([""]);
     const [problem_groups, setproblem_groups] = useState([""]);
+    const [support, setsupport] = useState(false)
 
     // host
     const [search, setsearch] = useState("")
@@ -28,6 +30,7 @@ export function Add_Problems() {
     const [inputlimt, setinputlimt] = useState(0)
     const [sample, setsample] = useState(0);
     const [subtask, setsubtask] = useState(0);
+    const [explanation, setexplanation] = useState(0);
 
     useEffect(() => {
         async function lmao() {
@@ -98,6 +101,7 @@ export function Add_Problems() {
             const input_limits = Array.from((document.getElementById("input limit") as HTMLElement).childNodes)
             const sample_limits = Array.from((document.getElementById("sample input") as HTMLElement).childNodes)
             const subtasks_limits = Array.from((document.getElementById("subtask") as HTMLElement).childNodes)
+            const explanations = Array.from((document.getElementById("explanation") as HTMLElement).childNodes)
 
             const input_limit =
                 (input_limits.length > 0)
@@ -187,8 +191,21 @@ export function Add_Problems() {
                     : undefined
 
 
+            const explanationn =
+                (explanations.length > 0)
+                    ?
+                    explanations
+                        .map((explanation_div) => {
+                            return Array.from(explanation_div.childNodes)
+                        })
+                        .map((explanation_div) => {
+                            return (explanation_div[0] as HTMLElement).title
+                        })
+                    : undefined
 
-
+            // console.log(explanationn);
+            setsave(false)
+            // return;
 
             // console.log("lmao")
             // console.log(`Name: ${name}`);
@@ -211,11 +228,12 @@ export function Add_Problems() {
             // console.log(`Host: ${host.slice(1).join(", ")}`)
 
 
-            // console.log(input_limit)
-            // console.log(sample_limit)
-            // console.log(subtask)
+            console.log(input_limit)
+            console.log(sample_limit)
+            console.log(subtask)
+            console.log(explanationn);
 
-            setsave(false)
+
 
             const temping = {
                 id: name,
@@ -237,47 +255,60 @@ export function Add_Problems() {
                     nani: isPublished,
                     error: ""
                 },
+                folder: "",
                 private: {
                     nani: isPrivate,
-                    groups: groups
+                    groups: groups.slice(1)
                 },
-                groups: problem_groups,
-                types: problem_types,
-                points: 1,
+                groups: problem_groups.slice(1),
+                types: problem_types.slice(1),
+                points: points,
                 def_limit: {
-                    time: 1,
-                    memory: 1
+                    time: timeLimit,
+                    memory: memoryLimit
                 },
-                specificLanguage: {},
-                languages: [],
+                specificLanguage: allowed_language.reduce((acc: any, value: any) => {
+                    acc[value.id] = {
+                        time: value.time.data,
+                        memory: value.memory.data
+                    }
+
+                    return acc
+                }, {}),
+                languages: allowed_language.map((item) => item.id),
                 body: {
-                    topic: "string",
-                    sample: [],
-                    inputLimit: [],
-                    subTasks: [],
-                    explanation: [],
+                    topic: document.getElementById("editorr")?.title || "",
+                    sample: sample_limit,
+                    inputLimit: input_limit,
+                    subTasks: subtask,
+                    explanation: explanationn,
                     support: {
-                        nani: true,
-                        body: "string"
+                        nani: support,
+                        body: support ? document.getElementById("support_editor")?.title : ""
                     }
                 }
             }
             // console.log(host.slice(1, host.length))
             console.log(temping)
-            return;
-            const temp: any = {}
-
-            Object.keys(allowed_language).forEach((item: any) => {
-                temp[allowed_language[item].id] = {
-                    time: allowed_language[item].time.data,
-                    memory: allowed_language[item].memory.data
-                }
-            })
-
-
 
             const res = await getdata("post", "problems", temping)
             console.log(res)
+
+
+            return;
+            // const temp: any = {}
+
+            // Object.keys(allowed_language).forEach((item: any) => {
+            //     temp[allowed_language[item].id] = {
+            //         time: allowed_language[item].time.data,
+            //         memory: allowed_language[item].memory.data
+            //     }
+            // })
+
+
+
+            // const res = await getdata("post", "problems", temping)
+            // console.log(res)
             // if (res.status == 200) {
             //     window.location.href = "/admin/problems"
             // }
@@ -1546,8 +1577,115 @@ export function Add_Problems() {
                         </th>
 
                     </tr>
+
+                    <tr>
+                        <th
+                            style={{
+                                userSelect: "none",
+                                cursor: "context-menu"
+                            }}>
+                            Explanation:
+                        </th>
+                        <th
+                            style={{
+                                display: "flex",
+                                flexDirection: "row"
+                            }}
+                        >
+                            <a
+                                style={{
+                                    padding: "0 0 0 0",
+                                    marginLeft: "5px",
+                                    userSelect: "none"
+                                }}
+
+                            >
+                                {explanation}
+                            </a>
+                            <FontAwesomeIcon icon={faCaretUp} style={{ marginLeft: "10px", verticalAlign: "center" }}
+                                onClick={(e) => {
+                                    setexplanation(explanation + 1)
+                                }}
+                            />
+                            <FontAwesomeIcon icon={faCaretDown} style={{ marginLeft: "10px", verticalAlign: "center" }}
+                                onClick={(e) => {
+                                    if (explanation <= 0) {
+                                        setexplanation(0)
+                                    }
+                                    else {
+                                        setexplanation(explanation - 1)
+                                    }
+                                }}
+                            />
+                        </th>
+                    </tr>
+                    <tr>
+                        <th
+                            style={{
+                                userSelect: "none",
+                                cursor: "context-menu"
+                            }}>
+
+                        </th>
+                        <th
+                            id="explanation"
+                        >
+                            {
+                                Array(explanation).fill(0).map((e: any, index: number) => {
+                                    return (
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                justifyContent: "space-around",
+                                                width: "500px",
+                                                marginBottom: "15px"
+                                            }}
+                                        >
+                                            <textarea
+                                                id={`explanation ${index + 1}`}
+                                                onChange={(e) => {
+                                                    e.preventDefault();
+                                                    // console.log(e.currentTarget.value)
+                                                    e.currentTarget.title = e.currentTarget.value
+                                                    checking();
+                                                }}
+                                                style={{
+                                                    backgroundColor: color[theme].background,
+                                                    color: color[theme].font,
+                                                    width: "150px",
+                                                    paddingLeft: "5px"
+                                                }}
+                                            />
+                                        </div>
+                                    )
+                                })
+                            }
+                        </th>
+
+                    </tr>
+
                 </table>
 
+            </div>
+
+
+            <div>
+                <a>
+                    Support:
+                </a>
+                <input type="checkbox" style={{ marginLeft: "5px" }} checked={support} onChange={(e) => {
+                    setsupport(!support)
+                }} />
+
+
+                {
+                    support && (
+                        <div>
+                            <Editor str="" anything="editor" editor_id="support_editor" />
+                        </div>
+                    )
+                }
             </div>
 
             <div style={{ paddingTop: "10px" }}>

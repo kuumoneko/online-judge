@@ -60,7 +60,7 @@ export interface Problems {
     name: string,
     host: string[],
     publishTime: number,
-
+    folder: string,
     SubmissionStatus: {
         AC: number,
         WA: number,
@@ -88,7 +88,8 @@ export interface Problems {
         memory: number
     },
     specificLanguage: {},
-    languages: Languages[]
+    languages: Languages[],
+    source: string,
     body: {
         topic: string,
         sample: ProblemsSample[],

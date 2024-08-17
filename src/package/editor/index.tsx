@@ -120,9 +120,9 @@ function LineSelection(str: string, selectedString: string) {
         endLine,
     };
 }
-export function after_effect(str: string[]): void;
-export function after_effect(str: string): void;
-export function after_effect(str: string | string[]): void {
+export function after_effect(str: string[], editor_id?: string): void;
+export function after_effect(str: string, editor_id?: string): void;
+export function after_effect(str: string | string[], editor_id?: string): void {
     let temp: string[];
     if (typeof str == "string") {
         temp = str.split("\n");
@@ -132,7 +132,7 @@ export function after_effect(str: string | string[]): void {
 
     // console.log(temp)
 
-    const editor = document.getElementById("editorr");
+    const editor = document.getElementById(editor_id || "editorr");
     if (editor) {
         editor.innerHTML = temp
             .map((item) => {
@@ -184,7 +184,7 @@ export function after_effect(str: string | string[]): void {
     }
 }
 
-export function Editor({ str = "", anything = "editor" }: { str?: string, anything?: string }): JSX.Element {
+export function Editor({ str = "", anything = "editor", editor_id = "editorr" }: { str?: string, anything?: string, editor_id?: string }): JSX.Element {
     const [cursor, setcursor] = useState("");
     const [cursor_col, setcol] = useState(0);
     const [select, setselect] = useState("");
@@ -194,7 +194,7 @@ export function Editor({ str = "", anything = "editor" }: { str?: string, anythi
     const [paste_string, set_paste_string] = useState("")
 
     useEffect(() => {
-        after_effect(str);
+        after_effect(str, editor_id);
     }, [])
 
     const OnClick = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
@@ -233,7 +233,7 @@ export function Editor({ str = "", anything = "editor" }: { str?: string, anythi
 
             const res = temp.join("\n");
 
-            const contenteditableDiv = document.getElementById("editorr");
+            const contenteditableDiv = document.getElementById(editor_id);
             if (contenteditableDiv) {
                 contenteditableDiv.innerText = res;
                 settype(res);
@@ -295,14 +295,14 @@ export function Editor({ str = "", anything = "editor" }: { str?: string, anythi
                         }
                     }
 
-                    after_effect(tempp);
+                    after_effect(tempp, editor_id);
                     settype(tempp.join("\n"));
                 } else {
                     tempp[startLine] = tempp[startLine]
                         .split(select)
                         .join(adding + select + adding);
 
-                    after_effect(tempp);
+                    after_effect(tempp, editor_id);
                     settype(tempp.join("\n"));
                 }
                 // console.log(tempp)
@@ -337,7 +337,7 @@ export function Editor({ str = "", anything = "editor" }: { str?: string, anythi
                 const res = temp.join("\n");
 
                 settype(res);
-                after_effect(temp);
+                after_effect(temp, editor_id);
             }
         } else if (id == "code") {
         }
@@ -618,10 +618,19 @@ export function Editor({ str = "", anything = "editor" }: { str?: string, anythi
                                         className="profile-editor"
                                     >
                                         <div
-                                            id="editorr"
+                                            id={editor_id}
                                             spellCheck="false"
                                             contentEditable="true"
                                             title={type}
+                                            style={{
+                                                outline: "none",
+                                                marginTop: "10px",
+                                                marginLeft: "10px",
+                                                height: "90%",
+                                                width: "99%",
+                                                overflowX: "hidden",
+                                                overflowY: "scroll"
+                                            }}
                                             onInput={(e) => {
                                                 settype(e.currentTarget.innerText.replaceAll(/\n\n/g, "\n"));
                                                 setcursor(
@@ -633,6 +642,8 @@ export function Editor({ str = "", anything = "editor" }: { str?: string, anythi
                                                 if (paste_string != "") {
                                                     after_effect(
                                                         e.currentTarget.innerText.replaceAll(/\n\n/g, "\n")
+                                                        ,
+                                                        editor_id
                                                     );
                                                     try {
                                                         let temp = Array.from(e.currentTarget.childNodes)
@@ -714,10 +725,16 @@ export function Editor({ str = "", anything = "editor" }: { str?: string, anythi
                                     className="profile-editor"
                                 >
                                     <div
+                                        id={editor_id}
                                         style={{
-                                            height: "100%"
+                                            outline: "none",
+                                            marginTop: "10px",
+                                            marginLeft: "10px",
+                                            height: "100%",
+                                            width: "99%",
+                                            overflowX: "hidden",
+                                            overflowY: "scroll"
                                         }}
-                                        id="editorr"
                                         spellCheck="false"
                                         contentEditable="true"
                                         title={type}
@@ -731,7 +748,7 @@ export function Editor({ str = "", anything = "editor" }: { str?: string, anythi
 
                                             if (paste_string != "") {
                                                 after_effect(
-                                                    e.currentTarget.innerText.replaceAll(/\n\n/g, "\n")
+                                                    e.currentTarget.innerText.replaceAll(/\n\n/g, "\n"), editor_id
                                                 );
                                                 try {
                                                     let temp = Array.from(e.currentTarget.childNodes)
