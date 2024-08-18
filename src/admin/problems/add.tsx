@@ -7,7 +7,6 @@ import { faPlus, faUserMinus, faUserPlus, faCaretUp, faCaretDown } from "@fortaw
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
 import { Editor } from "editor";
-import { Languages } from '../../package/enum/index';
 export function Add_Problems() {
 
     const theme = Cookies.get("theme") as "dark" | "light";
@@ -203,30 +202,7 @@ export function Add_Problems() {
                         })
                     : undefined
 
-            // console.log(explanationn);
             setsave(false)
-            // return;
-
-            // console.log("lmao")
-            // console.log(`Name: ${name}`);
-            // console.log(`title: ${Title}`)
-            // console.log(`Publish time: ${publish}`)
-            // console.log(`Published: ${isPublished}`)
-            // console.log(`Private: ${isPrivate}`)
-            // console.log(`Groups: ${groups}`)
-            // console.log(`Points: ${points}`)
-            // console.log(`Time limit: ${timeLimit}`)
-            // console.log(`Memory limit: ${memoryLimit}`)
-
-            // allowed_language.forEach((item, index) => {
-            //     console.log(`${index + 1}. ${item.id}: ${item.time.data} , ${item.memory.data}`)
-            // })
-
-            // console.log(`Source: ${soucre}`)
-
-            // console.log(`Body: ${document.getElementById("editorr")?.title}`)
-            // console.log(`Host: ${host.slice(1).join(", ")}`)
-
 
             console.log(input_limit)
             console.log(sample_limit)
@@ -294,24 +270,10 @@ export function Add_Problems() {
             const res = await getdata("post", "problems", temping)
             console.log(res)
 
-
+            if (res.status == 200) {
+                window.location.href = "/admin/problems"
+            }
             return;
-            // const temp: any = {}
-
-            // Object.keys(allowed_language).forEach((item: any) => {
-            //     temp[allowed_language[item].id] = {
-            //         time: allowed_language[item].time.data,
-            //         memory: allowed_language[item].memory.data
-            //     }
-            // })
-
-
-
-            // const res = await getdata("post", "problems", temping)
-            // console.log(res)
-            // if (res.status == 200) {
-            //     window.location.href = "/admin/problems"
-            // }
         }
         if (save == true)
             lmao();

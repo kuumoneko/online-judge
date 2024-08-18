@@ -47,7 +47,11 @@ export function sort_problems(mode: string, search: {
     }
 
 
-    problems = problems.filter((problem: Problems) => problem.points >= search.point.min && problem.points <= search.point.max)
+    problems = problems.filter((problem: Problems) => problem.points >= search.point.min && problem.points <= search.point.max).filter((obj, index, self) =>
+        index === self.findIndex((t) => (
+            t.id === obj.id
+        ))
+    );
 
 
 
@@ -79,14 +83,13 @@ export function sort_problems(mode: string, search: {
             return temp
         })
 
-
         if (search.name == "all" || search.name == "") {
             return temping;
         }
         else {
             return [
                 ...temping.filter((problem: Problems) => problem.name.toLowerCase() == search.name.toLowerCase()),
-                ...temping.filter((problem: Problems) => problem.name.toLowerCase().includes(search.name.toLowerCase()))
+                ...temping.filter((problem: Problems) => problem.name.toLowerCase().includes(search.name.toLowerCase()) && problem.name.toLowerCase() != search.name.toLowerCase())
             ]
         }
 
