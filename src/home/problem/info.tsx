@@ -42,6 +42,7 @@ export function Problem_info() {
                         <ul>
                             {
                                 problem.body.inputLimit.map((item) => {
+                                    console.log(item)
                                     return (
                                         <li
                                             style={{
@@ -57,7 +58,7 @@ export function Problem_info() {
                                                     `- ${item.key} <=`
                                                 }
                                             </a>
-                                            <Luythua a={item.maxvalue} />
+                                            <Luythua a={Number(item.max)} />
                                         </li>
                                     )
                                 })
@@ -127,7 +128,7 @@ export function Problem_info() {
                                                 }}
                                             >
                                                 {
-                                                    `- Subtask ${index + 1}: ${item.points}%, and `
+                                                    `- Subtask ${index + 1}: ${item.percent}%, and `
                                                 }
                                             </a>
 
@@ -135,6 +136,38 @@ export function Problem_info() {
                                                 item.limit.map((item) => {
                                                     return (
                                                         <>
+                                                            {
+                                                                item.min != undefined && (
+                                                                    <>
+                                                                        {
+                                                                            item.min > 10 ? (
+                                                                                <>
+                                                                                    <Luythua a={item.min} />
+                                                                                    <a
+                                                                                        style={{
+                                                                                            padding: "0 0 0 0"
+                                                                                        }}
+                                                                                    >
+                                                                                        {"<="}
+                                                                                    </a>
+                                                                                </>
+                                                                            ) : (
+                                                                                <>
+                                                                                    <a
+                                                                                        style={{
+                                                                                            padding: "0 0 0 0"
+                                                                                        }}
+
+                                                                                    >
+                                                                                        {`${item.min} <=`}
+                                                                                    </a>
+                                                                                </>
+                                                                            )
+                                                                        }
+                                                                    </>
+                                                                )
+                                                            }
+
                                                             <a
                                                                 style={{
                                                                     padding: "0 0 0 0"
@@ -144,7 +177,7 @@ export function Problem_info() {
                                                                     ` ${item.key} <=`
                                                                 }
                                                             </a>
-                                                            <Luythua a={item.maxvalue} />
+                                                            <Luythua a={item.max} />
                                                             <a
                                                                 style={{
                                                                     padding: "0 5px 0 0"

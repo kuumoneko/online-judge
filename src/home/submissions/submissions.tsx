@@ -39,9 +39,9 @@ export function Specific_Submissions(
         get_submission();
     }, [])
 
-    setInterval(() => {
-        get_submission();
-    }, 5000);
+    // setInterval(() => {
+    //     get_submission();
+    // }, 5000);
 
     return (
         <></>

@@ -75,7 +75,6 @@ export interface Problems {
         nani: boolean,
         error: string
     },
-    isPrivate: boolean,
     private: {
         nani: boolean,
         groups: string[]

@@ -112,15 +112,15 @@ export function Add_Problems() {
                         // return a list of {minvalue, key, max value}
                         .map((input_limit_div) => {
                             return {
-                                min: (input_limit_div.filter((e) => {
+                                min: Number((input_limit_div.filter((e) => {
                                     return (e as HTMLElement).id.includes("min value")
-                                })[0] as HTMLInputElement)?.title || "",
-                                key: (input_limit_div.filter((e) => {
+                                })[0] as HTMLInputElement)?.title) || undefined,
+                                key: Number((input_limit_div.filter((e) => {
                                     return (e as HTMLElement).id.includes("key")
-                                })[0] as HTMLInputElement).title,
-                                max: (input_limit_div.filter((e) => {
+                                })[0] as HTMLInputElement).title),
+                                max: Number((input_limit_div.filter((e) => {
                                     return (e as HTMLElement).id.includes("max value")
-                                })[0] as HTMLInputElement).title,
+                                })[0] as HTMLInputElement).title),
                             }
                         })
                     : undefined;
@@ -154,9 +154,9 @@ export function Add_Problems() {
                         })
                         .map((subtask_div) => {
                             return {
-                                percent: (subtask_div.filter((e) => {
+                                percent: Number((subtask_div.filter((e) => {
                                     return (e as HTMLElement).id.includes("input") == false
-                                })[0] as HTMLInputElement).title,
+                                })[0] as HTMLInputElement).title),
                                 // get all div that has input limit per subtask
                                 limit: Array
                                     .from(
@@ -173,15 +173,15 @@ export function Add_Problems() {
                                     // return a list of {min value , key , max value}
                                     .map((input_limit_div) => {
                                         return {
-                                            min: (input_limit_div.filter((e) => {
+                                            min: Number((input_limit_div.filter((e) => {
                                                 return (e as HTMLElement).id.includes("min value")
-                                            })[0] as HTMLInputElement)?.title || "",
-                                            key: (input_limit_div.filter((e) => {
+                                            })[0] as HTMLInputElement)?.title) || undefined,
+                                            key: Number((input_limit_div.filter((e) => {
                                                 return (e as HTMLElement).id.includes("key")
-                                            })[0] as HTMLInputElement).value,
-                                            max: (input_limit_div.filter((e) => {
+                                            })[0] as HTMLInputElement).value),
+                                            max: Number((input_limit_div.filter((e) => {
                                                 return (e as HTMLElement).id.includes("max value")
-                                            })[0] as HTMLInputElement).title,
+                                            })[0] as HTMLInputElement).title),
                                         }
                                     })
                                 ,

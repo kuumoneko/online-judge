@@ -2,12 +2,19 @@ import React from "react"
 
 export function Luythua({ a }: { a: number }): React.JSX.Element;
 export function Luythua({ a, b }: { a: number, b?: number }): React.JSX.Element {
-
+    console.log(a, ' ', b)
     if (b == undefined) {
         let cnt = 0;
         while (a % 10 == 0) {
             a /= 10;
             cnt++;
+        }
+        if (cnt == 0) {
+            return (
+                <span>
+                    {a}
+                </span>
+            )
         }
         return (
             <>

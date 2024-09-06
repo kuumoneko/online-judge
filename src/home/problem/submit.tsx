@@ -1,4 +1,4 @@
-import { after_effect, Editor } from "editor";
+import {  Editor } from "editor";
 import { geturl } from "ulti";
 import { getdata } from "ulti"
 import { useState, useEffect } from "react"
@@ -6,8 +6,6 @@ import { Problems, User } from "type";
 import { color } from "color";
 import Cookies from "js-cookie";
 import { Languages } from "enum";
-import { InputTypes } from '../../package/type/subtypes';
-
 
 export function Problem_Submit() {
     const url = geturl();
@@ -16,11 +14,12 @@ export function Problem_Submit() {
     const [languages, setlangs] = useState([])
     const [opened, setopen] = useState(false)
     const theme = color[Cookies.get("theme") as "dark" | "light"]
-    const [temp, settemp] = useState("")
+    const [code_lang, setcode_lang] = useState("");
+    const [ext, setext] = useState("")
     const [type, settype] = useState("");
     const [usr_id, setusr_id] = useState("")
     const [prlblm_id, setprlblm_id] = useState("")
-    let problem: Problems, user: User;
+    let problem: Problems | null = null, user: User | null = null;
     // let temp;
 
     useEffect(() => {
@@ -44,7 +43,7 @@ export function Problem_Submit() {
             setlang(problem.languages.find((e) => user.language.default_language == e) ? user.language.default_language : languages[0])
 
             setlangs(languages as [])
-            settemp(language == "" ?
+            setcode_lang(language == "" ?
                 problem.languages.find((e) => user.language.default_language == e) ? user.language.default_language : languages[0]
                 : language)
         }
@@ -53,8 +52,8 @@ export function Problem_Submit() {
 
     useEffect(() => {
         try {
-            settemp(language == "" ?
-                problem.languages.find((e) => user.language.default_language == e) ? user.language.default_language : languages[0]
+            setcode_lang(language == "" ?
+                (problem as unknown as Problems).languages.find((e) => (user as unknown as User).language.default_language == e) ? (user as unknown as User).language.default_language : languages[0]
                 : language)
         }
         catch {
@@ -62,10 +61,21 @@ export function Problem_Submit() {
         }
     }, [opened, language])
 
+    // useEffect(() => {
+    //     // It will auto format the string and add to div
+    //     after_effect(type, "editorr")
+    // }, [type])
+
+    // useEffect(() => { console.log("lmao") })
+
+    setInterval(() => {
+        // console.log(document.getElementById("editorr")?.innerText)
+        settype(document.getElementById("editorr")?.title as string)
+    }, 1000)
+
     useEffect(() => {
-        // It will auto format the string and add to div
-        after_effect(type, "editorr")
-    }, [type])
+        setext(`${code_lang == Languages.JAVA ? ".java" : (code_lang == Languages.PY3) ? ".py" : (code_lang == Languages.JS) ? ".js , .mjs , .cjs" : (code_lang == Languages.TS) ? ".ts" : ".cpp"}`)
+    } , [code_lang])
 
     return (
         <div>
@@ -74,13 +84,13 @@ export function Problem_Submit() {
                     Paste your code here or paste it from your file:
                     <input
                         type="file"
-                        accept={`${temp == Languages.JAVA ? ".java" : (temp == Languages.PY3) ? ".py" : (temp == Languages.JS) ? ".js , .mjs , .cjs" : (temp == Languages.TS) ? ".ts" : ".cpp"}`}
+                        accept={ext}
                         style={{ marginLeft: "5px", outline: "none", marginBottom: "5px" }}
                         onInput={async (e) => {
                             // console.log(e.target as HTMLInputElement)
                             if (e.target) {
                                 const tempp = (e.target as HTMLInputElement).files?.item(0)?.name
-                                if (`.${tempp?.split(".")[1]}` != `${temp == Languages.JAVA ? ".java" : (temp == Languages.PY3) ? ".py" : (temp == Languages.JS) ? ".js , .mjs , .cjs" : (temp == Languages.TS) ? ".ts" : ".cpp"}`) {
+                                if (`.${tempp?.split(".")[1]}` != ext) {
                                     return;
                                 }
                                 const text = await (e.target as HTMLInputElement).files?.item(0)?.text();
@@ -154,7 +164,7 @@ export function Problem_Submit() {
                                 }}
                             >
                                 {
-                                    temp
+                                    code_lang
                                 }
                             </a>
                         </div>
@@ -196,7 +206,7 @@ export function Problem_Submit() {
                             version: version,
                             code: type
                         })
-                        window.location.href = `/submissions/${res.data.id}`
+                        // window.location.href = `/submissions/${res.data.id}`
                     }}
                 >
                     <div

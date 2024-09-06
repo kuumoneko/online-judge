@@ -10,7 +10,7 @@ export interface Node {
 }
 
 export interface ProblemsTask {
-    points: number, // in %
+    percent: number, // in %
     limit: InputLimit[]
 }
 
@@ -33,6 +33,6 @@ export const InputTypes = [
 
 export interface InputLimit {
     key: string,
-    maxvalue: number,
-    minvalue: number
+    max: number,
+    min: number
 }
